@@ -30,7 +30,7 @@ public class ApprovalDetails implements Serializable {
     private Instant acceptedAt;
 
     @Column(name = "expected_delivery")
-    private String expectedDelivery;
+    private Instant expectedDelivery;
 
     @Column(name = "decision")
     private String decision;
@@ -57,16 +57,16 @@ public class ApprovalDetails implements Serializable {
         this.acceptedAt = acceptedAt;
     }
 
-    public String getExpectedDelivery() {
+    public Instant getExpectedDelivery() {
         return expectedDelivery;
     }
 
-    public ApprovalDetails expectedDelivery(String expectedDelivery) {
+    public ApprovalDetails expectedDelivery(Instant expectedDelivery) {
         this.expectedDelivery = expectedDelivery;
         return this;
     }
 
-    public void setExpectedDelivery(String expectedDelivery) {
+    public void setExpectedDelivery(Instant expectedDelivery) {
         this.expectedDelivery = expectedDelivery;
     }
 

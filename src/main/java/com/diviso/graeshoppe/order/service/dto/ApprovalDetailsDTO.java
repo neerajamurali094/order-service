@@ -12,7 +12,7 @@ public class ApprovalDetailsDTO implements Serializable {
 
     private Instant acceptedAt;
 
-    private String expectedDelivery;
+    private Instant expectedDelivery;
 
     private String decision;
 
@@ -33,11 +33,11 @@ public class ApprovalDetailsDTO implements Serializable {
         this.acceptedAt = acceptedAt;
     }
 
-    public String getExpectedDelivery() {
+    public Instant getExpectedDelivery() {
         return expectedDelivery;
     }
 
-    public void setExpectedDelivery(String expectedDelivery) {
+    public void setExpectedDelivery(Instant expectedDelivery) {
         this.expectedDelivery = expectedDelivery;
     }
 
