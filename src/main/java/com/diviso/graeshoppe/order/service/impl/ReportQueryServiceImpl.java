@@ -30,6 +30,7 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
+import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
@@ -160,5 +161,14 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		});
 		return orderAgg.getBuckets();
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#findProductByProductId(java.lang.Long)
+	 */
+	@Override
+	public Product findProductByProductId(Long productId) {
+		StringQuery stringQuery = new StringQuery(termQuery("id", productId).toString());
+		return elasticsearchOperations.queryForObject(stringQuery, Product.class);
 	}
 }

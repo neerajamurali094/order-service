@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.Order;
@@ -77,17 +78,17 @@ public class ReportQueryResource {
 
 			orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
 
-			//Instant insatantDate = order.getDeliveryInfo().getExpectedDelivery();
+			Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
 
-			//String stringDate = Date.from(insatantDate).toString();
+			String stringDate = Date.from(insatantDate).toString();
 
 			// date to string conversion for report format
 
-			//orderMaster.setDueDate(stringDate.substring(4, 10));
+			orderMaster.setDueDate(stringDate.substring(4, 10));
 
-			//orderMaster.setDueTime(stringDate.substring(11, 16));
+			orderMaster.setDueTime(stringDate.substring(11, 16));
 
-			//orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
+			orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 
 			// date to string conversion for report format
 
@@ -108,6 +109,8 @@ public class ReportQueryResource {
 			orderLines.forEach(orderline -> {
 
 				ReportOrderLine reportOrderLine = new ReportOrderLine();
+				
+				Product product = reportService.findProductByProductId(orderline.getProductId());
 				
 				reportOrderLine.setItem("add product to this id" + orderline.getProductId());
 				reportOrderLine.setQuantity(orderline.getQuantity());
