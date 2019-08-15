@@ -153,12 +153,7 @@ public class OrderCommandResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @PostMapping("/processPayment")
-    public CommandResource processPayment(@RequestBody ProcessPaymentRequest processPaymentRequest) {
-		log.info("Request to process the payment "+processPaymentRequest);
-    	return orderService.processPayment(processPaymentRequest);
-    	
-    }
+   
     
     @PostMapping("/acceptOrder")
     public CommandResource acceptOrder(@RequestBody AcceptOrderRequest acceptOrderRequest) {

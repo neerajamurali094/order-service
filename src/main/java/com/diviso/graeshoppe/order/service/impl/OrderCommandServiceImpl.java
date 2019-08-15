@@ -300,7 +300,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		formRequest.setTaskId(acceptOrderRequest.getTaskId());
 		formsApi.submitForm(formRequest);
 		// orderRepository.findByOrderId(acceptOrderRequest.getOrderId());
-		sendNotification(acceptOrderRequest.getOrderId());
+		//sendNotification(acceptOrderRequest.getOrderId());
 		CommandResource commandResource = resourceAssembler.toResource(processInstanceId);
 		return commandResource;
 	}
