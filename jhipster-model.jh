@@ -14,7 +14,7 @@ entity DeliveryInfo{
 }
 entity ApprovalDetails{
 	acceptedAt Instant,
-	expectedDelivery String,
+	expectedDelivery Instant,
 	decision String
 }
 entity Offer{

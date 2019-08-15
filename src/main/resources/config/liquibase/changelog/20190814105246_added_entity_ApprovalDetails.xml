@@ -26,7 +26,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="expected_delivery" type="varchar(255)">
+            <column name="expected_delivery" type="datetime">
                 <constraints nullable="true" />
             </column>
 
@@ -37,6 +37,7 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="approval_details" columnName="accepted_at" columnDataType="datetime"/>
+        <dropDefaultValue tableName="approval_details" columnName="expected_delivery" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

@@ -54,8 +54,8 @@ public class ApprovalDetailsResourceIntTest {
     private static final Instant DEFAULT_ACCEPTED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_ACCEPTED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final String DEFAULT_EXPECTED_DELIVERY = "AAAAAAAAAA";
-    private static final String UPDATED_EXPECTED_DELIVERY = "BBBBBBBBBB";
+    private static final Instant DEFAULT_EXPECTED_DELIVERY = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_EXPECTED_DELIVERY = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String DEFAULT_DECISION = "AAAAAAAAAA";
     private static final String UPDATED_DECISION = "BBBBBBBBBB";
@@ -305,7 +305,7 @@ public class ApprovalDetailsResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(approvalDetails.getId().intValue())))
             .andExpect(jsonPath("$.[*].acceptedAt").value(hasItem(DEFAULT_ACCEPTED_AT.toString())))
-            .andExpect(jsonPath("$.[*].expectedDelivery").value(hasItem(DEFAULT_EXPECTED_DELIVERY)))
+            .andExpect(jsonPath("$.[*].expectedDelivery").value(hasItem(DEFAULT_EXPECTED_DELIVERY.toString())))
             .andExpect(jsonPath("$.[*].decision").value(hasItem(DEFAULT_DECISION)));
     }
 

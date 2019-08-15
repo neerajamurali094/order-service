@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,11 +91,14 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		decision.setValue(acceptOrderRequest.getDecision());
 		properties.add(decision);
 
+		String stringDate = Date.from(acceptOrderRequest.getExpectedDelivery()).toString();
+		String date=stringDate.substring(4, 10);
+		String time=stringDate.substring(11, 16);
 		RestFormProperty deliveryTime = new RestFormProperty();
 		deliveryTime.setId("deliveryTime");
 		deliveryTime.setName("deliveryTime");
 		deliveryTime.setType("String");
-		deliveryTime.setValue(acceptOrderRequest.getExpectedDelivery());
+		deliveryTime.setValue(date+" "+time);
 		properties.add(deliveryTime);
 
 		formRequest.setProperties(properties);
