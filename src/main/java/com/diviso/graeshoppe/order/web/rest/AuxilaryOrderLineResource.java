@@ -54,9 +54,10 @@ public class AuxilaryOrderLineResource {
             throw new BadRequestAlertException("A new auxilaryOrderLine cannot already have an ID", ENTITY_NAME, "idexists");
         }
         AuxilaryOrderLineDTO result = auxilaryOrderLineService.save(auxilaryOrderLineDTO);
-        return ResponseEntity.created(new URI("/api/auxilary-order-lines/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        AuxilaryOrderLineDTO result2=auxilaryOrderLineService.save(result);
+        return ResponseEntity.created(new URI("/api/auxilary-order-lines/" + result2.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result2.getId().toString()))
+            .body(result2);
     }
 
     /**
