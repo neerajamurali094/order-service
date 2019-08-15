@@ -95,6 +95,10 @@ public class ReportQueryResource {
 			String orderDate = Date.from(order.getDate()).toString();
 
 			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
+			
+			String orderAcceptDate=Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
+			
+			orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
 
 			if (order.getStatus() != null) {
 
@@ -112,9 +116,12 @@ public class ReportQueryResource {
 				
 				Product product = reportService.findProductByProductId(orderline.getProductId());
 				
-				reportOrderLine.setItem("add product to this id" + orderline.getProductId());
+				reportOrderLine.setItem(product.getName());
+				
 				reportOrderLine.setQuantity(orderline.getQuantity());
+				
 				reportOrderLine.setTotal(orderline.getTotal());
+				
 				orderList.add(reportOrderLine);
 			});
 
