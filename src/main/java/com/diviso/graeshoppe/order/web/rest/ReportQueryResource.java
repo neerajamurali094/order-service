@@ -177,7 +177,7 @@ public class ReportQueryResource {
 
 		// orderMaster.setOrderFromCustomer(orderFromCustomer.getCount());
 
-		// want to include orderacceptedat ,orderfromcustomer,customerorder
+		// want to include  orderfromcustomer,customerorder
 
 		return ResponseEntity.ok().body(orderMaster);
 	}
