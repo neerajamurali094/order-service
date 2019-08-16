@@ -25,6 +25,10 @@ public class NotificationDTO implements Serializable {
     private String imageContentType;
     private Instant date;
 
+    private String receiverId;
+
+    private String status;
+
 
     public Long getId() {
         return id;
@@ -90,6 +94,22 @@ public class NotificationDTO implements Serializable {
         this.date = date;
     }
 
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -121,6 +141,8 @@ public class NotificationDTO implements Serializable {
             ", type='" + getType() + "'" +
             ", image='" + getImage() + "'" +
             ", date='" + getDate() + "'" +
+            ", receiverId='" + getReceiverId() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

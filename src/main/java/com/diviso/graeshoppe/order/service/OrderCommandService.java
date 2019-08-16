@@ -58,11 +58,5 @@ public interface OrderCommandService {
      */
     Page<OrderDTO> search(String query, Pageable pageable);
 
-	CommandResource processPayment(ProcessPaymentRequest processPaymentRequest);
-
-	CommandResource acceptOrder(AcceptOrderRequest acceptOrderRequest);
-
-	NotificationDTO sendNotification(String orderId);
-
 	OrderDTO update(OrderDTO orderDTO);
 }

@@ -10,11 +10,43 @@ public class ApprovalDetailsDTO implements Serializable {
 
     private Long id;
 
-    private Instant acceptedAt;
+    /**
+	 * @return the customerId
+	 */
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	/**
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	/**
+	 * @return the orderId
+	 */
+	public String getOrderId() {
+		return orderId;
+	}
+
+	/**
+	 * @param orderId the orderId to set
+	 */
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	private Instant acceptedAt;
 
     private Instant expectedDelivery;
 
     private String decision;
+    
+    private String customerId;
+    
+    private String orderId;
 
 
     public Long getId() {

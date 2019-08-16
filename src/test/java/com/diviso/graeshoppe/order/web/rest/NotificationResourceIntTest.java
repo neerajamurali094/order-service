@@ -72,6 +72,12 @@ public class NotificationResourceIntTest {
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_RECEIVER_ID = "AAAAAAAAAA";
+    private static final String UPDATED_RECEIVER_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_STATUS = "AAAAAAAAAA";
+    private static final String UPDATED_STATUS = "BBBBBBBBBB";
+
     @Autowired
     private NotificationRepository notificationRepository;
 
@@ -134,7 +140,9 @@ public class NotificationResourceIntTest {
             .type(DEFAULT_TYPE)
             .image(DEFAULT_IMAGE)
             .imageContentType(DEFAULT_IMAGE_CONTENT_TYPE)
-            .date(DEFAULT_DATE);
+            .date(DEFAULT_DATE)
+            .receiverId(DEFAULT_RECEIVER_ID)
+            .status(DEFAULT_STATUS);
         return notification;
     }
 
@@ -166,6 +174,8 @@ public class NotificationResourceIntTest {
         assertThat(testNotification.getImage()).isEqualTo(DEFAULT_IMAGE);
         assertThat(testNotification.getImageContentType()).isEqualTo(DEFAULT_IMAGE_CONTENT_TYPE);
         assertThat(testNotification.getDate()).isEqualTo(DEFAULT_DATE);
+        assertThat(testNotification.getReceiverId()).isEqualTo(DEFAULT_RECEIVER_ID);
+        assertThat(testNotification.getStatus()).isEqualTo(DEFAULT_STATUS);
 
         // Validate the Notification in Elasticsearch
         verify(mockNotificationSearchRepository, times(1)).save(testNotification);
@@ -211,7 +221,9 @@ public class NotificationResourceIntTest {
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
+            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+            .andExpect(jsonPath("$.[*].receiverId").value(hasItem(DEFAULT_RECEIVER_ID.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
     
     @Test
@@ -231,7 +243,9 @@ public class NotificationResourceIntTest {
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.imageContentType").value(DEFAULT_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.image").value(Base64Utils.encodeToString(DEFAULT_IMAGE)))
-            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
+            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
+            .andExpect(jsonPath("$.receiverId").value(DEFAULT_RECEIVER_ID.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -261,7 +275,9 @@ public class NotificationResourceIntTest {
             .type(UPDATED_TYPE)
             .image(UPDATED_IMAGE)
             .imageContentType(UPDATED_IMAGE_CONTENT_TYPE)
-            .date(UPDATED_DATE);
+            .date(UPDATED_DATE)
+            .receiverId(UPDATED_RECEIVER_ID)
+            .status(UPDATED_STATUS);
         NotificationDTO notificationDTO = notificationMapper.toDto(updatedNotification);
 
         restNotificationMockMvc.perform(put("/api/notifications")
@@ -280,6 +296,8 @@ public class NotificationResourceIntTest {
         assertThat(testNotification.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testNotification.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
         assertThat(testNotification.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testNotification.getReceiverId()).isEqualTo(UPDATED_RECEIVER_ID);
+        assertThat(testNotification.getStatus()).isEqualTo(UPDATED_STATUS);
 
         // Validate the Notification in Elasticsearch
         verify(mockNotificationSearchRepository, times(1)).save(testNotification);
@@ -346,7 +364,9 @@ public class NotificationResourceIntTest {
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
+            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+            .andExpect(jsonPath("$.[*].receiverId").value(hasItem(DEFAULT_RECEIVER_ID)))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)));
     }
 
     @Test

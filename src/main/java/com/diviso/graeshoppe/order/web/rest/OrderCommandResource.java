@@ -153,15 +153,4 @@ public class OrderCommandResource {
     }
 
    
-    
-    @PostMapping("/acceptOrder")
-    public CommandResource acceptOrder(@RequestBody AcceptOrderRequest acceptOrderRequest) {
-    	log.info("Request to accept the order "+acceptOrderRequest);
-    	return orderService.acceptOrder(acceptOrderRequest);
-    }
-    
-    @PostMapping("/sendNotification/{orderId}")
-    public NotificationDTO sendNotification(@PathVariable String orderId) {
-    	return orderService.sendNotification(orderId);
-    }
 }

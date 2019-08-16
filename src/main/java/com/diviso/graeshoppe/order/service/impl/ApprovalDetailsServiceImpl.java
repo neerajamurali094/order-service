@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.ApprovalDetailsService;
+import com.diviso.graeshoppe.order.service.NotificationService;
 import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
@@ -11,7 +12,9 @@ import com.diviso.graeshoppe.order.repository.ApprovalDetailsRepository;
 import com.diviso.graeshoppe.order.repository.search.ApprovalDetailsSearchRepository;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
 import com.diviso.graeshoppe.order.resource.assembler.ResourceAssembler;
+import com.diviso.graeshoppe.order.security.SecurityUtils;
 import com.diviso.graeshoppe.order.service.dto.ApprovalDetailsDTO;
+import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
 import com.diviso.graeshoppe.order.service.mapper.ApprovalDetailsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +46,9 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
     
     @Autowired
     private TasksApi tasksApi;
+    
+    @Autowired
+    private NotificationService notificationService;
     
     @Autowired
     private ResourceAssembler resourceAssembler;
@@ -106,9 +113,37 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		formRequest.setTaskId(taskId);
 		formsApi.submitForm(formRequest);
 		// orderRepository.findByOrderId(acceptOrderRequest.getOrderId());
-		//sendNotification(acceptOrderRequest.);
+		sendNotification(acceptOrderRequest.getOrderId(),acceptOrderRequest.getCustomerId());
 		CommandResource commandResource = resourceAssembler.toResource(processInstanceId);
 		return commandResource;
+	}
+	
+	
+	//@SendToUser("/queue/notification")
+	public NotificationDTO sendNotification(String orderId, String customerId) {
+		NotificationDTO notificationDTO = new NotificationDTO();
+		notificationDTO.setDate(Instant.now());
+		notificationDTO.setMessage("Your order request has been accepted by the restaurant");
+		notificationDTO.setTitle("Order Accepted");
+		notificationDTO.setTargetId(orderId);
+		notificationDTO.setType("AcceptOrder");
+		notificationDTO.setStatus("unread");
+		notificationDTO.setReceiverId(customerId);
+		NotificationDTO result = notificationService.save(notificationDTO);
+		log.info("Current User is " + SecurityUtils.getCurrentUserLogin().get());
+		//template.convertAndSend("/topic/test", "test");
+		//String username=SecurityUtils.getCurrentUserLogin().get();
+		//template.convertAndSendToUser(username, "/queue/notification",
+				//"Sample message hello " + username);
+
+		// SimpleDateFormat("HH:mm:ss").format(new Date())+"- "+"sample message");
+		
+//		System.out.println("getMessageChannel " + template.getMessageChannel() + " getUserDestinationPrefix "
+//				+ template.getUserDestinationPrefix() + " getDefaultDestination " + template.getDefaultDestination()
+//				+ " getSendTimeout " + template.getSendTimeout() + " getMessageConverter "
+//				+ template.getMessageConverter());
+
+		return result;
 	}
     /**
      * Save a approvalDetails.

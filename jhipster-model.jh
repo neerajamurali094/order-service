@@ -56,7 +56,9 @@ entity Notification{
 	targetId String,
 	type String,
 	image ImageBlob,
-	date Instant
+	date Instant,
+	receiverId String,
+	status String
 }
 
 relationship OneToMany{
