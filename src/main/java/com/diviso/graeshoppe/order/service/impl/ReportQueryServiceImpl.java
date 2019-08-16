@@ -119,8 +119,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	}
 
 	@Override
-	public List<Entry> findOrderCountByCustomerId(Pageable pageable) {
-
+	public Long findOrderCountByCustomerId(String customerId, Pageable pageable) {
+		Long count = 0l;
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(QUERY_THEN_FETCH)
 
@@ -129,8 +129,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
 		TermsAggregation categoryAggregation = result.getAggregation("customerorder", TermsAggregation.class);
-		return categoryAggregation.getBuckets();
+		count =	categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst().get().getCount();
 
+		return count;
 	}
 
 	@Override
@@ -167,7 +168,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
 		});
-		//return orderAgg.getBuckets();
+		// return orderAgg.getBuckets();
 
 		return storeBasedEntry;
 	}
