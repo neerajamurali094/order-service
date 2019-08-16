@@ -64,7 +64,6 @@ public class OrderCommandResource {
      */
     @PostMapping("/orders")
     public ResponseEntity<CommandResource> createOrder(@RequestBody OrderDTO orderDTO) throws URISyntaxException {
-		orderDTO.setStatusId(1l);
 		orderDTO.setDate(Instant.now());
         log.debug("REST request to save Order : {}", orderDTO);
         if (orderDTO.getId() != null) {

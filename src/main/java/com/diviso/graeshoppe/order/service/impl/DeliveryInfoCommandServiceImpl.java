@@ -73,6 +73,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
         Long phone=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
         CommandResource commandResource=confirmDelivery(taskId,phone,deliveryInfoDTO.getDeliveryType());
         commandResource.setSelfId(result.getId());
+        update(result);
         return commandResource;
     }
     

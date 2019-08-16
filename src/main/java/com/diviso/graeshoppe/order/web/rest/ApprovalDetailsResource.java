@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -50,7 +50,8 @@ public class ApprovalDetailsResource {
      */
     @PostMapping("/approval-details/{taskId}")
     public ResponseEntity<CommandResource> createApprovalDetails(@RequestBody ApprovalDetailsDTO approvalDetailsDTO,@PathVariable String taskId) throws URISyntaxException {
-        log.debug("REST request to save ApprovalDetails : {}", approvalDetailsDTO);
+        approvalDetailsDTO.setAcceptedAt(Instant.now());
+    	log.debug("REST request to save ApprovalDetails : {}", approvalDetailsDTO);
         if (approvalDetailsDTO.getId() != null) {
             throw new BadRequestAlertException("A new approvalDetails cannot already have an ID", ENTITY_NAME, "idexists");
         }
