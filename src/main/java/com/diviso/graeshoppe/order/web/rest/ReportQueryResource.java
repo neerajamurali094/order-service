@@ -72,7 +72,7 @@ public class ReportQueryResource {
 		if (order != null) {
 			orderMaster.setStoreName(order.getStoreId());
 
-			// orderMaster.setNotes(order.getNotes());
+			 orderMaster.setNotes(order.getDeliveryInfo().getDeliveryNotes());
 
 			orderMaster.setTotalDue(order.getGrandTotal());
 
