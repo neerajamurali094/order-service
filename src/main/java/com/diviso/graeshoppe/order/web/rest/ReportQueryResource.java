@@ -60,6 +60,8 @@ public class ReportQueryResource {
 	@Autowired
 	ReportQueryService reportService;
 
+	Long count;
+
 	@GetMapping("/main-report/{orderId}")
 	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, Pageable pageable) {
 
@@ -70,7 +72,7 @@ public class ReportQueryResource {
 		if (order != null) {
 			orderMaster.setStoreName(order.getStoreId());
 
-			//orderMaster.setNotes(order.getNotes());
+			// orderMaster.setNotes(order.getNotes());
 
 			orderMaster.setTotalDue(order.getGrandTotal());
 
@@ -95,9 +97,9 @@ public class ReportQueryResource {
 			String orderDate = Date.from(order.getDate()).toString();
 
 			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
-			
-			String orderAcceptDate=Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
-			
+
+			String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
+
 			orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
 
 			if (order.getStatus() != null) {
@@ -113,15 +115,15 @@ public class ReportQueryResource {
 			orderLines.forEach(orderline -> {
 
 				ReportOrderLine reportOrderLine = new ReportOrderLine();
-				
+
 				Product product = reportService.findProductByProductId(orderline.getProductId());
-				
+
 				reportOrderLine.setItem(product.getName());
-				
+
 				reportOrderLine.setQuantity(orderline.getQuantity());
-				
+
 				reportOrderLine.setTotal(orderline.getTotal());
-				
+
 				orderList.add(reportOrderLine);
 			});
 
@@ -149,14 +151,14 @@ public class ReportQueryResource {
 			}
 
 			Store store = reportService.findStoreByStoreId(order.getStoreId());
-			
-			if(store!=null){
 
-			log.info(".................store............" + store);
+			if (store != null) {
 
-			orderMaster.setStorePhone(store.getContactNo());
+				log.info(".................store............" + store);
 
-			orderMaster.setServiceCharge(store.getStoreSettings().getServiceCharge());
+				orderMaster.setStorePhone(store.getContactNo());
+
+				orderMaster.setServiceCharge(store.getStoreSettings().getServiceCharge());
 			}
 		}
 
@@ -173,22 +175,33 @@ public class ReportQueryResource {
 		 * });
 		 */
 
-		//List<Entry> orderFromCustomer = reportService.findOrderCountByCustomerIdAndStoreId(pageable);
+		// List<Entry> orderFromCustomer =
+		// reportService.findOrderCountByCustomerIdAndStoreId(pageable);
 
 		// orderMaster.setOrderFromCustomer(orderFromCustomer.getCount());
 
-		// want to include  orderfromcustomer,customerorder
+		// want to include orderfromcustomer,customerorder
 
 		return ResponseEntity.ok().body(orderMaster);
 	}
 
-	@GetMapping("/order-from-customer")
-	public List<Entry> findOrderCountByCustomerId(Pageable pageable){
-		return reportService.findOrderCountByCustomerId(pageable);
+	@GetMapping("/order-from-customer/{customerId}")
+	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
+
+		List<Entry> entry = reportService.findOrderCountByCustomerId(pageable);
+
+		entry.forEach(e -> {
+
+			if (e.getKey().equals(customerId)) {
+				count = e.getCount();
+			}
+
+		});
+		return count;
 	}
-	
+
 	@GetMapping("/order-from-customer-storeid")
-	public List<Entry> findOrderCountByCustomerIdAndStoreId(Pageable pageable){
+	public List<Entry> findOrderCountByCustomerIdAndStoreId(Pageable pageable) {
 		return reportService.findOrderCountByCustomerIdAndStoreId(pageable);
 	}
 }
