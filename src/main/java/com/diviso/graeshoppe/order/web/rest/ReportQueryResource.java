@@ -177,7 +177,7 @@ public class ReportQueryResource {
 
 		});
 
-		List<Entry> orderFromCustomerAndStore = reportService.findOrderCountByCustomerIdAndStoreId(pageable);
+		List<Entry> orderFromCustomerAndStore = reportService.findOrderCountByCustomerIdAndStoreId(order.getStoreId(),pageable);
 
 		orderFromCustomerAndStore.forEach(ordersBystore -> {
 
@@ -207,8 +207,8 @@ public class ReportQueryResource {
 		return count;
 	}
 
-	@GetMapping("/order-from-customer-storeid")
-	public List<Entry> findOrderCountByCustomerIdAndStoreId(Pageable pageable) {
-		return reportService.findOrderCountByCustomerIdAndStoreId(pageable);
+	@GetMapping("/order-from-customer-storeid/{storeId}")
+	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId,Pageable pageable) {
+		return reportService.findOrderCountByCustomerIdAndStoreId(storeId,pageable);
 	}
 }

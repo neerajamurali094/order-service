@@ -19,6 +19,7 @@ import static org.elasticsearch.action.search.SearchType.QUERY_THEN_FETCH;
 import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -133,7 +134,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	}
 
 	@Override
-	public List<Entry> findOrderCountByCustomerIdAndStoreId(Pageable pageable) {
+	public List<Entry> findOrderCountByCustomerIdAndStoreId(String storeId, Pageable pageable) {
 
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(QUERY_THEN_FETCH).withIndices("order").withTypes("order")
@@ -147,7 +148,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
 
 		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
-
+		List<Entry> storeBasedEntry = new ArrayList<Entry>();
 		orderAgg.getBuckets().forEach(bucket -> {
 			int i = 0;
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
@@ -156,6 +157,12 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 			System.out.println("SSSSSSSSSSSSSSSSSS"
 					+ bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
+			String storeName = bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i)
+					.getKeyAsString();
+			if (storeName.equals(storeId)) {
+				Entry storeEntry = bucket;
+				storeBasedEntry.add(storeEntry);
+			}
 			i++;
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());

@@ -68,7 +68,7 @@ public interface ReportQueryService {
 	 * @param pageable
 	 * @return
 	 */
-	List<Entry> findOrderCountByCustomerIdAndStoreId(Pageable pageable);
+	List<Entry> findOrderCountByCustomerIdAndStoreId(String storeId,Pageable pageable);
 
 	/**
 	 * @param productId
