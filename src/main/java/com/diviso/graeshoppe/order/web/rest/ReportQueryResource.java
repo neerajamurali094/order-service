@@ -72,18 +72,18 @@ public class ReportQueryResource {
 		if (order != null) {
 			orderMaster.setStoreName(order.getStoreId());
 
-			 orderMaster.setNotes(order.getDeliveryInfo().getDeliveryNotes());
+			orderMaster.setNotes(order.getDeliveryInfo().getDeliveryNotes());
 
 			orderMaster.setTotalDue(order.getGrandTotal());
 
 			orderMaster.setCustomerId(order.getCustomerId());
-			
+
 			log.info(".........order.getDeliveryInfo()..........." + order.getDeliveryInfo());
-			
+
 			orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
-			
+
 			log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
-			
+
 			Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
 
 			String stringDate = Date.from(insatantDate).toString();
@@ -165,27 +165,13 @@ public class ReportQueryResource {
 				orderMaster.setServiceCharge(store.getStoreSettings().getServiceCharge());
 			}
 		}
+		orderMaster.setCustomersOrder(reportService.findOrderCountByCustomerId(order.getCustomerId(), pageable));
 
-		List<Entry> customerOrders = reportService.findOrderCountByCustomerId(pageable);
-
-		customerOrders.forEach(customerOrder -> {
-
-			if (customerOrder.getKey().equals(order.getCustomerId())) {
-
-				orderMaster.setCustomersOrder(customerOrder.getCount());
-			}
-
-		});
-
-		List<Entry> orderFromCustomerAndStore = reportService.findOrderCountByCustomerIdAndStoreId(order.getStoreId(),pageable);
+		List<Entry> orderFromCustomerAndStore = reportService.findOrderCountByCustomerIdAndStoreId(order.getStoreId(),
+				pageable);
 
 		orderFromCustomerAndStore.forEach(ordersBystore -> {
-
-			if (ordersBystore.getKey().equals(order.getStoreId())) {
-
-				orderMaster.setOrderFromCustomer(ordersBystore.getCount());
-
-			}
+			orderMaster.setOrderFromCustomer(ordersBystore.getCount());
 		});
 
 		return ResponseEntity.ok().body(orderMaster);
@@ -195,20 +181,20 @@ public class ReportQueryResource {
 	@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
-		List<Entry> entry = reportService.findOrderCountByCustomerId(pageable);
+	return reportService.findOrderCountByCustomerId(customerId,pageable);
 
-		entry.forEach(e -> {
+	/*	entry.forEach(e -> {
 
 			if (e.getKey().equals(customerId)) {
 				count = e.getCount();
 			}
 
-		});
-		return count;
+		});*/
+		//return count;
 	}
 
 	@GetMapping("/order-from-customer-storeid/{storeId}")
-	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId,Pageable pageable) {
-		return reportService.findOrderCountByCustomerIdAndStoreId(storeId,pageable);
+	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId, Pageable pageable) {
+		return reportService.findOrderCountByCustomerIdAndStoreId(storeId, pageable);
 	}
 }

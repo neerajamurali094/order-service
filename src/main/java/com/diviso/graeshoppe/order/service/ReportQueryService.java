@@ -62,7 +62,7 @@ public interface ReportQueryService {
 	 * @param pageable
 	 * @return
 	 */
-	List<Entry> findOrderCountByCustomerId(Pageable pageable);
+	Long findOrderCountByCustomerId(String customerId,Pageable pageable);
 
 	/**
 	 * @param pageable
