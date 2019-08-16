@@ -48,6 +48,12 @@ public class Notification implements Serializable {
     @Column(name = "jhi_date")
     private Instant date;
 
+    @Column(name = "receiver_id")
+    private String receiverId;
+
+    @Column(name = "status")
+    private String status;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -147,6 +153,32 @@ public class Notification implements Serializable {
     public void setDate(Instant date) {
         this.date = date;
     }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public Notification receiverId(String receiverId) {
+        this.receiverId = receiverId;
+        return this;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Notification status(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -180,6 +212,8 @@ public class Notification implements Serializable {
             ", image='" + getImage() + "'" +
             ", imageContentType='" + getImageContentType() + "'" +
             ", date='" + getDate() + "'" +
+            ", receiverId='" + getReceiverId() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

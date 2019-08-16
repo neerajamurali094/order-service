@@ -107,6 +107,8 @@ class NotificationGatlingTest extends Simulation {
                 , "type":"SAMPLE_TEXT"
                 , "image":null
                 , "date":"2020-01-01T00:00:00.000Z"
+                , "receiverId":"SAMPLE_TEXT"
+                , "status":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_notification_url"))).exitHereIfFailed
