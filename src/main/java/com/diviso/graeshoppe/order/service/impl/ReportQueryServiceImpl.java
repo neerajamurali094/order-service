@@ -151,12 +151,12 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		
 		orderAgg.getBuckets().forEach(bucket -> {
 
-			//int i=0;
+			int i=0;
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
-			/*System.out.println("SSSSSSSSSSSSSSSSSS"
-					+ bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(1).getKeyAsString());*/
+			System.out.println("SSSSSSSSSSSSSSSSSS"
+					+ bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
 		});
