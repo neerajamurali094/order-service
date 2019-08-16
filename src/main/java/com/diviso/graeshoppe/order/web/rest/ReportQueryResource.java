@@ -77,9 +77,13 @@ public class ReportQueryResource {
 			orderMaster.setTotalDue(order.getGrandTotal());
 
 			orderMaster.setCustomerId(order.getCustomerId());
-
+			
+			log.info(".........order.getDeliveryInfo()..........." + order.getDeliveryInfo());
+			
 			orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
-
+			
+			log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
+			
 			Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
 
 			String stringDate = Date.from(insatantDate).toString();
@@ -183,11 +187,11 @@ public class ReportQueryResource {
 
 			}
 		});
-		
 
 		return ResponseEntity.ok().body(orderMaster);
 	}
 
+	// ..........test methods........................
 	@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
