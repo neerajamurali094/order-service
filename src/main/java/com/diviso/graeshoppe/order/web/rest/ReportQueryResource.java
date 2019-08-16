@@ -162,18 +162,16 @@ public class ReportQueryResource {
 			}
 		}
 
-		/*
-		 * List<Entry> customerOrders =
-		 * reportService.findOrderCountByCustomerId(pageable);
-		 * 
-		 * customerOrders.forEach(customerOrder->{
-		 * 
-		 * if(customerOrder.getKey().equals(order.getCustomerId())){
-		 * 
-		 * orderMaster.setCustomersOrder(customerOrder.getCount()); }
-		 * 
-		 * });
-		 */
+		List<Entry> customerOrders = reportService.findOrderCountByCustomerId(pageable);
+
+		customerOrders.forEach(customerOrder -> {
+
+			if (customerOrder.getKey().equals(order.getCustomerId())) {
+
+				orderMaster.setCustomersOrder(customerOrder.getCount());
+			}
+
+		});
 
 		// List<Entry> orderFromCustomer =
 		// reportService.findOrderCountByCustomerIdAndStoreId(pageable);
