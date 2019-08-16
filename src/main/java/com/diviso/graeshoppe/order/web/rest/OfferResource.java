@@ -54,9 +54,10 @@ public class OfferResource {
             throw new BadRequestAlertException("A new offer cannot already have an ID", ENTITY_NAME, "idexists");
         }
         OfferDTO result = offerService.save(offerDTO);
-        return ResponseEntity.created(new URI("/api/offers/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        OfferDTO result1 = offerService.save(result);
+        return ResponseEntity.created(new URI("/api/offers/" + result1.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result1.getId().toString()))
+            .body(result1);
     }
 
     /**
