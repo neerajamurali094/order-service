@@ -167,8 +167,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
 		});
-		return orderAgg.getBuckets();
+		//return orderAgg.getBuckets();
 
+		return storeBasedEntry;
 	}
 
 	/*
