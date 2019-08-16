@@ -98,9 +98,9 @@ public class ReportQueryResource {
 
 			// date to string conversion for report format
 
-			String orderDate = Date.from(order.getDate()).toString();
+		//	String orderDate = Date.from(order.getDate()).toString();
 
-			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
+			//orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
 
 			String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
 
@@ -178,23 +178,23 @@ public class ReportQueryResource {
 	}
 
 	// ..........test methods........................
-	@GetMapping("/order-from-customer/{customerId}")
+	/*	@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
 	return reportService.findOrderCountByCustomerId(customerId,pageable);
 
-	/*	entry.forEach(e -> {
+	entry.forEach(e -> {
 
 			if (e.getKey().equals(customerId)) {
 				count = e.getCount();
 			}
 
-		});*/
+		});
 		//return count;
 	}
 
 	@GetMapping("/order-from-customer-storeid/{storeId}")
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId, Pageable pageable) {
 		return reportService.findOrderCountByCustomerIdAndStoreId(storeId, pageable);
-	}
+	}*/
 }
