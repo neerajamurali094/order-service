@@ -90,6 +90,7 @@ public class ReportQueryResource {
 
 			// date to string conversion for report format
 
+			orderMaster.setOrderNumber(orderId);
 			orderMaster.setDueDate(stringDate.substring(4, 10));
 
 			orderMaster.setDueTime(stringDate.substring(11, 16));
