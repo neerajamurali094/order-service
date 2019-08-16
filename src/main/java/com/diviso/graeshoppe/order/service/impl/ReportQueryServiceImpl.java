@@ -117,8 +117,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		return elasticsearchOperations.queryForObject(stringQuery, Store.class);
 	}
 
-	
-	@Override    
+	@Override
 	public List<Entry> findOrderCountByCustomerId(Pageable pageable) {
 
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
@@ -132,40 +131,44 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		return categoryAggregation.getBuckets();
 
 	}
-	
-	
+
 	@Override
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(Pageable pageable) {
 
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(QUERY_THEN_FETCH).withIndices("order").withTypes("order")
 				.addAggregation(AggregationBuilders.terms("customer").field("customerId.keyword")
-						.order(org.elasticsearch.search.aggregations.bucket.terms.Terms.Order.aggregation("avgPrice", true))
+						.order(org.elasticsearch.search.aggregations.bucket.terms.Terms.Order.aggregation("avgPrice",
+								true))
 						.subAggregation(AggregationBuilders.avg("avgPrice").field("grandTotal"))
 						.subAggregation(AggregationBuilders.terms("store").field("storeId.keyword")))
 				.build();
-		
-		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
-		
-		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
-		
-		orderAgg.getBuckets().forEach(bucket -> {
 
-			int i=0;
+		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
+
+		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
+
+		orderAgg.getBuckets().forEach(bucket -> {
+			int i = 0;
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
+
 			System.out.println("SSSSSSSSSSSSSSSSSS"
 					+ bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
+			i++;
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
 		});
 		return orderAgg.getBuckets();
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#findProductByProductId(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#
+	 * findProductByProductId(java.lang.Long)
 	 */
 	@Override
 	public Product findProductByProductId(Long productId) {
