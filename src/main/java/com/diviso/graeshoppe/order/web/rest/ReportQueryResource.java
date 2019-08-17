@@ -91,6 +91,7 @@ public class ReportQueryResource {
 			// date to string conversion for report format
 
 			orderMaster.setOrderNumber(orderId);
+			
 			orderMaster.setDueDate(stringDate.substring(4, 10));
 
 			orderMaster.setDueTime(stringDate.substring(11, 16));
@@ -179,12 +180,12 @@ public class ReportQueryResource {
 	}
 
 	// ..........test methods........................
-	/*	@GetMapping("/order-from-customer/{customerId}")
+		@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
 	return reportService.findOrderCountByCustomerId(customerId,pageable);
 
-	entry.forEach(e -> {
+	/*entry.forEach(e -> {
 
 			if (e.getKey().equals(customerId)) {
 				count = e.getCount();
@@ -192,10 +193,11 @@ public class ReportQueryResource {
 
 		});
 		//return count;
-	}
-
+*/	}
+//>>>>>>>>>>>>>>>>
 	@GetMapping("/order-from-customer-storeid/{storeId}")
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId, Pageable pageable) {
+		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.findOrderCountByCustomerIdAndStoreId(storeId, pageable);
-	}*/
+	}
 }
