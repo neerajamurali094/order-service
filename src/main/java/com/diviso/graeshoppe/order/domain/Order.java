@@ -59,10 +59,10 @@ public class Order implements Serializable {
     @JoinColumn(unique = true)
     private ApprovalDetails approvalDetails;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade=CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<OrderLine> orderLines = new HashSet<>();
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade=CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Offer> appliedOffers = new HashSet<>();
     @ManyToOne
