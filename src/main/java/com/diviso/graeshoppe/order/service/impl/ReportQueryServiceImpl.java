@@ -175,6 +175,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 				Entry statusEntry = bucket;
 				statusBasedEntry.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
 			}
+			
+			statusBasedEntry.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
 			i++;
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().size());
