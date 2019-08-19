@@ -205,7 +205,7 @@ public class ReportQueryResource {
 	@GetMapping("/order-from-customer-status/{customerId}")
 	public List<Entry> findOrderCountByCustomerIdAndStatusName(@PathVariable String customerId, Pageable pageable) {
 
-		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, pageable);
+		return reportService.findOrderCountByCustomerIdAndStatusFilter(customerId, pageable);
 
 	}
 
