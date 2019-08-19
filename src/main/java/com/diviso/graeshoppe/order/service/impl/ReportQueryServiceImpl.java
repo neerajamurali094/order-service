@@ -145,31 +145,41 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	}
 
 	@Override
-	public Long findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable) {
+	public List<Entry> findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable) {
 		Long count = 0l;
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
-				.withSearchType(QUERY_THEN_FETCH)
-
-				.withIndices("order").withTypes("order")
-				.addAggregation(AggregationBuilders.terms("customerorder").field("customerId.keyword")).build();
+				.withSearchType(QUERY_THEN_FETCH).withIndices("order").withTypes("order")
+				.addAggregation(AggregationBuilders.terms("customer").field("customerId.keyword")
+						.order(org.elasticsearch.search.aggregations.bucket.terms.Terms.Order.aggregation("avgPrice",
+								true))
+						.subAggregation(AggregationBuilders.avg("avgPrice").field("grandTotal"))
+						.subAggregation(AggregationBuilders.terms("statusName").field("status.name.keyword")))
+				.build();
 
 		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
 
-		List<Order> orderList = result.getContent().stream()
-				.filter(order -> order.getStatus().getName().equals("payment-proessed")).collect(Collectors.toList());
-		
-		log.info("..............orderList............."+orderList);
-		
-		AggregatedPage<Order> aggregatedOrder = new AggregatedPageImpl<Order>(orderList);
-		log.info("..............aggregatedOrder............."+aggregatedOrder);
-		
-		TermsAggregation categoryAggregation = aggregatedOrder.getAggregation("customerorder", TermsAggregation.class);
-		
-		log.info("..............categoryAggregation............."+categoryAggregation);
-		count = categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst()
-				.get().getCount();
+		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
+		List<Entry> statusBasedEntry = new ArrayList<Entry>();
+		orderAgg.getBuckets().forEach(bucket -> {
+			int i = 0;
+			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
+			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
+					bucket.getCount(), averagePrice));
 
-		return count;
+			System.out.println("SSSSSSSSSSSSSSSSSS"
+					+ bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
+			String storeName = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i)
+					.getKeyAsString();
+			if (storeName.equals("payment-proessed")) {
+				Entry statusEntry = bucket;
+				statusBasedEntry.add(statusEntry);
+			}
+			i++;
+			System.out.println(
+					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().size());
+		});
+		
+		return statusBasedEntry;
 	}
 
 	@Override

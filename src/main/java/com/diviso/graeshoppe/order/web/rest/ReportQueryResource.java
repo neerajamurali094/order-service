@@ -91,7 +91,7 @@ public class ReportQueryResource {
 			// date to string conversion for report format
 
 			orderMaster.setOrderNumber(orderId);
-			
+
 			orderMaster.setDueDate(stringDate.substring(4, 10));
 
 			orderMaster.setDueTime(stringDate.substring(11, 16));
@@ -123,21 +123,22 @@ public class ReportQueryResource {
 				ReportOrderLine reportOrderLine = new ReportOrderLine();
 
 				Product product = reportService.findProductByProductId(orderline.getProductId());
-				
+
 				List<AuxilaryLineItem> auxItems = reportService.findAuxItemsByProductId(product.getId());
-				
-				List<AuxItem> auxItemList=new ArrayList<AuxItem>();
-				auxItems.forEach(aux->{
+
+				List<AuxItem> auxItemList = new ArrayList<AuxItem>();
+				auxItems.forEach(aux -> {
 					AuxItem auxItem = new AuxItem();
-					
+
 					auxItem.setAuxItem(aux.getAuxilaryItem().getName());
 					auxItem.setQuantity(aux.getQuantity());
 					auxItem.setTotal(aux.getProduct().getSellingPrice());
 					auxItemList.add(auxItem);
 				});
-				
-				//List<ComboItem> comboItem = reportService.findComboItemByProductId(peoduct.getId());
-				
+
+				// List<ComboItem> comboItem =
+				// reportService.findComboItemByProductId(peoduct.getId());
+
 				reportOrderLine.setItem(product.getName());
 
 				reportOrderLine.setQuantity(orderline.getQuantity());
@@ -194,16 +195,24 @@ public class ReportQueryResource {
 	}
 
 	// ..........test methods........................
-		@GetMapping("/order-from-customer/{customerId}")
+	@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
-//check status filter
-	return reportService.findOrderCountByCustomerIdAndStatusFilter(customerId,pageable);
+
+		return reportService.findOrderCountByCustomerId(customerId, pageable);
 
 	}
-//>>>>>>>>>>>>>>>>
+
+	@GetMapping("/order-from-customer-status/{customerId}")
+	public List<Entry> findOrderCountByCustomerIdAndStatusName(@PathVariable String customerId, Pageable pageable) {
+
+		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, pageable);
+
+	}
+
+	// >>>>>>>>>>>>>>>>
 	@GetMapping("/order-from-customer-storeid/{storeId}")
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId, Pageable pageable) {
-		//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
+		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.findOrderCountByCustomerIdAndStoreId(storeId, pageable);
 	}
 }

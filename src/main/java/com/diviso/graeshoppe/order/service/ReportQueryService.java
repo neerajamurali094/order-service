@@ -88,6 +88,6 @@ public interface ReportQueryService {
 	 * @param pageable
 	 * @return
 	 */
-	Long findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable);
+	List<Entry> findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable);
 
 }
