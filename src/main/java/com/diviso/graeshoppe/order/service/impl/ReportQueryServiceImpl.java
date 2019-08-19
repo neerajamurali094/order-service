@@ -193,9 +193,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 				
 				i++;
 			});
-			// System.out.println(
-			// "SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("statusName",
-			// TermsAggregation.class).getBuckets().size());
+			
 		});
 
 		return statusBasedEntry;
@@ -236,9 +234,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
 			i++;
 		});
-		// return orderAgg.getBuckets();
-
-		return storeBasedEntry;
+	
+		return storeBasedEntry;// returnin a list because entry instantiation fix yet to happen
 	}
 
 	/*

@@ -203,10 +203,12 @@ public class ReportQueryResource {
 	}
 
 	@GetMapping("/order-from-customer-status/{customerId}")
-	public List<Entry> findOrderCountByCustomerIdAndStatusName(@PathVariable String customerId, Pageable pageable) {
+	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String customerId, Pageable pageable) {
 
-		return reportService.findOrderCountByCustomerIdAndStatusFilter(customerId, pageable);
-
+		reportService.findOrderCountByCustomerIdAndStatusFilter(customerId, pageable).forEach(e -> {
+			count = e.getCount();
+		});
+		return count;
 	}
 
 	// >>>>>>>>>>>>>>>>
