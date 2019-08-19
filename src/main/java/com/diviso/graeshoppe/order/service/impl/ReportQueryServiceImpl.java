@@ -27,7 +27,7 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
+import com.github.vanroy.springdata.jest.aggregation.impl.AggregatedPageImpl;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -133,7 +133,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
 		TermsAggregation categoryAggregation = result.getAggregation("customerorder", TermsAggregation.class);
-		count =	categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst().get().getCount();
+		count = categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst()
+				.get().getCount();
 
 		return count;
 	}
@@ -151,15 +152,17 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 		List<Order> orderList = result.getContent().stream()
 				.filter(order -> order.getStatus().getName().equals("payment-proessed")).collect(Collectors.toList());
-		AggregatedPage<Order> aggregatedOrder = (AggregatedPage<Order>) new AggregatedPageImpl(orderList);
+		
+		AggregatedPage<Order> aggregatedOrder = new AggregatedPageImpl<Order>(orderList);
 
 		TermsAggregation categoryAggregation = aggregatedOrder.getAggregation("customerorder", TermsAggregation.class);
+
 		count = categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst()
 				.get().getCount();
 
 		return count;
 	}
-	
+
 	@Override
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(String storeId, Pageable pageable) {
 
@@ -211,8 +214,11 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		return elasticsearchOperations.queryForObject(stringQuery, Product.class);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#findAuxItemsByProductId(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#
+	 * findAuxItemsByProductId(java.lang.Long)
 	 */
 	@Override
 	public List<AuxilaryLineItem> findAuxItemsByProductId(Long id) {
