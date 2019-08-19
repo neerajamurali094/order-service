@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
 
 import com.diviso.graeshoppe.order.service.dto.AddressDTO;
-
+import com.diviso.graeshoppe.order.service.dto.AuxItem;
 import com.diviso.graeshoppe.order.service.dto.OrderMaster;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
 
@@ -100,9 +100,9 @@ public class ReportQueryResource {
 
 			// date to string conversion for report format
 
-		//	String orderDate = Date.from(order.getDate()).toString();
+			String orderDate = Date.from(order.getDate()).toString();
 
-			//orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
+			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
 
 			String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
 
@@ -123,7 +123,21 @@ public class ReportQueryResource {
 				ReportOrderLine reportOrderLine = new ReportOrderLine();
 
 				Product product = reportService.findProductByProductId(orderline.getProductId());
-
+				
+				List<AuxilaryLineItem> auxItems = reportService.findAuxItemsByProductId(product.getId());
+				
+				List<AuxItem> auxItemList=new ArrayList<AuxItem>();
+				auxItems.forEach(aux->{
+					AuxItem auxItem = new AuxItem();
+					
+					auxItem.setAuxItem(aux.getAuxilaryItem().getName());
+					auxItem.setQuantity(aux.getQuantity());
+					auxItem.setTotal(aux.getProduct().getSellingPrice());
+					auxItemList.add(auxItem);
+				});
+				
+				//List<ComboItem> comboItem = reportService.findComboItemByProductId(peoduct.getId());
+				
 				reportOrderLine.setItem(product.getName());
 
 				reportOrderLine.setQuantity(orderline.getQuantity());
@@ -182,18 +196,10 @@ public class ReportQueryResource {
 	// ..........test methods........................
 		@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
+//check status filter
+	return reportService.findOrderCountByCustomerIdAndStatusFilter(customerId,pageable);
 
-	return reportService.findOrderCountByCustomerId(customerId,pageable);
-
-	/*entry.forEach(e -> {
-
-			if (e.getKey().equals(customerId)) {
-				count = e.getCount();
-			}
-
-		});
-		//return count;
-*/	}
+	}
 //>>>>>>>>>>>>>>>>
 	@GetMapping("/order-from-customer-storeid/{storeId}")
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId, Pageable pageable) {

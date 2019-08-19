@@ -21,16 +21,20 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
+import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
@@ -135,6 +139,28 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	}
 
 	@Override
+	public Long findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable) {
+		Long count = 0l;
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
+				.withSearchType(QUERY_THEN_FETCH)
+
+				.withIndices("order").withTypes("order")
+				.addAggregation(AggregationBuilders.terms("customerorder").field("customerId.keyword")).build();
+
+		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
+
+		List<Order> orderList = result.getContent().stream()
+				.filter(order -> order.getStatus().getName().equals("completed")).collect(Collectors.toList());
+		AggregatedPage<Order> aggregatedOrder = (AggregatedPage<Order>) new AggregatedPageImpl(orderList);
+
+		TermsAggregation categoryAggregation = aggregatedOrder.getAggregation("customerorder", TermsAggregation.class);
+		count = categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst()
+				.get().getCount();
+
+		return count;
+	}
+	
+	@Override
 	public List<Entry> findOrderCountByCustomerIdAndStoreId(String storeId, Pageable pageable) {
 
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
@@ -183,5 +209,14 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	public Product findProductByProductId(Long productId) {
 		StringQuery stringQuery = new StringQuery(termQuery("id", productId).toString());
 		return elasticsearchOperations.queryForObject(stringQuery, Product.class);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#findAuxItemsByProductId(java.lang.Long)
+	 */
+	@Override
+	public List<AuxilaryLineItem> findAuxItemsByProductId(Long id) {
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(termQuery("product.id", id)).build();
+		return elasticsearchOperations.queryForList(searchQuery, AuxilaryLineItem.class);
 	}
 }

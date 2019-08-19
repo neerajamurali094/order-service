@@ -15,55 +15,33 @@
  */
 package com.diviso.graeshoppe.order.service.dto;
 
-import java.util.List;
-
 /**
  * TODO Provide a detailed description here 
  * @author MayaSanjeev
  * mayabytatech, maya.k.k@lxisoft.com
  */
-public class ReportOrderLine {
+public class AuxItem {
 
-	private Integer quantity;
+private Double quantity;
 	
-	private String item ;
+	private String auxItem ;
 	
 	private Double total;
 
-	List<AuxItem> auxItems;
-	List<ComboItem> combos;
-	
-
-	public List<AuxItem> getAuxItems() {
-		return auxItems;
-	}
-
-	public void setAuxItems(List<AuxItem> auxItems) {
-		this.auxItems = auxItems;
-	}
-
-	public List<ComboItem> getCombos() {
-		return combos;
-	}
-
-	public void setCombos(List<ComboItem> combos) {
-		this.combos = combos;
-	}
-
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
-	public String getItem() {
-		return item;
+	public String getAuxItem() {
+		return auxItem;
 	}
 
-	public void setItem(String item) {
-		this.item = item;
+	public void setAuxItem(String auxItem) {
+		this.auxItem = auxItem;
 	}
 
 	public Double getTotal() {
@@ -75,18 +53,10 @@ public class ReportOrderLine {
 	}
 
 	@Override
-	public String toString() {
-		return "ReportOrderLine [quantity=" + quantity + ", item=" + item + ", total=" + total + ", auxItems="
-				+ auxItems + ", combos=" + combos + "]";
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((auxItems == null) ? 0 : auxItems.hashCode());
-		result = prime * result + ((combos == null) ? 0 : combos.hashCode());
-		result = prime * result + ((item == null) ? 0 : item.hashCode());
+		result = prime * result + ((auxItem == null) ? 0 : auxItem.hashCode());
 		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
 		result = prime * result + ((total == null) ? 0 : total.hashCode());
 		return result;
@@ -100,21 +70,11 @@ public class ReportOrderLine {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ReportOrderLine other = (ReportOrderLine) obj;
-		if (auxItems == null) {
-			if (other.auxItems != null)
+		AuxItem other = (AuxItem) obj;
+		if (auxItem == null) {
+			if (other.auxItem != null)
 				return false;
-		} else if (!auxItems.equals(other.auxItems))
-			return false;
-		if (combos == null) {
-			if (other.combos != null)
-				return false;
-		} else if (!combos.equals(other.combos))
-			return false;
-		if (item == null) {
-			if (other.item != null)
-				return false;
-		} else if (!item.equals(other.item))
+		} else if (!auxItem.equals(other.auxItem))
 			return false;
 		if (quantity == null) {
 			if (other.quantity != null)
@@ -128,5 +88,11 @@ public class ReportOrderLine {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "AuxItem [quantity=" + quantity + ", auxItem=" + auxItem + ", total=" + total + "]";
+	}
+	
 	
 }

@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
+import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
@@ -75,5 +76,18 @@ public interface ReportQueryService {
 	 * @return
 	 */
 	Product findProductByProductId(Long productId);
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	List<AuxilaryLineItem> findAuxItemsByProductId(Long id);
+
+	/**
+	 * @param customerId
+	 * @param pageable
+	 * @return
+	 */
+	Long findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable);
 
 }
