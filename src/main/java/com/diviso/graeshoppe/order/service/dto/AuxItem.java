@@ -22,18 +22,18 @@ package com.diviso.graeshoppe.order.service.dto;
  */
 public class AuxItem {
 
-private Double quantity;
+private Integer quantity;
 	
 	private String auxItem ;
 	
 	private Double total;
 
-	public Double getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Double quantity) {
-		this.quantity = quantity;
+	public void setQuantity(Integer integer) {
+		this.quantity = integer;
 	}
 
 	public String getAuxItem() {

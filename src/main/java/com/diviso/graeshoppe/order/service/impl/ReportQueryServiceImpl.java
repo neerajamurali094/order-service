@@ -37,13 +37,16 @@ import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
 import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
+import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
+import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
+import com.diviso.graeshoppe.order.service.dto.AuxItem;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
 import com.esotericsoftware.minlog.Log;
 import com.github.vanroy.springdata.jest.JestElasticsearchTemplate;
@@ -260,8 +263,18 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	 * findAuxItemsByProductId(java.lang.Long)
 	 */
 	@Override
-	public List<AuxilaryLineItem> findAuxItemsByProductId(Long id) {
+	public List<ComboLineItem> findCombosByProductId(Long id) {
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(termQuery("product.id", id)).build();
-		return elasticsearchOperations.queryForList(searchQuery, AuxilaryLineItem.class);
+		return elasticsearchOperations.queryForList(searchQuery, ComboLineItem.class);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#findAuxItemsByOrderLineId(java.lang.Long)
+	 */
+	@Override
+	public List<AuxilaryOrderLine> findAuxItemsByOrderLineId(Long id) {
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(termQuery("orderLine.id", id)).build();
+		return elasticsearchOperations.queryForList(searchQuery, AuxilaryOrderLine.class);
+		
 	}
 }

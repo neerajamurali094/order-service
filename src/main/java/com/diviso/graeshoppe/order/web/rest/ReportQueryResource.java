@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
+import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +36,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
+import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
 
 import com.diviso.graeshoppe.order.service.dto.AddressDTO;
 import com.diviso.graeshoppe.order.service.dto.AuxItem;
+import com.diviso.graeshoppe.order.service.dto.ComboItem;
 import com.diviso.graeshoppe.order.service.dto.OrderMaster;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
 
@@ -125,20 +129,26 @@ public class ReportQueryResource {
 
 				Product product = reportService.findProductByProductId(orderline.getProductId());
 
-				List<AuxilaryLineItem> auxItems = reportService.findAuxItemsByProductId(product.getId());
+				List<ComboLineItem> comboItemList = reportService.findCombosByProductId(product.getId());
 
-				List<AuxItem> auxItemList = new ArrayList<AuxItem>();
-				auxItems.forEach(aux -> {
-					AuxItem auxItem = new AuxItem();
-
-					auxItem.setAuxItem(aux.getAuxilaryItem().getName());
-					auxItem.setQuantity(aux.getQuantity());
-					auxItem.setTotal(aux.getProduct().getSellingPrice());
-					auxItemList.add(auxItem);
+				List<ComboItem> comItemList = new ArrayList<ComboItem>();
+				comboItemList.forEach(com -> {
+					ComboItem comboItem = new ComboItem();
+					comboItem.setcomboItem(com.getComboItem().getName());
+					comboItem.setQuantity(com.getQuantity());
+					comItemList.add(comboItem);
 				});
 
-				// List<ComboItem> comboItem =
-				// reportService.findComboItemByProductId(peoduct.getId());
+				List<AuxilaryOrderLine> auxilaryList = reportService.findAuxItemsByOrderLineId(orderline.getId());
+
+				List<AuxItem> aux = new ArrayList<AuxItem>();
+				auxilaryList.forEach(a -> {
+					AuxItem auxItem = new AuxItem();
+					auxItem.setAuxItem(reportService.findProductByProductId(a.getProductId()).getName());
+					auxItem.setQuantity(a.getQuantity());
+					auxItem.setTotal(a.getTotal());
+					aux.add(auxItem);
+				});
 
 				reportOrderLine.setItem(product.getName());
 
@@ -210,8 +220,9 @@ public class ReportQueryResource {
 
 	// >>>>>>>>>>>>>>>>
 	@GetMapping("/order-from-customer-storeid/{storeId}")
-	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId, Pageable pageable) {
+	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
+			Pageable pageable) {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
-		return reportService.findOrderCountByCustomerIdAndStoreId(customerId,storeId, pageable);
+		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
 }

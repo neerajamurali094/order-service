@@ -20,11 +20,14 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
+import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
+import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
+import com.diviso.graeshoppe.order.service.dto.AuxItem;
 
 import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
 
@@ -81,7 +84,7 @@ public interface ReportQueryService {
 	 * @param id
 	 * @return
 	 */
-	List<AuxilaryLineItem> findAuxItemsByProductId(Long id);
+	List<ComboLineItem> findCombosByProductId(Long id);
 
 	/**
 	 * @param customerId
@@ -89,5 +92,11 @@ public interface ReportQueryService {
 	 * @return
 	 */
 	Long findOrderCountByCustomerIdAndStatusFilter(String statusName,String customerId, Pageable pageable);
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	List<AuxilaryOrderLine> findAuxItemsByOrderLineId(Long id);
 
 }

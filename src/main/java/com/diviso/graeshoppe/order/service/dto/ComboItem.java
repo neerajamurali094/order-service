@@ -21,48 +21,41 @@ package com.diviso.graeshoppe.order.service.dto;
  * mayabytatech, maya.k.k@lxisoft.com
  */
 public class ComboItem {
-private Integer quantity;
+private Double quantity;
 	
-	private String auxItem ;
+	private String comboItem ;
 	
-	private Double total;
 
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
-	public String getAuxItem() {
-		return auxItem;
+	public String getcomboItem() {
+		return comboItem;
 	}
 
-	public void setAuxItem(String auxItem) {
-		this.auxItem = auxItem;
+	public void setcomboItem(String comboItem) {
+		this.comboItem = comboItem;
 	}
 
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
-	}
+	
 
 	@Override
 	public String toString() {
-		return "ComboItem [quantity=" + quantity + ", auxItem=" + auxItem + ", total=" + total + "]";
+		return "ComboItem [quantity=" + quantity + ", comboItem=" + comboItem + ", total=" +  "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((auxItem == null) ? 0 : auxItem.hashCode());
+		result = prime * result + ((comboItem == null) ? 0 : comboItem.hashCode());
 		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
-		result = prime * result + ((total == null) ? 0 : total.hashCode());
+		
 		return result;
 	}
 
@@ -75,21 +68,17 @@ private Integer quantity;
 		if (getClass() != obj.getClass())
 			return false;
 		ComboItem other = (ComboItem) obj;
-		if (auxItem == null) {
-			if (other.auxItem != null)
+		if (comboItem == null) {
+			if (other.comboItem != null)
 				return false;
-		} else if (!auxItem.equals(other.auxItem))
+		} else if (!comboItem.equals(other.comboItem))
 			return false;
 		if (quantity == null) {
 			if (other.quantity != null)
 				return false;
 		} else if (!quantity.equals(other.quantity))
 			return false;
-		if (total == null) {
-			if (other.total != null)
-				return false;
-		} else if (!total.equals(other.total))
-			return false;
+	
 		return true;
 	}
 	
