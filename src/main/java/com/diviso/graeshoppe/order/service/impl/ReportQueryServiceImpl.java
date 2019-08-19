@@ -65,7 +65,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	private final JestElasticsearchTemplate elasticsearchTemplate;
 
 	private final Logger log = LoggerFactory.getLogger(ReportQueryServiceImpl.class); 
-	
+	int i = 0;
 	@Autowired
 	ElasticsearchOperations elasticsearchOperations;
 
@@ -160,8 +160,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
 		List<Entry> statusBasedEntry = new ArrayList<Entry>();
+	
 		orderAgg.getBuckets().forEach(bucket -> {
-			int i = 0;
+		
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
@@ -177,7 +178,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			}
 			
 			statusBasedEntry.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
-			i++;
+			i=i+1;
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().size());
 		});
@@ -202,7 +203,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
 		List<Entry> storeBasedEntry = new ArrayList<Entry>();
 		orderAgg.getBuckets().forEach(bucket -> {
-			int i = 0;
+		//	int i = 0;
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
