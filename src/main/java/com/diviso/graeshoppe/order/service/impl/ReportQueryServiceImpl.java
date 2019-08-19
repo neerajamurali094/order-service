@@ -150,7 +150,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		AggregatedPage<Order> result = elasticsearchTemplate.queryForPage(searchQuery, Order.class);
 
 		List<Order> orderList = result.getContent().stream()
-				.filter(order -> order.getStatus().getName().equals("created")).collect(Collectors.toList());
+				.filter(order -> order.getStatus().getName().equals("payment-proessed")).collect(Collectors.toList());
 		AggregatedPage<Order> aggregatedOrder = (AggregatedPage<Order>) new AggregatedPageImpl(orderList);
 
 		TermsAggregation categoryAggregation = aggregatedOrder.getAggregation("customerorder", TermsAggregation.class);
