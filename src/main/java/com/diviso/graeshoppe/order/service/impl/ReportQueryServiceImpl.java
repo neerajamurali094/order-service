@@ -166,8 +166,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
 
-			System.out.println("SSSSSSSSSSSSSSSSSS"
-					+ bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
+			System.out.println("...............entries...................."
+					+ bucket.getAggregation("statusName", TermsAggregation.class).getBuckets());
+			
 			String statusName = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i)
 					.getKeyAsString();
 			if (statusName.equals("payment-proessed")) {
