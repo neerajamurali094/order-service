@@ -64,6 +64,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	private final JestClient jestClient;
 	private final JestElasticsearchTemplate elasticsearchTemplate;
 	int i = 0;
+	Long count = 0L;
+
 	private final Logger log = LoggerFactory.getLogger(ReportQueryServiceImpl.class);
 
 	@Autowired
@@ -145,8 +147,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	}
 
 	@Override
-	public List<Entry> findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable) {
-		Long count = 0l;
+	public Long findOrderCountByCustomerIdAndStatusFilter(String statusName, String customerId, Pageable pageable) {
+
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(QUERY_THEN_FETCH).withIndices("order").withTypes("order")
 				.addAggregation(AggregationBuilders.terms("customer").field("customerId.keyword")
@@ -180,27 +182,28 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			List<Entry> listStatus = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets();
 
 			listStatus.forEach(s -> {
-				log.info(".............i............." + i);
+
 				if (bucket.getKey().equals(customerId)) {
-					if (s.getKey().equals("payment-proessed")) {
-						log.info(".............if............." + i);
+					if (s.getKey().equals(statusName)) {
+
 						statusBasedEntry
 								.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
 					}
 				}
 
-				log.info(".............if............." + i);
-				
 				i++;
 			});
-			
+
 		});
 
-		return statusBasedEntry;
+		statusBasedEntry.forEach(e -> {
+			count = e.getCount();
+		});
+		return count;
 	}
 
 	@Override
-	public List<Entry> findOrderCountByCustomerIdAndStoreId(String storeId, Pageable pageable) {
+	public Long findOrderCountByCustomerIdAndStoreId(String customerId, String storeId, Pageable pageable) {
 
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(QUERY_THEN_FETCH).withIndices("order").withTypes("order")
@@ -217,25 +220,25 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		List<Entry> storeBasedEntry = new ArrayList<Entry>();
 		orderAgg.getBuckets().forEach(bucket -> {
 
-			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
-			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
-					bucket.getCount(), averagePrice));
+			List<Entry> listStore = bucket.getAggregation("store", TermsAggregation.class).getBuckets();
 
-			System.out.println("SSSSSSSSSSSSSSSSSS"
-					+ bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
-			String storeName = bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i)
-					.getKeyAsString();
-			if (storeName.equals(storeId)) {
-				Entry storeEntry = bucket;
-				storeBasedEntry.add(storeEntry);
-			}
+			listStore.forEach(s -> {
 
-			System.out.println(
-					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
-			i++;
+				if (bucket.getKey().equals(customerId)) {
+					if (s.getKey().equals(storeId)) {
+
+						storeBasedEntry.add(bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i));
+					}
+				}
+
+				i++;
+			});
+
 		});
-	
-		return storeBasedEntry;// returnin a list because entry instantiation fix yet to happen
+		storeBasedEntry.forEach(e->{
+		count=	e.getCount();
+		});
+		return count;
 	}
 
 	/*

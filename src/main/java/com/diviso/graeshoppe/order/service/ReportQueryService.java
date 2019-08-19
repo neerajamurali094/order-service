@@ -69,7 +69,7 @@ public interface ReportQueryService {
 	 * @param pageable
 	 * @return
 	 */
-	List<Entry> findOrderCountByCustomerIdAndStoreId(String storeId,Pageable pageable);
+	Long findOrderCountByCustomerIdAndStoreId(String customerId,String storeId,Pageable pageable);
 
 	/**
 	 * @param productId
@@ -88,6 +88,6 @@ public interface ReportQueryService {
 	 * @param pageable
 	 * @return
 	 */
-	List<Entry> findOrderCountByCustomerIdAndStatusFilter(String customerId, Pageable pageable);
+	Long findOrderCountByCustomerIdAndStatusFilter(String statusName,String customerId, Pageable pageable);
 
 }

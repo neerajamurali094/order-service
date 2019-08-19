@@ -63,7 +63,8 @@ public class ReportQueryResource {
 	Long count;
 
 	@GetMapping("/main-report/{orderId}")
-	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, Pageable pageable) {
+	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, @PathVariable String statusName,
+			Pageable pageable) {
 
 		OrderMaster orderMaster = new OrderMaster();
 
@@ -182,14 +183,11 @@ public class ReportQueryResource {
 				orderMaster.setServiceCharge(store.getStoreSettings().getServiceCharge());
 			}
 		}
-		orderMaster.setCustomersOrder(reportService.findOrderCountByCustomerId(order.getCustomerId(), pageable));
+		orderMaster.setCustomersOrder(
+				reportService.findOrderCountByCustomerIdAndStatusFilter(statusName, order.getCustomerId(), pageable));
 
-		List<Entry> orderFromCustomerAndStore = reportService.findOrderCountByCustomerIdAndStoreId(order.getStoreId(),
-				pageable);
-
-		orderFromCustomerAndStore.forEach(ordersBystore -> {
-			orderMaster.setOrderFromCustomer(ordersBystore.getCount());
-		});
+		orderMaster.setOrderFromCustomer(reportService.findOrderCountByCustomerIdAndStoreId(order.getCustomerId(),
+				order.getStoreId(), pageable));
 
 		return ResponseEntity.ok().body(orderMaster);
 	}
@@ -203,18 +201,17 @@ public class ReportQueryResource {
 	}
 
 	@GetMapping("/order-from-customer-status/{customerId}")
-	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String customerId, Pageable pageable) {
+	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String statusName, String customerId,
+			Pageable pageable) {
 
-		reportService.findOrderCountByCustomerIdAndStatusFilter(customerId, pageable).forEach(e -> {
-			count = e.getCount();
-		});
-		return count;
+		return reportService.findOrderCountByCustomerIdAndStatusFilter(statusName, customerId, pageable);
+
 	}
 
 	// >>>>>>>>>>>>>>>>
 	@GetMapping("/order-from-customer-storeid/{storeId}")
-	public List<Entry> findOrderCountByCustomerIdAndStoreId(@PathVariable String storeId, Pageable pageable) {
+	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId, Pageable pageable) {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
-		return reportService.findOrderCountByCustomerIdAndStoreId(storeId, pageable);
+		return reportService.findOrderCountByCustomerIdAndStoreId(customerId,storeId, pageable);
 	}
 }
