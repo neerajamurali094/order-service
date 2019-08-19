@@ -63,9 +63,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 	private final JestClient jestClient;
 	private final JestElasticsearchTemplate elasticsearchTemplate;
-
-	private final Logger log = LoggerFactory.getLogger(ReportQueryServiceImpl.class); 
 	int i = 0;
+	private final Logger log = LoggerFactory.getLogger(ReportQueryServiceImpl.class);
+
 	@Autowired
 	ElasticsearchOperations elasticsearchOperations;
 
@@ -160,29 +160,42 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
 		List<Entry> statusBasedEntry = new ArrayList<Entry>();
-	
-		orderAgg.getBuckets().forEach(bucket -> {
-		
-			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
-			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
-					bucket.getCount(), averagePrice));
 
-			System.out.println("........................  "+i
-					+ bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
-			
-			String statusName = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i)
-					.getKeyAsString();
-			if (statusName.equals("payment-proessed")) {
-				Entry statusEntry = bucket;
-				statusBasedEntry.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
-			}
-			
-			statusBasedEntry.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
-			i=i+1;
-			System.out.println(
-					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().size());
+		orderAgg.getBuckets().forEach(bucket -> {
+
+			// double averagePrice =
+			// bucket.getAvgAggregation("avgPrice").getAvg();
+			// System.out.println(String.format("Key: %s, Doc count: %d, Average
+			// Price: %f", bucket.getKey(),
+			// bucket.getCount(), averagePrice));
+
+			// System.out.println("........................"
+			// + bucket.getAggregation("statusName",
+			// TermsAggregation.class).getBuckets().get(i).getKeyAsString());
+
+			// String statusName = bucket.getAggregation("statusName",
+			// TermsAggregation.class).getBuckets().get(i)
+			// .getKeyAsString();
+
+			List<Entry> listStatus = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets();
+
+			listStatus.forEach(s -> {
+
+				if (bucket.getKey().equals(customerId)) {
+					if (s.getKey().equals("payment-proessed")) {
+
+						statusBasedEntry
+								.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
+					}
+				}
+
+				i++;
+			});
+			// System.out.println(
+			// "SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("statusName",
+			// TermsAggregation.class).getBuckets().size());
 		});
-		
+
 		return statusBasedEntry;
 	}
 
@@ -203,14 +216,13 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
 		List<Entry> storeBasedEntry = new ArrayList<Entry>();
 		orderAgg.getBuckets().forEach(bucket -> {
-	
+			int i = 0;
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
 
-			System.out.println("....................  "+i+
-					bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
-			
+			System.out.println("SSSSSSSSSSSSSSSSSS"
+					+ bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i).getKeyAsString());
 			String storeName = bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i)
 					.getKeyAsString();
 			if (storeName.equals(storeId)) {
@@ -219,7 +231,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			}
 			i++;
 			System.out.println(
-					"..........total count............" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
+					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
 		});
 		// return orderAgg.getBuckets();
 
