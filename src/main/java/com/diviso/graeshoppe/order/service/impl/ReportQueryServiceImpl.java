@@ -180,15 +180,17 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 			List<Entry> listStatus = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets();
 
 			listStatus.forEach(s -> {
-
+				log.info(".............i............." + i);
 				if (bucket.getKey().equals(customerId)) {
 					if (s.getKey().equals("payment-proessed")) {
-
+						log.info(".............if............." + i);
 						statusBasedEntry
 								.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
 					}
 				}
 
+				log.info(".............if............." + i);
+				
 				i++;
 			});
 			// System.out.println(
@@ -216,7 +218,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		TermsAggregation orderAgg = result.getAggregation("customer", TermsAggregation.class);
 		List<Entry> storeBasedEntry = new ArrayList<Entry>();
 		orderAgg.getBuckets().forEach(bucket -> {
-			int i = 0;
+
 			double averagePrice = bucket.getAvgAggregation("avgPrice").getAvg();
 			System.out.println(String.format("Key: %s, Doc count: %d, Average Price: %f", bucket.getKey(),
 					bucket.getCount(), averagePrice));
@@ -229,9 +231,10 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 				Entry storeEntry = bucket;
 				storeBasedEntry.add(storeEntry);
 			}
-			i++;
+
 			System.out.println(
 					"SSSSSSSSSSSSSSSSSS" + bucket.getAggregation("store", TermsAggregation.class).getBuckets().size());
+			i++;
 		});
 		// return orderAgg.getBuckets();
 
