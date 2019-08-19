@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -43,6 +45,7 @@ import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
+import com.esotericsoftware.minlog.Log;
 import com.github.vanroy.springdata.jest.JestElasticsearchTemplate;
 import com.github.vanroy.springdata.jest.aggregation.AggregatedPage;
 
@@ -61,6 +64,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	private final JestClient jestClient;
 	private final JestElasticsearchTemplate elasticsearchTemplate;
 
+	private final Logger log = LoggerFactory.getLogger(ReportQueryServiceImpl.class); 
+	
 	@Autowired
 	ElasticsearchOperations elasticsearchOperations;
 
@@ -153,10 +158,14 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		List<Order> orderList = result.getContent().stream()
 				.filter(order -> order.getStatus().getName().equals("payment-proessed")).collect(Collectors.toList());
 		
+		log.info("..............orderList............."+orderList);
+		
 		AggregatedPage<Order> aggregatedOrder = new AggregatedPageImpl<Order>(orderList);
-
+		log.info("..............aggregatedOrder............."+aggregatedOrder);
+		
 		TermsAggregation categoryAggregation = aggregatedOrder.getAggregation("customerorder", TermsAggregation.class);
-
+		
+		log.info("..............categoryAggregation............."+categoryAggregation);
 		count = categoryAggregation.getBuckets().stream().filter(entry -> entry.getKey().equals(customerId)).findFirst()
 				.get().getCount();
 
