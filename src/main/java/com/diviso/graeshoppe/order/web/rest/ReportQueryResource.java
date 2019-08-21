@@ -194,9 +194,9 @@ public class ReportQueryResource {
 			}
 		}
 		orderMaster.setCustomersOrder(
-				reportService.findOrderCountByCustomerIdAndStatusFilter(statusName, order.getCustomerId(), pageable));
+				reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, order.getCustomerId(), pageable));
 
-		orderMaster.setOrderFromCustomer(reportService.findOrderCountByCustomerIdAndStoreId(order.getCustomerId(),
+		orderMaster.setOrderFromCustomer(reportService.getOrderCountByCustomerIdAndStoreId(order.getCustomerId(),
 				order.getStoreId(), pageable));
 
 		return ResponseEntity.ok().body(orderMaster);
@@ -219,7 +219,7 @@ public class ReportQueryResource {
 	}
 
 	// >>>>>>>>>>>>>>>>
-	@GetMapping("/order-from-customer-storeid/{storeId}")
+	@GetMapping("/order-from-customer-storeid/{customerId}/{storeId}")
 	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
@@ -235,7 +235,7 @@ public class ReportQueryResource {
 	}
 	
 	
-	@GetMapping("/getorder-from-customer-storeid/{storeId}")
+	@GetMapping("/getorder-from-customer-storeid/{customerId}/{storeId}")
 	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
