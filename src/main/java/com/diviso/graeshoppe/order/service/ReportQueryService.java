@@ -99,4 +99,20 @@ public interface ReportQueryService {
 	 */
 	List<AuxilaryOrderLine> findAuxItemsByOrderLineId(Long id);
 
+	/**
+	 * @param statusName
+	 * @param customerId
+	 * @param pageable
+	 * @return
+	 */
+	Long getOrderCountByCustomerIdAndStatusFilter(String statusName, String customerId, Pageable pageable);
+
+	/**
+	 * @param customerId
+	 * @param storeId
+	 * @param pageable
+	 * @return
+	 */
+	Long getOrderCountByCustomerIdAndStoreId(String customerId, String storeId, Pageable pageable);
+
 }

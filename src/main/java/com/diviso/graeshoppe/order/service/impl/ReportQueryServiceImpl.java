@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,34 +169,19 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 		orderAgg.getBuckets().forEach(bucket -> {
 
-			// double averagePrice =
-			// bucket.getAvgAggregation("avgPrice").getAvg();
-			// System.out.println(String.format("Key: %s, Doc count: %d, Average
-			// Price: %f", bucket.getKey(),
-			// bucket.getCount(), averagePrice));
-
-			// System.out.println("........................"
-			// + bucket.getAggregation("statusName",
-			// TermsAggregation.class).getBuckets().get(i).getKeyAsString());
-
-			// String statusName = bucket.getAggregation("statusName",
-			// TermsAggregation.class).getBuckets().get(i)
-			// .getKeyAsString();
-
 			List<Entry> listStatus = bucket.getAggregation("statusName", TermsAggregation.class).getBuckets();
 
-			listStatus.forEach(s -> {
+			for (int i = 0; i < listStatus.size(); i++) {
 
 				if (bucket.getKey().equals(customerId)) {
-					if (s.getKey().equals(statusName)) {
+					if (listStatus.get(i).getKey().equals(statusName)) {
 
 						statusBasedEntry
 								.add(bucket.getAggregation("statusName", TermsAggregation.class).getBuckets().get(i));
 					}
 				}
 
-				i++;
-			});
+			}
 
 		});
 
@@ -225,21 +211,20 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 			List<Entry> listStore = bucket.getAggregation("store", TermsAggregation.class).getBuckets();
 
-			listStore.forEach(s -> {
+			for (int i = 0; i < listStore.size(); i++) {
 
 				if (bucket.getKey().equals(customerId)) {
-					if (s.getKey().equals(storeId)) {
+					if (listStore.get(i).getKey().equals(storeId)) {
 
 						storeBasedEntry.add(bucket.getAggregation("store", TermsAggregation.class).getBuckets().get(i));
 					}
 				}
 
-				i++;
-			});
+			}
 
 		});
-		storeBasedEntry.forEach(e->{
-		count=	e.getCount();
+		storeBasedEntry.forEach(e -> {
+			count = e.getCount();
 		});
 		return count;
 	}
@@ -268,13 +253,47 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		return elasticsearchOperations.queryForList(searchQuery, ComboLineItem.class);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#findAuxItemsByOrderLineId(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#
+	 * findAuxItemsByOrderLineId(java.lang.Long)
 	 */
 	@Override
 	public List<AuxilaryOrderLine> findAuxItemsByOrderLineId(Long id) {
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(termQuery("orderLine.id", id)).build();
 		return elasticsearchOperations.queryForList(searchQuery, AuxilaryOrderLine.class);
-		
+
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#
+	 * getOrderCountByCustomerIdAndStatusFilter(java.lang.String,
+	 * java.lang.String, org.springframework.data.domain.Pageable)
+	 */
+	@Override
+	public Long getOrderCountByCustomerIdAndStatusFilter(String statusName, String customerId, Pageable pageable) {
+		log.info(".............." + statusName + ".............." + customerId);
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.boolQuery()
+				.must(termQuery("status.name", statusName)).must(termQuery("customerId", customerId))).build();
+		log.info(
+				"...........data..........." + elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
+		return (long) elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent().size();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#getOrderCountByCustomerIdAndStoreId(java.lang.String, java.lang.String, org.springframework.data.domain.Pageable)
+	 */
+	@Override
+	public Long getOrderCountByCustomerIdAndStoreId(String customerId, String storeId, Pageable pageable) {
+		log.info(".............." + customerId + ".............." + storeId);
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.boolQuery()
+				.must(termQuery("customerId", customerId)).must(termQuery("storeId", storeId))).build();
+		log.info(
+				"...........data..........." + elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
+		return (long) elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent().size();
+	}
+
 }

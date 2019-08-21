@@ -225,4 +225,20 @@ public class ReportQueryResource {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
+	
+	@GetMapping("/getorder-from-customer-status/{statusName}/{customerId}")
+	public Long getOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,@PathVariable String customerId,
+			Pageable pageable) {
+
+		return reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, customerId, pageable);
+
+	}
+	
+	
+	@GetMapping("/getorder-from-customer-storeid/{storeId}")
+	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
+			Pageable pageable) {
+		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
+		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
+	}
 }
