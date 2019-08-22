@@ -19,6 +19,6 @@ import org.springframework.security.oauth2.client.token.grant.password.ResourceO
 @Configuration
 @ExcludeFromComponentScan
 @EnableConfigurationProperties
-public class ClientConfiguration {
+public class StoreClientConfiguration {
 
 }
