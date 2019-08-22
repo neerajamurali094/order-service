@@ -1,10 +1,12 @@
 package com.diviso.graeshoppe.order.service;
 
+import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,4 +55,6 @@ public interface OrderService {
      * @return the list of entities
      */
     Page<OrderDTO> search(String query, Pageable pageable);
+    
+    List<Order> findByStoreId(String storeId);
 }
