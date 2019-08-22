@@ -66,7 +66,7 @@ public class ReportQueryResource {
 
 	Long count;
 
-	@GetMapping("/main-report/{orderId}")
+	@GetMapping("/main-report/{orderId}/{statusName}")
 	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, @PathVariable String statusName,
 			Pageable pageable) {
 
@@ -194,9 +194,9 @@ public class ReportQueryResource {
 			}
 		}
 		orderMaster.setCustomersOrder(
-				reportService.findOrderCountByCustomerIdAndStatusFilter(statusName, order.getCustomerId(), pageable));
+				reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, order.getCustomerId(), pageable));
 
-		orderMaster.setOrderFromCustomer(reportService.findOrderCountByCustomerIdAndStoreId(order.getCustomerId(),
+		orderMaster.setOrderFromCustomer(reportService.getOrderCountByCustomerIdAndStoreId(order.getCustomerId(),
 				order.getStoreId(), pageable));
 
 		return ResponseEntity.ok().body(orderMaster);
@@ -219,10 +219,33 @@ public class ReportQueryResource {
 	}
 
 	// >>>>>>>>>>>>>>>>
-	@GetMapping("/order-from-customer-storeid/{storeId}")
+	@GetMapping("/order-from-customer-storeid/{customerId}/{storeId}")
 	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
+	
+	@GetMapping("/getorder-from-customer-status/{statusName}/{customerId}")
+	public Long getOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,@PathVariable String customerId,
+			Pageable pageable) {
+
+		return reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, customerId, pageable);
+
+	}
+	
+	
+	@GetMapping("/getorder-from-customer-storeid/{customerId}/{storeId}")
+	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
+			Pageable pageable) {
+		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
+		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
+	}
+	
+	@GetMapping("/order-line/{orderId}")
+	public List<OrderLine> getOrderCountByCustomerIdAndStoreId(@PathVariable String orderId) {
+		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method for ordermaster check
+		return reportService.findOrderLinesByOrderId(orderId);
+	}
+	
 }
