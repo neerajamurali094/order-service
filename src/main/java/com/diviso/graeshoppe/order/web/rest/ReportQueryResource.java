@@ -265,7 +265,7 @@ public class ReportQueryResource {
 
 		Double total = 0.0;
 		log.info(".........................................................." + order.size());
-		for (int i = 0; i < order.size(); i++) {
+		/*for (int i = 0; i < order.size(); i++) {
 			log.info("..............................................." + Date.from(order.get(i).getDate()).toString());
 			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals("Aug 20")) {
 				log.info(".................." + order.get(i));
@@ -274,7 +274,7 @@ public class ReportQueryResource {
 				log.info(".................." + total);
 			}
 		}
-
+*/
 		Reportsummary report = new Reportsummary();
 		report.setCount((long) storeBased.size());
 		report.setTotal(total);
