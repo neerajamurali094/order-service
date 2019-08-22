@@ -66,7 +66,7 @@ public class ReportQueryResource {
 
 	Long count;
 
-	@GetMapping("/main-report/{orderId}")
+	@GetMapping("/main-report/{orderId}/{statusName}")
 	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, @PathVariable String statusName,
 			Pageable pageable) {
 
