@@ -264,8 +264,8 @@ public class ReportQueryResource {
 		List<Order> storeBased = new ArrayList<Order>();
 
 		Double total = 0.0;
-		log.info(".........................................................." + storeBased.size());
-		for (int i = 0; i < storeBased.size(); i++) {
+		log.info(".........................................................." + order.size());
+		for (int i = 0; i < order.size(); i++) {
 			log.info("..............................................." + Date.from(order.get(i).getDate()).toString());
 			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals("Aug 20")) {
 				log.info(".................." + order.get(i));
