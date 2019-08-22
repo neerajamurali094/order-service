@@ -241,4 +241,11 @@ public class ReportQueryResource {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
+	
+	@GetMapping("/order-line/{orderId}")
+	public List<OrderLine> getOrderCountByCustomerIdAndStoreId(@PathVariable String orderId) {
+		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method for ordermaster check
+		return reportService.findOrderLinesByOrderId(orderId);
+	}
+	
 }
