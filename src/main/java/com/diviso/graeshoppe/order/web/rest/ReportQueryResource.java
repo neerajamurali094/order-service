@@ -266,7 +266,7 @@ public class ReportQueryResource {
 		Double total = 0.0;
 
 		for (int i = 0; i < storeBased.size(); i++) {
-			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals(currentDate)) {
+			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals("Aug 20")) {
 				log.info(".................." + order.get(i));
 				order.add(order.get(i));
 				total += order.get(i).getGrandTotal();
