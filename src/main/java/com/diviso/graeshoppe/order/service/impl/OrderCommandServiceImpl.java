@@ -13,6 +13,7 @@ import com.diviso.graeshoppe.order.client.bpmn.model.ProcessInstanceResponse;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestVariable;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
+import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.models.AcceptOrderRequest;
 import com.diviso.graeshoppe.order.models.ProcessPaymentRequest;
@@ -62,7 +63,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private final SimpMessagingTemplate template;
 
 	@Autowired
-	private NotificationService notificationService;
+	private StoreResourceApi storeResourceApi;
+
 
 	private final OrderMapper orderMapper;
 
@@ -177,12 +179,12 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		orderId.setType("String");
 		orderId.setValue(trackingId);
 		properties.add(orderId);
-
+		String type=storeResourceApi.findStoreSettingsByStoreIdUsingGET(storeId).getBody().getOrderAcceptType();
 		RestFormProperty acceptType = new RestFormProperty();
 		acceptType.setId("acceptType");
 		acceptType.setName("acceptType");
 		acceptType.setType("String");
-		acceptType.setValue("manual");
+		acceptType.setValue(type);
 		properties.add(acceptType);
 
 		RestFormProperty customerEmail = new RestFormProperty();
