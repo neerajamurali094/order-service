@@ -91,6 +91,11 @@ public class ReportQueryResource {
 			log.info(".........order.getDeliveryInfo()..........." + order.getDeliveryInfo());
 
 			orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
+			
+			orderMaster.setOrderNumber(orderId);
+			
+
+			if(order.getApprovalDetails()!=null) {
 
 			log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
 
@@ -100,12 +105,12 @@ public class ReportQueryResource {
 
 			// date to string conversion for report format
 
-			orderMaster.setOrderNumber(orderId);
-
+			
 			orderMaster.setDueDate(stringDate.substring(4, 10));
 
 			orderMaster.setDueTime(stringDate.substring(11, 16));
-
+			
+			}
 			orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 
 			// date to string conversion for report format
