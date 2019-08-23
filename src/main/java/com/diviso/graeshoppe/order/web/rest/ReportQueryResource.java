@@ -77,7 +77,7 @@ public class ReportQueryResource {
 
 		OrderMaster orderMaster = new OrderMaster();
 
-		Order order = reportService.findOrderByOrderId(orderId);
+		Order order = reportService.findOrderByOrderIdandStatusName(orderId, statusName);
 		log.info("..................order......................" + order);
 		if (order != null) {
 			orderMaster.setStoreName(order.getStoreId());
@@ -91,25 +91,23 @@ public class ReportQueryResource {
 			log.info(".........order.getDeliveryInfo()..........." + order.getDeliveryInfo());
 
 			orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
-			
+
 			orderMaster.setOrderNumber(orderId);
-			
 
-			if(order.getApprovalDetails()!=null) {
+			if (order.getApprovalDetails() != null) {
 
-			log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
+				log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
 
-			Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
+				Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
 
-			String stringDate = Date.from(insatantDate).toString();
+				String stringDate = Date.from(insatantDate).toString();
 
-			// date to string conversion for report format
+				// date to string conversion for report format
 
-			
-			orderMaster.setDueDate(stringDate.substring(4, 10));
+				orderMaster.setDueDate(stringDate.substring(4, 10));
 
-			orderMaster.setDueTime(stringDate.substring(11, 16));
-			
+				orderMaster.setDueTime(stringDate.substring(11, 16));
+
 			}
 			orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 
@@ -119,11 +117,10 @@ public class ReportQueryResource {
 
 			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
 
-		
-			if(order.getApprovalDetails()!=null) {
-			String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
-			
-			orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
+			if (order.getApprovalDetails() != null) {
+				String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
+
+				orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
 			}
 			if (order.getStatus() != null) {
 
@@ -142,26 +139,26 @@ public class ReportQueryResource {
 				Product product = reportService.findProductByProductId(orderline.getProductId());
 
 				List<ComboLineItem> comboItemList = reportService.findCombosByProductId(product.getId());
-				if(comboItemList!=null) {
-				List<ComboItem> comItemList = new ArrayList<ComboItem>();
-				comboItemList.forEach(com -> {
-					ComboItem comboItem = new ComboItem();
-					comboItem.setcomboItem(com.getComboItem().getName());
-					comboItem.setQuantity(com.getQuantity());
-					comItemList.add(comboItem);
-				});
+				if (comboItemList != null) {
+					List<ComboItem> comItemList = new ArrayList<ComboItem>();
+					comboItemList.forEach(com -> {
+						ComboItem comboItem = new ComboItem();
+						comboItem.setcomboItem(com.getComboItem().getName());
+						comboItem.setQuantity(com.getQuantity());
+						comItemList.add(comboItem);
+					});
 				}
-				
+
 				List<AuxilaryOrderLine> auxilaryList = reportService.findAuxItemsByOrderLineId(orderline.getId());
-				if(auxilaryList!=null) {
-				List<AuxItem> aux = new ArrayList<AuxItem>();
-				auxilaryList.forEach(a -> {
-					AuxItem auxItem = new AuxItem();
-					auxItem.setAuxItem(reportService.findProductByProductId(a.getProductId()).getName());
-					auxItem.setQuantity(a.getQuantity());
-					auxItem.setTotal(a.getTotal());
-					aux.add(auxItem);
-				});
+				if (auxilaryList != null) {
+					List<AuxItem> aux = new ArrayList<AuxItem>();
+					auxilaryList.forEach(a -> {
+						AuxItem auxItem = new AuxItem();
+						auxItem.setAuxItem(reportService.findProductByProductId(a.getProductId()).getName());
+						auxItem.setQuantity(a.getQuantity());
+						auxItem.setTotal(a.getTotal());
+						aux.add(auxItem);
+					});
 				}
 				reportOrderLine.setItem(product.getName());
 
@@ -260,7 +257,6 @@ public class ReportQueryResource {
 		// ordermaster check
 		return reportService.findOrderLinesByOrderId(orderId);
 	}
-	
 
 	@GetMapping("/reportsummary/{storeId}")
 	public Reportsummary getOrderByStoreIdAndCurrentDate(@PathVariable String storeId) {
@@ -274,12 +270,13 @@ public class ReportQueryResource {
 		Double total = 0.0;
 		log.info(".........................................................." + order.size());
 		for (int i = 0; i < order.size(); i++) {
-			//log.info("..............................................." + Date.from(order.get(i).getDate()).toString());
+			// log.info("..............................................." +
+			// Date.from(order.get(i).getDate()).toString());
 			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals("Aug 20")) {
-			//	log.info(".................." + order.get(i));
+				// log.info(".................." + order.get(i));
 				order.add(order.get(i));
 				total += order.get(i).getGrandTotal();
-				//log.info(".................." + total);
+				// log.info(".................." + total);
 			}
 		}
 

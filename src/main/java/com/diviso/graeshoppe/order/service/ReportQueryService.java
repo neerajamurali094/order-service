@@ -42,7 +42,7 @@ public interface ReportQueryService {
 	 * @param orderId
 	 * @return
 	 */
-	Order findOrderByOrderId(String orderId);
+	Order findOrderByOrderIdandStatusName(String orderId, String status);
 
 	/**
 	 * @param orderId

@@ -89,8 +89,11 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	 * (java.lang.String)
 	 */
 	@Override
-	public Order findOrderByOrderId(String orderId) {
-		StringQuery stringQuery = new StringQuery(termQuery("orderId.keyword", orderId).toString());
+	public Order findOrderByOrderIdandStatusName(String orderId, String status) {
+		StringQuery stringQuery = new StringQuery(QueryBuilders.boolQuery()
+				.must(termQuery("orderId.keyword", orderId)).must(termQuery("status.keyword", status)).toString());
+		
+		
 		return elasticsearchOperations.queryForObject(stringQuery, Order.class);
 	}
 
