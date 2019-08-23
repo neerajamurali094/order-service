@@ -142,7 +142,7 @@ public class ReportQueryResource {
 				Product product = reportService.findProductByProductId(orderline.getProductId());
 
 				List<ComboLineItem> comboItemList = reportService.findCombosByProductId(product.getId());
-
+				if(comboItemList!=null) {
 				List<ComboItem> comItemList = new ArrayList<ComboItem>();
 				comboItemList.forEach(com -> {
 					ComboItem comboItem = new ComboItem();
@@ -150,9 +150,10 @@ public class ReportQueryResource {
 					comboItem.setQuantity(com.getQuantity());
 					comItemList.add(comboItem);
 				});
-
+				}
+				
 				List<AuxilaryOrderLine> auxilaryList = reportService.findAuxItemsByOrderLineId(orderline.getId());
-
+				if(auxilaryList!=null) {
 				List<AuxItem> aux = new ArrayList<AuxItem>();
 				auxilaryList.forEach(a -> {
 					AuxItem auxItem = new AuxItem();
@@ -161,7 +162,7 @@ public class ReportQueryResource {
 					auxItem.setTotal(a.getTotal());
 					aux.add(auxItem);
 				});
-
+				}
 				reportOrderLine.setItem(product.getName());
 
 				reportOrderLine.setQuantity(orderline.getQuantity());
