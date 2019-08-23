@@ -39,6 +39,7 @@ import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
+import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
 
 import com.diviso.graeshoppe.order.service.dto.AddressDTO;
@@ -46,6 +47,7 @@ import com.diviso.graeshoppe.order.service.dto.AuxItem;
 import com.diviso.graeshoppe.order.service.dto.ComboItem;
 import com.diviso.graeshoppe.order.service.dto.OrderMaster;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
+import com.diviso.graeshoppe.order.service.dto.Reportsummary;
 
 import io.github.jhipster.web.util.ResponseUtil;
 import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
@@ -65,6 +67,9 @@ public class ReportQueryResource {
 	ReportQueryService reportService;
 
 	Long count;
+
+	@Autowired
+	OrderService orderService;
 
 	@GetMapping("/main-report/{orderId}/{statusName}")
 	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, @PathVariable String statusName,
@@ -196,8 +201,8 @@ public class ReportQueryResource {
 		orderMaster.setCustomersOrder(
 				reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, order.getCustomerId(), pageable));
 
-		orderMaster.setOrderFromCustomer(reportService.getOrderCountByCustomerIdAndStoreId(order.getCustomerId(),
-				order.getStoreId(), pageable));
+		orderMaster.setOrderFromCustomer(
+				reportService.getOrderCountByCustomerIdAndStoreId(order.getCustomerId(), order.getStoreId(), pageable));
 
 		return ResponseEntity.ok().body(orderMaster);
 	}
@@ -211,8 +216,8 @@ public class ReportQueryResource {
 	}
 
 	@GetMapping("/order-from-customer-status/{statusName}/{customerId}")
-	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,@PathVariable String customerId,
-			Pageable pageable) {
+	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,
+			@PathVariable String customerId, Pageable pageable) {
 
 		return reportService.findOrderCountByCustomerIdAndStatusFilter(statusName, customerId, pageable);
 
@@ -225,27 +230,55 @@ public class ReportQueryResource {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
-	
+
 	@GetMapping("/getorder-from-customer-status/{statusName}/{customerId}")
-	public Long getOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,@PathVariable String customerId,
+	public Long getOrderCountByCustomerIdAndStatusName(@PathVariable String statusName, @PathVariable String customerId,
 			Pageable pageable) {
 
 		return reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, customerId, pageable);
 
 	}
-	
-	
+
 	@GetMapping("/getorder-from-customer-storeid/{customerId}/{storeId}")
 	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
-	
+
 	@GetMapping("/order-line/{orderId}")
 	public List<OrderLine> getOrderCountByCustomerIdAndStoreId(@PathVariable String orderId) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method for ordermaster check
+		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method for
+		// ordermaster check
 		return reportService.findOrderLinesByOrderId(orderId);
 	}
 	
+
+	@GetMapping("/reportsummary/{storeId}")
+	public Reportsummary getOrderByStoreIdAndCurrentDate(@PathVariable String storeId) {
+
+		List<Order> order = orderService.findByStoreId(storeId);
+
+		String currentDate = Date.from(Instant.now()).toString();
+
+		List<Order> storeBased = new ArrayList<Order>();
+
+		Double total = 0.0;
+		log.info(".........................................................." + order.size());
+		for (int i = 0; i < order.size(); i++) {
+			//log.info("..............................................." + Date.from(order.get(i).getDate()).toString());
+			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals("Aug 20")) {
+			//	log.info(".................." + order.get(i));
+				order.add(order.get(i));
+				total += order.get(i).getGrandTotal();
+				//log.info(".................." + total);
+			}
+		}
+
+		Reportsummary report = new Reportsummary();
+		report.setCount((long) storeBased.size());
+		report.setTotal(total);
+
+		return report;
+	}
 }

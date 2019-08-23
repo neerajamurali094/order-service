@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -110,4 +111,12 @@ public class OrderServiceImpl implements OrderService {
         return orderSearchRepository.search(queryStringQuery(query), pageable)
             .map(orderMapper::toDto);
     }
+
+	/* (non-Javadoc)
+	 * @see com.diviso.graeshoppe.order.service.OrderService#findByStoreId(java.lang.String)
+	 */
+	@Override
+	public List<Order> findByStoreId(String storeId) {
+		return orderRepository.findByStoreId(storeId);
+	}
 }
