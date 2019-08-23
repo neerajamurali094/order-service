@@ -119,10 +119,12 @@ public class ReportQueryResource {
 
 			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
 
+		
+			if(order.getApprovalDetails()!=null) {
 			String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
-
+			
 			orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
-
+			}
 			if (order.getStatus() != null) {
 
 				orderMaster.setOrderStatus(order.getStatus().getName());
