@@ -286,7 +286,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 		return (long) elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent().size();
 	}
 
-	/* (non-Javadoc)
+	/* (non-Javadoc)status
 	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#getOrderCountByCustomerIdAndStoreId(java.lang.String, java.lang.String, org.springframework.data.domain.Pageable)
 	 */
 	@Override
