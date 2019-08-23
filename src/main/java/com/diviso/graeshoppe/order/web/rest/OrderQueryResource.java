@@ -9,6 +9,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,15 +51,18 @@ public class OrderQueryResource {
 			@RequestParam(value = "candidateGroups", required = false) String candidateGroups,
 			@Valid @RequestParam(value = "createdOn", required = false) String createdOn,
 			@Valid @RequestParam(value = "createdBefore", required = false) String createdBefore,
-			@Valid @RequestParam(value = "createdAfter", required = false) String createdAfter) {
+			@Valid @RequestParam(value = "createdAfter", required = false) String createdAfter/*Pageable pageable*/) {
 
+		
 		ResponseEntity<DataResponse> response = tasksApi.getTasks(name, nameLike, null, null, null, null, assignee,
 				assigneeLike, null, null, null, null, candidateUser, candidateGroup, candidateGroups, null, null, null,
 				null, null, null, null, null, null, null, null, null, createdOn, createdBefore, createdAfter, null,
-				null, null, null, null, null, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, null, null, null, null, null, /*pageable.getPageNumber()+""*/"0",null, "desc",/* pageable.getPageSize()+""*/"150");
 		List<LinkedHashMap<String, String>> myTasks = (List<LinkedHashMap<String, String>>) response.getBody()
 				.getData();
+		
 		List<OpenTask> tasks=new ArrayList<OpenTask>();
+		//Page<OpenTask> page=new PageImpl<>(tasks, pageable, response.getBody().getTotal());
 		myTasks.forEach(task -> {
 			OpenTask openTask = new OpenTask();
 			String taskProcessInstanceId = task.get("processInstanceId");

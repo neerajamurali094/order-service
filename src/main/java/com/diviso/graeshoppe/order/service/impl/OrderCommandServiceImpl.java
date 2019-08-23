@@ -166,7 +166,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		ResponseEntity<DataResponse> taskResponseDoctor = tasksApi.getTasks("Initiate Order", null, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, processInstanceId, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null, null, null, null, null);
+				null, null, null, null, null, null, "0", null, "desc", "30");
 		@SuppressWarnings("unchecked")
 		String orderTaskId = ((List<LinkedHashMap<String, String>>) taskResponseDoctor.getBody().getData()).get(0)
 				.get("id");
