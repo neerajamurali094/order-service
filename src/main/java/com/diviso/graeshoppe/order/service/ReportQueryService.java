@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
 import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
@@ -27,9 +26,6 @@ import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
-import com.diviso.graeshoppe.order.service.dto.AuxItem;
-
-import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
 
 /**
  * TODO Provide a detailed description here 
@@ -38,6 +34,13 @@ import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
  */
 public interface ReportQueryService {
 
+	/**
+	 * @param orderId
+	 * @return
+	 */
+	Order findOrderByOrderIdandStatusName(String orderId, String status);
+	
+	
 	/**
 	 * @param orderId
 	 * @return

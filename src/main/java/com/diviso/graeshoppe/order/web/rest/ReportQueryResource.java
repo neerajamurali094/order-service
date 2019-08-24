@@ -19,9 +19,6 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
-import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
@@ -42,16 +40,11 @@ import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
-
-import com.diviso.graeshoppe.order.service.dto.AddressDTO;
 import com.diviso.graeshoppe.order.service.dto.AuxItem;
 import com.diviso.graeshoppe.order.service.dto.ComboItem;
 import com.diviso.graeshoppe.order.service.dto.OrderMaster;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
 import com.diviso.graeshoppe.order.service.dto.Reportsummary;
-
-import io.github.jhipster.web.util.ResponseUtil;
-import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
 
 /**
  * TODO Provide a detailed description here
@@ -59,7 +52,7 @@ import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
  * @author MayaSanjeev mayabytatech, maya.k.k@lxisoft.com
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/order")
 public class ReportQueryResource {
 
 	private final Logger log = LoggerFactory.getLogger(ReportQueryResource.class);
@@ -88,8 +81,13 @@ public class ReportQueryResource {
 		
 		OrderMaster orderMaster = new OrderMaster();
 
+//		Order order = reportService.findOrderByOrderIdandStatusName(orderId, statusName);
+	
 		Order order = reportService.findOrderByOrderId(orderId);
+		
+		
 		log.info("..................order......................" + order);
+		
 		if (order != null) {
 			orderMaster.setStoreName(order.getStoreId());
 
@@ -103,20 +101,23 @@ public class ReportQueryResource {
 
 			orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
 
-			log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
-
-			Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
-
-			String stringDate = Date.from(insatantDate).toString();
-
-			// date to string conversion for report format
-
 			orderMaster.setOrderNumber(orderId);
 
-			orderMaster.setDueDate(stringDate.substring(4, 10));
+			if (order.getApprovalDetails() != null) {
 
-			orderMaster.setDueTime(stringDate.substring(11, 16));
+				log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
 
+				Instant instantDate = order.getApprovalDetails().getExpectedDelivery();
+
+				String stringDate = Date.from(instantDate).toString();
+
+				// date to string conversion for report format
+
+				orderMaster.setDueDate(stringDate.substring(4, 10));
+
+				orderMaster.setDueTime(stringDate.substring(11, 16));
+
+			}
 			orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 
 			// date to string conversion for report format
@@ -125,10 +126,11 @@ public class ReportQueryResource {
 
 			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
 
-			String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
+			if (order.getApprovalDetails() != null) {
+				String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
 
-			orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
-
+				orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
+			}
 			if (order.getStatus() != null) {
 
 				orderMaster.setOrderStatus(order.getStatus().getName());
@@ -146,26 +148,27 @@ public class ReportQueryResource {
 				Product product = reportService.findProductByProductId(orderline.getProductId());
 
 				List<ComboLineItem> comboItemList = reportService.findCombosByProductId(product.getId());
-
-				List<ComboItem> comItemList = new ArrayList<ComboItem>();
-				comboItemList.forEach(com -> {
-					ComboItem comboItem = new ComboItem();
-					comboItem.setcomboItem(com.getComboItem().getName());
-					comboItem.setQuantity(com.getQuantity());
-					comItemList.add(comboItem);
-				});
+				if (comboItemList != null) {
+					List<ComboItem> comItemList = new ArrayList<ComboItem>();
+					comboItemList.forEach(com -> {
+						ComboItem comboItem = new ComboItem();
+						comboItem.setcomboItem(com.getComboItem().getName());
+						comboItem.setQuantity(com.getQuantity());
+						comItemList.add(comboItem);
+					});
+				}
 
 				List<AuxilaryOrderLine> auxilaryList = reportService.findAuxItemsByOrderLineId(orderline.getId());
-
-				List<AuxItem> aux = new ArrayList<AuxItem>();
-				auxilaryList.forEach(a -> {
-					AuxItem auxItem = new AuxItem();
-					auxItem.setAuxItem(reportService.findProductByProductId(a.getProductId()).getName());
-					auxItem.setQuantity(a.getQuantity());
-					auxItem.setTotal(a.getTotal());
-					aux.add(auxItem);
-				});
-
+				if (auxilaryList != null) {
+					List<AuxItem> aux = new ArrayList<AuxItem>();
+					auxilaryList.forEach(a -> {
+						AuxItem auxItem = new AuxItem();
+						auxItem.setAuxItem(reportService.findProductByProductId(a.getProductId()).getName());
+						auxItem.setQuantity(a.getQuantity());
+						auxItem.setTotal(a.getTotal());
+						aux.add(auxItem);
+					});
+				}
 				reportOrderLine.setItem(product.getName());
 
 				reportOrderLine.setQuantity(orderline.getQuantity());
@@ -218,15 +221,14 @@ public class ReportQueryResource {
 		return ResponseEntity.ok().body(orderMaster);
 	}
 
-	// ..........test methods........................
-	@GetMapping("/order-from-customer/{customerId}")
+	@GetMapping("/count-by-customerid/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
 		return reportService.findOrderCountByCustomerId(customerId, pageable);
 
 	}
 
-	@GetMapping("/order-from-customer-status/{statusName}/{customerId}")
+	@GetMapping("/count-by-customerid-status/{statusName}/{customerId}")
 	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,
 			@PathVariable String customerId, Pageable pageable) {
 
@@ -234,15 +236,14 @@ public class ReportQueryResource {
 
 	}
 
-	// >>>>>>>>>>>>>>>>
-	@GetMapping("/order-from-customer-storeid/{customerId}/{storeId}")
+	@GetMapping("/count-by-customerid-statusid/{customerId}/{storeId}")
 	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
+
 		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
 
-	@GetMapping("/getorder-from-customer-status/{statusName}/{customerId}")
+	@GetMapping("/count/{statusName}/{customerId}")
 	public Long getOrderCountByCustomerIdAndStatusName(@PathVariable String statusName, @PathVariable String customerId,
 			Pageable pageable) {
 
@@ -250,39 +251,42 @@ public class ReportQueryResource {
 
 	}
 
-	@GetMapping("/getorder-from-customer-storeid/{customerId}/{storeId}")
-	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
-			Pageable pageable) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
-		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
-	}
-
 	@GetMapping("/order-line/{orderId}")
-	public List<OrderLine> getOrderCountByCustomerIdAndStoreId(@PathVariable String orderId) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method for
-		// ordermaster check
+	public List<OrderLine> findOrderLinesByOrderId(@PathVariable String orderId) {
+
 		return reportService.findOrderLinesByOrderId(orderId);
 	}
-	
+
+	@GetMapping("/orderid-status/{orderId}/{status}")
+	public Order findOrderByOrderIdandStatusName(@PathVariable String orderId, @PathVariable String status) {
+
+		return reportService.findOrderByOrderIdandStatusName(orderId, status);
+
+	}
+
+	@GetMapping("/{orderId}")
+	public Order findOrderByOrderId(@PathVariable String orderId) {
+
+		return reportService.findOrderByOrderId(orderId);
+	}
 
 	@GetMapping("/reportsummary/{storeId}")
 	public Reportsummary getOrderByStoreIdAndCurrentDate(@PathVariable String storeId) {
 
 		List<Order> order = orderService.findByStoreId(storeId);
 
-		String currentDate = Date.from(Instant.now()).toString();
-
 		List<Order> storeBased = new ArrayList<Order>();
 
 		Double total = 0.0;
 		log.info(".........................................................." + order.size());
 		for (int i = 0; i < order.size(); i++) {
-			//log.info("..............................................." + Date.from(order.get(i).getDate()).toString());
+			// log.info("..............................................." +
+			// Date.from(order.get(i).getDate()).toString());
 			if (Date.from(order.get(i).getDate()).toString().substring(4, 10).equals("Aug 20")) {
-			//	log.info(".................." + order.get(i));
+				// log.info(".................." + order.get(i));
 				order.add(order.get(i));
 				total += order.get(i).getGrandTotal();
-				//log.info(".................." + total);
+				// log.info(".................." + total);
 			}
 		}
 

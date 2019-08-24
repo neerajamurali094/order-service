@@ -21,7 +21,6 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -30,14 +29,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import com.github.vanroy.springdata.jest.aggregation.impl.AggregatedPageImpl;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
-import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
 import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
@@ -47,9 +43,6 @@ import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
-import com.diviso.graeshoppe.order.service.dto.AuxItem;
-import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
-import com.esotericsoftware.minlog.Log;
 import com.github.vanroy.springdata.jest.JestElasticsearchTemplate;
 import com.github.vanroy.springdata.jest.aggregation.AggregatedPage;
 
@@ -67,6 +60,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 	private final JestClient jestClient;
 	private final JestElasticsearchTemplate elasticsearchTemplate;
+
 	int i = 0;
 	Long count = 0L;
 
@@ -89,8 +83,11 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	 * (java.lang.String)
 	 */
 	@Override
-	public Order findOrderByOrderId(String orderId) {
-		StringQuery stringQuery = new StringQuery(termQuery("orderId.keyword", orderId).toString());
+	public Order findOrderByOrderIdandStatusName(String orderId, String status) {
+		StringQuery stringQuery = new StringQuery(
+				QueryBuilders.boolQuery().must(QueryBuilders.termQuery("orderId", orderId))
+						.must(QueryBuilders.termQuery("status", status)).toString());
+
 		return elasticsearchOperations.queryForObject(stringQuery, Order.class);
 	}
 
@@ -270,30 +267,42 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#
-	 * getOrderCountByCustomerIdAndStatusFilter(java.lang.String,
-	 * java.lang.String, org.springframework.data.domain.Pageable)
+	 * getOrderCountByCustomerIdAndStatusFilter(java.lang.String, java.lang.String,
+	 * org.springframework.data.domain.Pageable)
 	 */
 	@Override
 	public Long getOrderCountByCustomerIdAndStatusFilter(String statusName, String customerId, Pageable pageable) {
 		log.info(".............." + statusName + ".............." + customerId);
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.boolQuery()
 				.must(termQuery("status.name", statusName)).must(termQuery("customerId", customerId))).build();
-		log.info(
-				"...........data..........." + elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
+		log.info("...........data..........."
+				+ elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
 		return (long) elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent().size();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#getOrderCountByCustomerIdAndStoreId(java.lang.String, java.lang.String, org.springframework.data.domain.Pageable)
+	/*
+	 * (non-Javadoc)status
+	 * 
+	 * @see com.diviso.graeshoppe.order.service.ReportQueryService#
+	 * getOrderCountByCustomerIdAndStoreId(java.lang.String, java.lang.String,
+	 * org.springframework.data.domain.Pageable)
 	 */
 	@Override
 	public Long getOrderCountByCustomerIdAndStoreId(String customerId, String storeId, Pageable pageable) {
 		log.info(".............." + customerId + ".............." + storeId);
-		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.boolQuery()
-				.must(termQuery("customerId", customerId)).must(termQuery("storeId", storeId))).build();
-		log.info(
-				"...........data..........." + elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
+		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+				QueryBuilders.boolQuery().must(termQuery("customerId", customerId)).must(termQuery("storeId", storeId)))
+				.build();
+		log.info("...........data..........."
+				+ elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
 		return (long) elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent().size();
 	}
+
+	@Override
+	public Order findOrderByOrderId(String orderId) {
+		StringQuery stringQuery = new StringQuery(termQuery("orderId.keyword", orderId).toString());
+		return elasticsearchOperations.queryForObject(stringQuery, Order.class);
+	}
+
 
 }
