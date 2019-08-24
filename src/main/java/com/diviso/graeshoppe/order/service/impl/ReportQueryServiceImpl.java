@@ -84,8 +84,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	 */
 	@Override
 	public Order findOrderByOrderIdandStatusName(String orderId, String status) {
-		StringQuery stringQuery = new StringQuery(QueryBuilders.boolQuery().must(termQuery("orderId.keyword", orderId))
-				.must(termQuery("status.keyword", status)).toString());
+		StringQuery stringQuery = new StringQuery(
+				QueryBuilders.boolQuery().must(QueryBuilders.termQuery("orderId", orderId))
+						.must(QueryBuilders.termQuery("status", status)).toString());
 
 		return elasticsearchOperations.queryForObject(stringQuery, Order.class);
 	}
@@ -296,5 +297,12 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 				+ elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent());
 		return (long) elasticsearchOperations.queryForPage(searchQuery, Order.class).getContent().size();
 	}
+
+	@Override
+	public Order findOrderByOrderId(String orderId) {
+		StringQuery stringQuery = new StringQuery(termQuery("orderId.keyword", orderId).toString());
+		return elasticsearchOperations.queryForObject(stringQuery, Order.class);
+	}
+
 
 }

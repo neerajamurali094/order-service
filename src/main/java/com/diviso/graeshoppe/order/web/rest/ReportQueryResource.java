@@ -51,7 +51,7 @@ import com.diviso.graeshoppe.order.service.dto.Reportsummary;
  * @author MayaSanjeev mayabytatech, maya.k.k@lxisoft.com
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/order")
 public class ReportQueryResource {
 
 	private final Logger log = LoggerFactory.getLogger(ReportQueryResource.class);
@@ -91,9 +91,9 @@ public class ReportQueryResource {
 
 				log.info("...........order.getApprovalDetails()..........." + order.getApprovalDetails());
 
-				Instant insatantDate = order.getApprovalDetails().getExpectedDelivery();
+				Instant instantDate = order.getApprovalDetails().getExpectedDelivery();
 
-				String stringDate = Date.from(insatantDate).toString();
+				String stringDate = Date.from(instantDate).toString();
 
 				// date to string conversion for report format
 
@@ -205,15 +205,14 @@ public class ReportQueryResource {
 		return ResponseEntity.ok().body(orderMaster);
 	}
 
-
-	@GetMapping("/order-from-customer/{customerId}")
+	@GetMapping("/count/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
 		return reportService.findOrderCountByCustomerId(customerId, pageable);
 
 	}
 
-	@GetMapping("/order-from-customer-status/{statusName}/{customerId}")
+	@GetMapping("/{statusName}/{customerId}")
 	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,
 			@PathVariable String customerId, Pageable pageable) {
 
@@ -221,25 +220,19 @@ public class ReportQueryResource {
 
 	}
 
-	@GetMapping("/order-from-customer-storeid/{customerId}/{storeId}")
+	@GetMapping("/count/{customerId}/{storeId}")
 	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
 
 		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
 
-	@GetMapping("/getorder-from-customer-status/{statusName}/{customerId}")
+	@GetMapping("/count/{statusName}/{customerId}")
 	public Long getOrderCountByCustomerIdAndStatusName(@PathVariable String statusName, @PathVariable String customerId,
 			Pageable pageable) {
 
 		return reportService.getOrderCountByCustomerIdAndStatusFilter(statusName, customerId, pageable);
 
-	}
-
-	@GetMapping("/customer-order/{customerId}/{storeId}")
-	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
-			Pageable pageable) {
-		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
 
 	@GetMapping("/order-line/{orderId}")
@@ -248,11 +241,17 @@ public class ReportQueryResource {
 		return reportService.findOrderLinesByOrderId(orderId);
 	}
 
-	@GetMapping("/order/{orderId}/{status}")
+	@GetMapping("/{orderId}/{status}")
 	public Order findOrderByOrderIdandStatusName(@PathVariable String orderId, @PathVariable String status) {
 
 		return reportService.findOrderByOrderIdandStatusName(orderId, status);
 
+	}
+
+	@GetMapping("/{orderId}")
+	public Order findOrderByOrderId(@PathVariable String orderId) {
+
+		return reportService.findOrderByOrderId(orderId);
 	}
 
 	@GetMapping("/reportsummary/{storeId}")
