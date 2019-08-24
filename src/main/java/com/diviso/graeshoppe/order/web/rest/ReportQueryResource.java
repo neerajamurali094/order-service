@@ -39,6 +39,7 @@ import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
+import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
 
@@ -65,16 +66,26 @@ public class ReportQueryResource {
 
 	@Autowired
 	ReportQueryService reportService;
+	
+	@Autowired
+	OrderRepository orderRepository;
 
 	Long count;
 
 	@Autowired
 	OrderService orderService;
 
+	@GetMapping("/findOrder/{orderId}/{status}")
+	public Optional<Order> getOrderByOrderIdAndStatusName(String orderId,String status){
+		return orderRepository.findByOrderIdAndStatus_Name(orderId,status);
+	}
+	
+	
 	@GetMapping("/main-report/{orderId}/{statusName}")
 	public ResponseEntity<OrderMaster> getOrderMaster(@PathVariable String orderId, @PathVariable String statusName,
 			Pageable pageable) {
 
+		
 		OrderMaster orderMaster = new OrderMaster();
 
 		Order order = reportService.findOrderByOrderId(orderId);
