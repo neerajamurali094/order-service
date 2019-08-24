@@ -70,8 +70,13 @@ public class ReportQueryResource {
 
 		OrderMaster orderMaster = new OrderMaster();
 
-		Order order = reportService.findOrderByOrderIdandStatusName(orderId, statusName);
+//		Order order = reportService.findOrderByOrderIdandStatusName(orderId, statusName);
+	
+		Order order = reportService.findOrderByOrderId(orderId);
+		
+		
 		log.info("..................order......................" + order);
+		
 		if (order != null) {
 			orderMaster.setStoreName(order.getStoreId());
 
