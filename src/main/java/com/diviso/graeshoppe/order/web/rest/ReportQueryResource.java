@@ -36,8 +36,11 @@ import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
+import com.diviso.graeshoppe.order.domain.Offer;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
+import com.diviso.graeshoppe.order.repository.OfferRepository;
+import com.diviso.graeshoppe.order.repository.OrderLineRepository;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
@@ -63,15 +66,112 @@ public class ReportQueryResource {
 	
 	@Autowired
 	OrderRepository orderRepository;
+	
+	@Autowired
+	OrderLineRepository orderLineRepository;
 
+	@Autowired
+	OfferRepository offerRepository;
+	
+	
+	
+	
 	Long count;
 
 	@Autowired
 	OrderService orderService;
 
 	@GetMapping("/findOrder/{orderId}/{status}")
-	public Optional<Order> getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status){
-		return orderRepository.findByOrderIdAndStatus_Name(orderId,status);
+	public OrderMaster getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status){
+		OrderMaster orderMaster = new OrderMaster(); 
+		 Order order=orderRepository.findByOrderIdAndStatus_Name(orderId,status).get();
+		 if(order==null) {
+			 return null;
+		 }
+		 List<OrderLine> orderLines= orderLineRepository.findByOrder_Id(order.getId());
+		 List<Offer> offers= offerRepository.findByOrder_Id(order.getId());
+		 if(order.getDeliveryInfo()!=null) {
+			 orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
+			 orderMaster.setNotes(order.getDeliveryInfo().getDeliveryNotes());
+			 orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
+			 orderMaster.setCustomerId(order.getCustomerId());
+			 Store store = reportService.findStoreByStoreId(order.getStoreId());
+
+				if (store != null) {
+
+					log.info(".................store............" + store);
+
+					orderMaster.setStorePhone(store.getContactNo());
+
+					orderMaster.setServiceCharge(store.getStoreSettings().getServiceCharge());
+				}
+			 if(order.getDeliveryInfo().getDeliveryAddress()!=null) {
+				 Address address= order.getDeliveryInfo().getDeliveryAddress();
+				 orderMaster.setAddressType(address.getAddressType());
+				 orderMaster.setAlternatePhone(address.getAlternatePhone());
+				 orderMaster.setPhone(address.getPhone());
+				 orderMaster.setCity(address.getCity());
+				 orderMaster.setHouseNoOrBuildingName(address.getHouseNoOrBuildingName());
+				 orderMaster.setRoadNameAreaOrStreet(address.getRoadNameAreaOrStreet());
+				 orderMaster.setLandmark(address.getLandmark());
+				 orderMaster.setName(address.getName());
+				 orderMaster.setPincode(address.getPincode());
+			 }
+			 if(order.getApprovalDetails()!=null) {
+					Instant instantDate = order.getApprovalDetails().getExpectedDelivery();
+
+					String stringDate = Date.from(instantDate).toString();
+
+					// date to string conversion for report format
+
+					orderMaster.setDueDate(stringDate.substring(4, 10));
+
+					orderMaster.setDueTime(stringDate.substring(11, 16));
+			 }
+
+		 }
+		 List<ReportOrderLine> orderList = new ArrayList<ReportOrderLine>();
+			orderLines.forEach(orderline -> {
+
+				ReportOrderLine reportOrderLine = new ReportOrderLine();
+
+				Product product = reportService.findProductByProductId(orderline.getProductId());
+
+				List<ComboLineItem> comboItemList = reportService.findCombosByProductId(product.getId());
+				if (comboItemList != null) {
+					List<ComboItem> comItemList = new ArrayList<ComboItem>();
+					comboItemList.forEach(com -> {
+						ComboItem comboItem = new ComboItem();
+						comboItem.setcomboItem(com.getComboItem().getName());
+						comboItem.setQuantity(com.getQuantity());
+						comItemList.add(comboItem);
+					});
+				}
+
+				List<AuxilaryOrderLine> auxilaryList = reportService.findAuxItemsByOrderLineId(orderline.getId());
+				if (auxilaryList != null) {
+					List<AuxItem> aux = new ArrayList<AuxItem>();
+					auxilaryList.forEach(a -> {
+						AuxItem auxItem = new AuxItem();
+						auxItem.setAuxItem(reportService.findProductByProductId(a.getProductId()).getName());
+						auxItem.setQuantity(a.getQuantity());
+						auxItem.setTotal(a.getTotal());
+						aux.add(auxItem);
+					});
+				}
+				reportOrderLine.setItem(product.getName());
+
+				reportOrderLine.setQuantity(orderline.getQuantity());
+
+				reportOrderLine.setTotal(orderline.getTotal());
+
+				orderList.add(reportOrderLine);
+			});
+
+			orderMaster.setOrderLine(orderList);
+			String orderDate = Date.from(order.getDate()).toString();
+	
+		 return orderMaster;
 	}
 	
 	
