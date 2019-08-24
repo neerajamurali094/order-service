@@ -19,9 +19,6 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import com.diviso.graeshoppe.order.client.product.model.AuxilaryLineItem;
-import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diviso.graeshoppe.order.client.product.model.ComboLineItem;
 import com.diviso.graeshoppe.order.client.product.model.Product;
 import com.diviso.graeshoppe.order.client.store.domain.Store;
 import com.diviso.graeshoppe.order.domain.Address;
@@ -41,16 +39,11 @@ import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.ReportQueryService;
-
-import com.diviso.graeshoppe.order.service.dto.AddressDTO;
 import com.diviso.graeshoppe.order.service.dto.AuxItem;
 import com.diviso.graeshoppe.order.service.dto.ComboItem;
 import com.diviso.graeshoppe.order.service.dto.OrderMaster;
 import com.diviso.graeshoppe.order.service.dto.ReportOrderLine;
 import com.diviso.graeshoppe.order.service.dto.Reportsummary;
-
-import io.github.jhipster.web.util.ResponseUtil;
-import io.searchbox.core.search.aggregation.TermsAggregation.Entry;
 
 /**
  * TODO Provide a detailed description here
@@ -212,7 +205,7 @@ public class ReportQueryResource {
 		return ResponseEntity.ok().body(orderMaster);
 	}
 
-	// ..........test methods........................
+
 	@GetMapping("/order-from-customer/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
@@ -228,11 +221,10 @@ public class ReportQueryResource {
 
 	}
 
-	// >>>>>>>>>>>>>>>>
 	@GetMapping("/order-from-customer-storeid/{customerId}/{storeId}")
 	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
+
 		return reportService.findOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
 
@@ -244,26 +236,29 @@ public class ReportQueryResource {
 
 	}
 
-	@GetMapping("/getorder-from-customer-storeid/{customerId}/{storeId}")
+	@GetMapping("/customer-order/{customerId}/{storeId}")
 	public Long getOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method
 		return reportService.getOrderCountByCustomerIdAndStoreId(customerId, storeId, pageable);
 	}
 
 	@GetMapping("/order-line/{orderId}")
-	public List<OrderLine> getOrderCountByCustomerIdAndStoreId(@PathVariable String orderId) {
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>this is test method for
-		// ordermaster check
+	public List<OrderLine> findOrderLinesByOrderId(@PathVariable String orderId) {
+
 		return reportService.findOrderLinesByOrderId(orderId);
+	}
+
+	@GetMapping("/order/{orderId}/{status}")
+	public Order findOrderByOrderIdandStatusName(@PathVariable String orderId, @PathVariable String status) {
+
+		return reportService.findOrderByOrderIdandStatusName(orderId, status);
+
 	}
 
 	@GetMapping("/reportsummary/{storeId}")
 	public Reportsummary getOrderByStoreIdAndCurrentDate(@PathVariable String storeId) {
 
 		List<Order> order = orderService.findByStoreId(storeId);
-
-		String currentDate = Date.from(Instant.now()).toString();
 
 		List<Order> storeBased = new ArrayList<Order>();
 
