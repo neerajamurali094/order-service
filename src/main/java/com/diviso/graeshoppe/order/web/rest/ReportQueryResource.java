@@ -205,14 +205,14 @@ public class ReportQueryResource {
 		return ResponseEntity.ok().body(orderMaster);
 	}
 
-	@GetMapping("/count/{customerId}")
+	@GetMapping("/count-by-customerid/{customerId}")
 	public Long findOrderCountByCustomerId(@PathVariable String customerId, Pageable pageable) {
 
 		return reportService.findOrderCountByCustomerId(customerId, pageable);
 
 	}
 
-	@GetMapping("/{statusName}/{customerId}")
+	@GetMapping("/count-by-customerid-status/{statusName}/{customerId}")
 	public Long findOrderCountByCustomerIdAndStatusName(@PathVariable String statusName,
 			@PathVariable String customerId, Pageable pageable) {
 
@@ -220,7 +220,7 @@ public class ReportQueryResource {
 
 	}
 
-	@GetMapping("/count/{customerId}/{storeId}")
+	@GetMapping("/count-by-customerid-statusid/{customerId}/{storeId}")
 	public Long findOrderCountByCustomerIdAndStoreId(@PathVariable String customerId, @PathVariable String storeId,
 			Pageable pageable) {
 
@@ -241,7 +241,7 @@ public class ReportQueryResource {
 		return reportService.findOrderLinesByOrderId(orderId);
 	}
 
-	@GetMapping("/{orderId}/{status}")
+	@GetMapping("/orderid-status/{orderId}/{status}")
 	public Order findOrderByOrderIdandStatusName(@PathVariable String orderId, @PathVariable String status) {
 
 		return reportService.findOrderByOrderIdandStatusName(orderId, status);
