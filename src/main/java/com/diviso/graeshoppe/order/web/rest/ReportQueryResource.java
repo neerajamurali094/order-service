@@ -70,7 +70,7 @@ public class ReportQueryResource {
 	OrderService orderService;
 
 	@GetMapping("/findOrder/{orderId}/{status}")
-	public Optional<Order> getOrderByOrderIdAndStatusName(String orderId,String status){
+	public Optional<Order> getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status){
 		return orderRepository.findByOrderIdAndStatus_Name(orderId,status);
 	}
 	
