@@ -129,6 +129,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+		
 		return orderRepository.countByDateBetweenAndStoreId(dateBegin, dateEnd, storeId);
 	}
 

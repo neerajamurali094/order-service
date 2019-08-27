@@ -17,6 +17,7 @@ package com.diviso.graeshoppe.order.web.rest;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -448,6 +449,13 @@ public class ReportQueryResource {
 	public List<String> findAllPaymentRefByDeliveryType(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd,@PathVariable String storeId,@PathVariable String deliveryType) {
 		return orderService.findAllPaymentRefByDeliveryType(dateBegin, dateEnd, storeId,deliveryType);
 	}
-		
+	
+	@GetMapping("/fi/{storeId}")
+	public  long test(@PathVariable String storeId) {
+		Instant dateBegin = Instant.parse(LocalDate.now().toString() + "T00:00:00Z");
+		Instant dateEnd = Instant.parse(LocalDate.now().toString() + "T23:59:59Z");
+	return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	
 	
 }
