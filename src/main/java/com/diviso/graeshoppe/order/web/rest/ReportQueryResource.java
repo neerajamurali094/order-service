@@ -82,7 +82,7 @@ public class ReportQueryResource {
 	
 
 	@GetMapping("/findOrder/{orderId}/{status}")
-	public OrderMaster getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status){
+	public OrderMaster getOrderMasterByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status,Pageable pageable){
 		OrderMaster orderMaster = new OrderMaster(); 
 		 Order order=orderRepository.findByOrderIdAndStatus_Name(orderId,status).get();
 		 if(order==null) {
@@ -96,6 +96,10 @@ public class ReportQueryResource {
 			 orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
 			 orderMaster.setCustomerId(order.getCustomerId());
 			 Store store = reportService.findStoreByStoreId(order.getStoreId());
+			 orderMaster.setStoreName(store.getName());
+			 orderMaster.setServiceCharge(store.getStoreSettings().getServiceCharge());
+			 orderMaster.setOrderNumber(orderId);
+			 orderMaster.setTotalDue(order.getGrandTotal());
 
 				if (store != null) {
 
@@ -116,6 +120,10 @@ public class ReportQueryResource {
 				 orderMaster.setLandmark(address.getLandmark());
 				 orderMaster.setName(address.getName());
 				 orderMaster.setPincode(address.getPincode());
+				 orderMaster.setOrderFromCustomer(
+							reportService.getOrderCountByCustomerIdAndStoreId(order.getCustomerId(), order.getStoreId(), pageable));
+				 orderMaster.setCustomersOrder(
+							reportService.getOrderCountByCustomerIdAndStatusFilter(status, order.getCustomerId(), pageable));
 			 }
 			 if(order.getApprovalDetails()!=null) {
 					Instant instantDate = order.getApprovalDetails().getExpectedDelivery();
@@ -127,6 +135,9 @@ public class ReportQueryResource {
 					orderMaster.setDueDate(stringDate.substring(4, 10));
 
 					orderMaster.setDueTime(stringDate.substring(11, 16));
+					String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
+
+					orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
 			 }
 
 		 }
@@ -146,6 +157,7 @@ public class ReportQueryResource {
 						comboItem.setQuantity(com.getQuantity());
 						comItemList.add(comboItem);
 					});
+					reportOrderLine.setCombos(comItemList);
 				}
 
 				List<AuxilaryOrderLine> auxilaryList = reportService.findAuxItemsByOrderLineId(orderline.getId());
@@ -158,6 +170,7 @@ public class ReportQueryResource {
 						auxItem.setTotal(a.getTotal());
 						aux.add(auxItem);
 					});
+					reportOrderLine.setAuxItems(aux);
 				}
 				reportOrderLine.setItem(product.getName());
 
@@ -169,8 +182,13 @@ public class ReportQueryResource {
 			});
 
 			orderMaster.setOrderLine(orderList);
+			if (order.getStatus() != null) {
+
+				orderMaster.setOrderStatus(order.getStatus().getName());
+
+			}
 			String orderDate = Date.from(order.getDate()).toString();
-	
+			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
 		 return orderMaster;
 	}
 	
