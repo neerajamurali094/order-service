@@ -140,4 +140,14 @@ public class OrderServiceImpl implements OrderService {
 	public List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
 		return orderRepository.findAllPaymentRef(dateBegin, dateEnd, storeId);
 	}
+	
+	public List<String> findAllPaymentRefByDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,String deliveryType)
+	{
+		return orderRepository.findAllPaymentRefByDeliveryType(dateBegin, dateEnd, storeId,deliveryType);
+	}
+	
+	
+	
+	
+	
 }

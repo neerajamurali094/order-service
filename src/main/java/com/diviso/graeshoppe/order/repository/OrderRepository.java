@@ -35,4 +35,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	public List<String> findAllPaymentRef(@Param("dateBegin") Instant dateBegin, @Param("dateEnd") Instant dateEnd,
 			@Param("storeId") String storeId);
 
+	@Query(value = "SELECT c.paymentRef FROM Order c  WHERE c.date BETWEEN :dateBegin AND :dateEnd AND c.storeId=:storeId AND  c.deliveryInfo.deliveryType LIKE CONCAT('%',:deliveryType,'%')")
+	public List<String> findAllPaymentRefByDeliveryType(@Param("dateBegin") Instant dateBegin,
+			@Param("dateEnd") Instant dateEnd, @Param("storeId") String storeId,
+			@Param("deliveryType") String deliveryType);
+	
+	
 }

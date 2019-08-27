@@ -423,6 +423,13 @@ public class ReportQueryResource {
 	}
 	
 	
-	
+	/*
+	 * 
+	 */
+	@GetMapping("/findPayRefByDeliveryType/{dateBegin}/{dateEnd}/{storeId}/{deliveryType}")
+	public List<String> findAllPaymentRefByDeliveryType(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd,@PathVariable String storeId,@PathVariable String deliveryType) {
+		return orderService.findAllPaymentRefByDeliveryType(dateBegin, dateEnd, storeId,deliveryType);
+	}
+		
 	
 }
