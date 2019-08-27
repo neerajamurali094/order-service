@@ -73,13 +73,13 @@ public class ReportQueryResource {
 	@Autowired
 	OfferRepository offerRepository;
 	
-	
+	@Autowired
+	OrderService orderService;
 	
 	
 	Long count;
 
-	@Autowired
-	OrderService orderService;
+	
 
 	@GetMapping("/findOrder/{orderId}/{status}")
 	public OrderMaster getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status,Pageable pageable){
@@ -415,4 +415,32 @@ public class ReportQueryResource {
 
 		return report;
 	}
+	
+	
+	/*
+	 * 
+	 */
+	@GetMapping("/countAllOrder/{dateBegin}/{dateEnd}/{storeId}")
+	public long countAllOrdersByDateAndStoreId(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd, @PathVariable String storeId) {
+		return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	/*
+	 * 
+	 */
+	@GetMapping("/countOrdersByDeliveryType/{dateBegin}/{dateEnd}/{storeId}/{deliveryType}")
+	public Integer countOrdersByStoreIdAndDeliveryType(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd, @PathVariable String storeId,
+			String deliveryType) {
+		return orderService.countOrdersByStoreIdAndDeliveryType(dateBegin, dateEnd, storeId, deliveryType);
+	}
+	/*
+	 * 
+	 */
+	@GetMapping("/findPaymentReference/{dateBegin}/{dateEnd}/{storeId}")
+	public List<String> findAllPaymentReferenceByDateAndStoreId(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd,@PathVariable String storeId) {
+		return orderService.findAllPaymentReferenceByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	
+	
+	
+	
 }
