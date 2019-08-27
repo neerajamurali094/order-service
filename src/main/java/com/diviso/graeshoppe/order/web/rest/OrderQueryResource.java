@@ -43,8 +43,7 @@ public class OrderQueryResource {
 	@Autowired
 	private OrderQueryService orderQueryService;
 	
-	@Autowired
-	private OrderService orderService;
+	
 	
 
 	@GetMapping("/tasks")
@@ -120,25 +119,6 @@ public class OrderQueryResource {
 	}
 	
 	
-	/*
-	 * 
-	 */
-	public long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
-		return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
-	}
-	/*
-	 * 
-	 */
-	public Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,
-			String deliveryType) {
-		return orderService.countOrdersByStoreIdAndDeliveryType(dateBegin, dateEnd, storeId, deliveryType);
-	}
-	/*
-	 * 
-	 */
-	public List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
-		return orderService.findAllPaymentReferenceByDateAndStoreId(dateBegin, dateEnd, storeId);
-	}
 	
 	
 	

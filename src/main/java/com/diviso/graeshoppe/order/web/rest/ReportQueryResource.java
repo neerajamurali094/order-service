@@ -402,20 +402,23 @@ public class ReportQueryResource {
 	/*
 	 * 
 	 */
-	public long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+	@GetMapping("/reportsummary/{dateBegin}/{dateEnd}/{storeId}")
+	public long countAllOrdersByDateAndStoreId(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd, @PathVariable String storeId) {
 		return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
 	}
 	/*
 	 * 
 	 */
-	public Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,
+	@GetMapping("/reportsummary/{dateBegin}/{dateEnd}/{storeId}/{deliveryType}")
+	public Integer countOrdersByStoreIdAndDeliveryType(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd, @PathVariable String storeId,
 			String deliveryType) {
 		return orderService.countOrdersByStoreIdAndDeliveryType(dateBegin, dateEnd, storeId, deliveryType);
 	}
 	/*
 	 * 
 	 */
-	public List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+	@GetMapping("/reportsummary/{dateBegin}/{dateEnd}/{storeId}")
+	public List<String> findAllPaymentReferenceByDateAndStoreId(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd,@PathVariable String storeId) {
 		return orderService.findAllPaymentReferenceByDateAndStoreId(dateBegin, dateEnd, storeId);
 	}
 	
