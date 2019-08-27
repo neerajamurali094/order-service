@@ -82,7 +82,7 @@ public class ReportQueryResource {
 	
 
 	@GetMapping("/findOrder/{orderId}/{status}")
-	public OrderMaster getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status,Pageable pageable){
+	public OrderMaster getOrderMasterByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status,Pageable pageable){
 		OrderMaster orderMaster = new OrderMaster(); 
 		 Order order=orderRepository.findByOrderIdAndStatus_Name(orderId,status).get();
 		 if(order==null) {
