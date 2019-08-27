@@ -1,5 +1,6 @@
 package com.diviso.graeshoppe.order.web.rest;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.DataResponse;
 import com.diviso.graeshoppe.order.models.OpenTask;
 import com.diviso.graeshoppe.order.service.OrderQueryService;
+import com.diviso.graeshoppe.order.service.OrderService;
 
 @RestController
 @RequestMapping("/api")
@@ -40,6 +42,10 @@ public class OrderQueryResource {
 	
 	@Autowired
 	private OrderQueryService orderQueryService;
+	
+	@Autowired
+	private OrderService orderService;
+	
 
 	@GetMapping("/tasks")
 	public List<OpenTask> getTasks(@RequestParam(value = "name", required = false) String name,
@@ -112,5 +118,38 @@ public class OrderQueryResource {
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
 	}
+	
+	
+	/*
+	 * 
+	 */
+	public long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+		return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	/*
+	 * 
+	 */
+	public Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,
+			String deliveryType) {
+		return orderService.countOrdersByStoreIdAndDeliveryType(dateBegin, dateEnd, storeId, deliveryType);
+	}
+	/*
+	 * 
+	 */
+	public List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+		return orderService.findAllPaymentReferenceByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

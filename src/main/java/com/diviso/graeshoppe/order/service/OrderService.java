@@ -6,6 +6,7 @@ import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,4 +58,18 @@ public interface OrderService {
     Page<OrderDTO> search(String query, Pageable pageable);
     
     List<Order> findByStoreId(String storeId);
+    
+    /*
+     * 
+     */
+    long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId);
+    Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,String deliveryType);
+    List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId);
+    
+    
+    
+    
+    
+    
+    
 }

@@ -73,13 +73,13 @@ public class ReportQueryResource {
 	@Autowired
 	OfferRepository offerRepository;
 	
-	
+	@Autowired
+	OrderService orderService;
 	
 	
 	Long count;
 
-	@Autowired
-	OrderService orderService;
+	
 
 	@GetMapping("/findOrder/{orderId}/{status}")
 	public OrderMaster getOrderByOrderIdAndStatusName(@PathVariable String orderId,@PathVariable String status){
@@ -397,4 +397,29 @@ public class ReportQueryResource {
 
 		return report;
 	}
+	
+	
+	/*
+	 * 
+	 */
+	public long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+		return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	/*
+	 * 
+	 */
+	public Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,
+			String deliveryType) {
+		return orderService.countOrdersByStoreIdAndDeliveryType(dateBegin, dateEnd, storeId, deliveryType);
+	}
+	/*
+	 * 
+	 */
+	public List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
+		return orderService.findAllPaymentReferenceByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
+	
+	
+	
+	
 }
