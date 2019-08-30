@@ -66,7 +66,7 @@ public interface OrderService {
     Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,String deliveryType);
     List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId);
     
-    
+    List<String> findAllPaymentRefByDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,String deliveryType);
     
     
     

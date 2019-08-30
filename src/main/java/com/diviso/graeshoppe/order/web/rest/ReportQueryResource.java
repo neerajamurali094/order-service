@@ -16,7 +16,9 @@
 package com.diviso.graeshoppe.order.web.rest;
 
 import java.sql.Date;
-import java.time.Instant;
+import java.time.*;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -92,8 +94,17 @@ public class ReportQueryResource {
 		 List<Offer> offers= offerRepository.findByOrder_Id(order.getId());
 		 if(order.getDeliveryInfo()!=null) {
 			 orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
-			 orderMaster.setNotes(order.getDeliveryInfo().getDeliveryNotes());
-			 orderMaster.setMethodOfOrder(order.getDeliveryInfo().getDeliveryType());
+				
+			 if(order.getDeliveryInfo().getDeliveryNotes()!=null)
+				{
+				 orderMaster.setNotes("No notes mentioned");
+				}
+			 else
+				 {
+				 orderMaster.setNotes(order.getDeliveryInfo().getDeliveryNotes());
+				 }
+			 
+			  
 			 orderMaster.setCustomerId(order.getCustomerId());
 			 Store store = reportService.findStoreByStoreId(order.getStoreId());
 			 orderMaster.setStoreName(store.getName());
@@ -126,15 +137,30 @@ public class ReportQueryResource {
 							reportService.getOrderCountByCustomerIdAndStatusFilter(status, order.getCustomerId(), pageable));
 			 }
 			 if(order.getApprovalDetails()!=null) {
-					Instant instantDate = order.getApprovalDetails().getExpectedDelivery();
+					
+				 	Instant instantDate = order.getApprovalDetails().getExpectedDelivery();
 
 					String stringDate = Date.from(instantDate).toString();
 
-					// date to string conversion for report format
-
+					if(order.getApprovalDetails()==null)
+					{
 					orderMaster.setDueDate(stringDate.substring(4, 10));
+							
+					orderMaster.setDueTime((Instant.now().plus(Duration.ofMinutes(getDeliveryTime(store.getMaxDeliveryTime()).getMinute()))).toString());
+					
+	
+					Instant.now().plus(Duration.ofMinutes(getDeliveryTime(store.getMaxDeliveryTime()).getMinute()));
 
-					orderMaster.setDueTime(stringDate.substring(11, 16));
+					}
+					
+					else
+					{
+						orderMaster.setDueDate(stringDate.substring(4, 10));
+						
+						orderMaster.setDueTime(stringDate.substring(11, 16));
+					}
+						
+						
 					String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
 
 					orderMaster.setOrderAcceptedAt(orderAcceptDate.substring(4, 16));
@@ -147,7 +173,7 @@ public class ReportQueryResource {
 				ReportOrderLine reportOrderLine = new ReportOrderLine();
 
 				Product product = reportService.findProductByProductId(orderline.getProductId());
-
+				// date to string conversion for report format
 				List<ComboLineItem> comboItemList = reportService.findCombosByProductId(product.getId());
 				if (comboItemList != null) {
 					List<ComboItem> comItemList = new ArrayList<ComboItem>();
@@ -244,7 +270,7 @@ public class ReportQueryResource {
 			String orderDate = Date.from(order.getDate()).toString();
 
 			orderMaster.setOrderPlaceAt(orderDate.substring(4, 16));
-
+			
 			if (order.getApprovalDetails() != null) {
 				String orderAcceptDate = Date.from(order.getApprovalDetails().getAcceptedAt()).toString();
 
@@ -441,6 +467,33 @@ public class ReportQueryResource {
 	}
 	
 	
+	/*
+	 * 
+	 */
+	@GetMapping("/findPayRefByDeliveryType/{dateBegin}/{dateEnd}/{storeId}/{deliveryType}")
+	public List<String> findAllPaymentRefByDeliveryType(@PathVariable Instant dateBegin, @PathVariable Instant dateEnd,@PathVariable String storeId,@PathVariable String deliveryType) {
+		return orderService.findAllPaymentRefByDeliveryType(dateBegin, dateEnd, storeId,deliveryType);
+	}
 	
+	@GetMapping("/fi/{storeId}")
+	public  long test(@PathVariable String storeId) {
+		Instant dateBegin = Instant.parse(LocalDate.now().toString() + "T00:00:00Z");
+		Instant dateEnd = Instant.parse(LocalDate.now().toString() + "T23:59:59Z");
+	return orderService.countAllOrdersByDateAndStoreId(dateBegin, dateEnd, storeId);
+	}
 	
+	public LocalTime getDeliveryTime(Instant instant) {
+	
+	LocalTime time = instant.atZone(ZoneOffset.UTC).toLocalTime();
+	// get hour
+	int hour = instant.atZone(ZoneOffset.UTC).getHour();
+	// get minute
+	int minute = instant.atZone(ZoneOffset.UTC).getMinute();
+	// get second
+	int second = instant.atZone(ZoneOffset.UTC).getSecond();
+	// get nano
+	int nano = instant.atZone(ZoneOffset.UTC).getNano();
+	
+	return time;
+	}
 }
