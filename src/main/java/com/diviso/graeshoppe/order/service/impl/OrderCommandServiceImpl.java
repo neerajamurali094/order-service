@@ -297,11 +297,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		
 
 		if (order.getApprovalDetails() == null) {
+			log.info("Approval details not exists");
 			orderAvro.setApprovalDetails(
 					ApprovalDetails.newBuilder()
 					.setExpectedDelivery(order.getDate().toEpochMilli()).build());
 			
 		} else {
+			log.info("Approval details exists");
 			orderAvro.setApprovalDetails(ApprovalDetails.newBuilder().setAcceptedAt(order.getDate().toEpochMilli())
 					.setExpectedDelivery(order.getApprovalDetails().getExpectedDelivery().toEpochMilli())
 					.setDecision(order.getApprovalDetails().getDecision()).build());
