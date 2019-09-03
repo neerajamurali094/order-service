@@ -8,6 +8,7 @@ import com.diviso.graeshoppe.order.service.UserService;
 import com.diviso.graeshoppe.order.avro.Address;
 import com.diviso.graeshoppe.order.avro.ApprovalDetails;
 import com.diviso.graeshoppe.order.avro.DeliveryInfo;
+import com.diviso.graeshoppe.order.avro.Order.Builder;
 import com.diviso.graeshoppe.order.avro.Status;
 import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.ProcessInstancesApi;
@@ -283,7 +284,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
 		log.info("Order fetched from db is  "+ order);
 		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
-		com.diviso.graeshoppe.order.avro.Order orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
+		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
 				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef())
 				.setOrderCountgraeshoppe(graeshoppeCount)
@@ -291,8 +292,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
 				.setStatus(Status.newBuilder().setId(Integer.parseInt(order.getStatus().getId() + ""))
 						.setName(order.getStatus().getName()).build())
-				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()))
-				.build();
+				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
+				
 		
 
 		if (order.getApprovalDetails() == null) {
@@ -325,7 +326,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.build());
 			
 		} 
-		return messageChannel.orderOut().send(MessageBuilder.withPayload(orderAvro).build());
+		com.diviso.graeshoppe.order.avro.Order message =orderAvro.build();
+		return messageChannel.orderOut().send(MessageBuilder.withPayload(message).build());
 	}
 
 	private com.diviso.graeshoppe.order.avro.OrderLine toAvroOrderLine(OrderLine orderline) {
