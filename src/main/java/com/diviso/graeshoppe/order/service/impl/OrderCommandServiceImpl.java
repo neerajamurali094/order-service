@@ -298,7 +298,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 		if (order.getApprovalDetails() == null) {
 			orderAvro.setApprovalDetails(
-					ApprovalDetails.newBuilder().setAcceptedAt(0)
+					ApprovalDetails.newBuilder()
 					.setExpectedDelivery(order.getDate().toEpochMilli()).build());
 			
 		} else {
