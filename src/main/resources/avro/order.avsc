@@ -40,7 +40,7 @@
 	"fields":[
 		{"name":"acceptedAt","type":"long","logicalType":"date"},
 		{"name":"expectedDelivery","type":["null","long"],"logicalType":"date"},
-		{"name":"decision","type":["null","string"]}
+		{"name":"decision","type":["null","string"],"default": null}
 				]
 	},
 	
