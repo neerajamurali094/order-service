@@ -281,10 +281,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		order.setOrderLines(orderLineRepository.findByOrder_Id(order.getId()));
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
-		log.info("Order fetched from db is  ", order);
+		log.info("Order fetched from db is  "+ order);
 		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
 		com.diviso.graeshoppe.order.avro.Order orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
 				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
+				.setPaymentRef(order.getPaymentRef())
 				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
 				.setStatus(Status.newBuilder().setId(Integer.parseInt(order.getStatus().getId() + ""))
 						.setName(order.getStatus().getName()).build())
@@ -292,6 +293,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.build();
 		orderAvro.setOrderCountRestaurant(restaurantCount);
 		orderAvro.setOrderCountgraeshoppe(graeshoppeCount);
+
 		if (order.getApprovalDetails() == null) {
 			orderAvro.setApprovalDetails(
 					ApprovalDetails.newBuilder().setAcceptedAt(order.getDate().toEpochMilli()).build());
