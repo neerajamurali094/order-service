@@ -53,7 +53,7 @@ spring:
             bindings:
                 output:
                     destination: topic-jhipster
-                payment:
+                order:
                     destination: order
                     contentType: application/*+avro
                     producer:
