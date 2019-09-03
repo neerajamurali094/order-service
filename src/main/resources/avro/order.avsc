@@ -32,6 +32,14 @@
 		]
 	},
 	
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"Offer",
+	"fields":[
+		{"name":"offerRef","type":["null","string"],"default": null}
+		]
+	},
 	
 	{
 	"namespace":"com.diviso.graeshoppe.order.avro",
@@ -49,7 +57,7 @@
 	"type":"record",
 	"name":"Status",
 	"fields":[
-		{"name":"id","type":"int"},
+		{"name":"id","type":"long"},
 		{"name":"name","type":["null","string"]}
 		]
 	},
@@ -96,7 +104,8 @@
 			   {"name":"deliveryInfo","type":"com.diviso.graeshoppe.order.avro.DeliveryInfo"},
 			   {"name":"approvalDetails","type":["null","com.diviso.graeshoppe.order.avro.ApprovalDetails"]},
 			   {"name":"status","type":["null","com.diviso.graeshoppe.order.avro.Status"]},
-			   {"name":"orderLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.OrderLine"}}
+			   {"name":"orderLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.OrderLine"}},
+			   {"name":"offerLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.Offer"}}
 			   
 			]
 	}

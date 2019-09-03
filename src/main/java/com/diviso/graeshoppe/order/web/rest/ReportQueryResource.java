@@ -92,7 +92,7 @@ public class ReportQueryResource {
 			 return null;
 		 }
 		 Set<OrderLine> orderLines= orderLineRepository.findByOrder_Id(order.getId());
-		 List<Offer> offers= offerRepository.findByOrder_Id(order.getId());
+		 Set<Offer> offers= offerRepository.findByOrder_Id(order.getId());
 		 if(order.getDeliveryInfo()!=null) {
 			 orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 				

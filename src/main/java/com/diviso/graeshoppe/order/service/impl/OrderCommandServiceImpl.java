@@ -22,6 +22,7 @@ import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
 import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
 import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
+import com.diviso.graeshoppe.order.domain.Offer;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.models.AcceptOrderRequest;
@@ -51,6 +52,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -280,6 +282,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	public boolean publishMesssage(String orderId) {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_Id(order.getId()));
+		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
 		log.info("Order fetched from db is  "+ order);
@@ -290,17 +293,15 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount)
 				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
-				.setStatus(Status.newBuilder().setId(Integer.parseInt(order.getStatus().getId() + ""))
+				.setStatus(Status.newBuilder().setId(order.getStatus().getId())
 						.setName(order.getStatus().getName()).build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
 				
-		
-
 		if (order.getApprovalDetails() == null) {
 			log.info("Approval details not exists");
 			orderAvro.setApprovalDetails(
 					ApprovalDetails.newBuilder()
-					.setExpectedDelivery(order.getDate().toEpochMilli()).build());
+					.setExpectedDelivery(order.getDate().plus(Duration.ofMinutes(40)).toEpochMilli()).build());
 			
 		} else {
 			log.info("Approval details exists");
@@ -330,6 +331,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.build());
 			
 		} 
+	
+		orderAvro.setOfferLines(order.getAppliedOffers().stream().map(this::toAvroOffer).collect(Collectors.toList()));
 		com.diviso.graeshoppe.order.avro.Order message =orderAvro.build();
 		return messageChannel.orderOut().send(MessageBuilder.withPayload(message).build());
 	}
@@ -346,5 +349,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return com.diviso.graeshoppe.order.avro.AuxilaryOrderLine.newBuilder()
 				.setProductId(auxilaryOrderLine.getProductId()).setQuantity(auxilaryOrderLine.getQuantity())
 				.setPricePerUnit(auxilaryOrderLine.getPricePerUnit()).setTotal(auxilaryOrderLine.getTotal()).build();
+	}
+	
+	private com.diviso.graeshoppe.order.avro.Offer toAvroOffer(Offer offer) {
+		return com.diviso.graeshoppe.order.avro.Offer.newBuilder()
+				.setOfferRef(offer.getOfferRef()).build();
+				
 	}
 }
