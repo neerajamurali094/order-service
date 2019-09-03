@@ -38,7 +38,7 @@
 	"type":"record",
 	"name":"ApprovalDetails",
 	"fields":[
-		{"name":"acceptedAt","type":"long","logicalType":"date""default": 0},
+		{"name":"acceptedAt","type":"long","logicalType":"date","default": 0},
 		{"name":"expectedDelivery","type":["null","long"],"logicalType":"date","default": null},
 		{"name":"decision","type":["null","string"],"default": null}
 				]
