@@ -2,8 +2,13 @@ package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.NotificationService;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
+import com.diviso.graeshoppe.order.service.OrderLineService;
 import com.diviso.graeshoppe.order.service.UniqueOrderIDService;
 import com.diviso.graeshoppe.order.service.UserService;
+import com.diviso.graeshoppe.order.avro.Address;
+import com.diviso.graeshoppe.order.avro.ApprovalDetails;
+import com.diviso.graeshoppe.order.avro.DeliveryInfo;
+import com.diviso.graeshoppe.order.avro.Status;
 import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.ProcessInstancesApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
@@ -14,9 +19,14 @@ import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestVariable;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
 import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
+import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
+import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Order;
+import com.diviso.graeshoppe.order.domain.OrderLine;
 import com.diviso.graeshoppe.order.models.AcceptOrderRequest;
 import com.diviso.graeshoppe.order.models.ProcessPaymentRequest;
+import com.diviso.graeshoppe.order.repository.OfferRepository;
+import com.diviso.graeshoppe.order.repository.OrderLineRepository;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.repository.search.OrderSearchRepository;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
@@ -33,6 +43,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Service;
@@ -46,6 +57,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -60,11 +72,14 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 	private final OrderRepository orderRepository;
 
+	private final OrderLineRepository orderLineRepository;
+
+	private final OfferRepository offerRepository;
+
 	private final SimpMessagingTemplate template;
 
 	@Autowired
 	private StoreResourceApi storeResourceApi;
-
 
 	private final OrderMapper orderMapper;
 
@@ -80,6 +95,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private UserService userService;
 
 	@Autowired
+	private MessageBinderConfiguration messageChannel;
+
+	@Autowired
 	private FormsApi formsApi;
 
 	@Autowired
@@ -93,11 +111,14 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 	@Autowired
 	public OrderCommandServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper,
-			OrderSearchRepository orderSearchRepository, SimpMessagingTemplate template) {
+			OrderSearchRepository orderSearchRepository, OfferRepository offerRepository,
+			SimpMessagingTemplate template, OrderLineRepository orderLineRepository) {
 		this.orderRepository = orderRepository;
 		this.orderMapper = orderMapper;
 		this.template = template;
 		this.orderSearchRepository = orderSearchRepository;
+		this.orderLineRepository = orderLineRepository;
+		this.offerRepository = offerRepository;
 	}
 
 	/**
@@ -124,7 +145,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		update(result);
 		return resource;
 	}
-	
+
 	/**
 	 * Update a order.
 	 *
@@ -138,10 +159,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		order = orderRepository.save(order);
 		OrderDTO result = orderMapper.toDto(order);
 		orderSearchRepository.save(order);
-		
+
 		return result;
 	}
-
 
 	public CommandResource initiateOrder(String trackingId, String storeId, String customerId, String email) {
 		ProcessInstanceCreateRequest processInstanceCreateRequest = new ProcessInstanceCreateRequest();
@@ -179,7 +199,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		orderId.setType("String");
 		orderId.setValue(trackingId);
 		properties.add(orderId);
-		String type=storeResourceApi.findStoreSettingsByStoreIdUsingGET(storeId).getBody().getOrderAcceptType();
+		String type = storeResourceApi.findStoreSettingsByStoreIdUsingGET(storeId).getBody().getOrderAcceptType();
 		RestFormProperty acceptType = new RestFormProperty();
 		acceptType.setId("acceptType");
 		acceptType.setName("acceptType");
@@ -255,5 +275,62 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return orderSearchRepository.search(queryStringQuery(query), pageable).map(orderMapper::toDto);
 	}
 
+	@Override
+	public boolean publishMesssage(String orderId) {
+		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
+		order.setOrderLines(orderLineRepository.findByOrder_Id(order.getId()));
+		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
+		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
+		log.info("Order fetched from db is  ", order);
+		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
+		com.diviso.graeshoppe.order.avro.Order orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
+				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
+				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
+				.setDeliveryInfo(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
+						.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge())
+						.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes())
+						.setDeliveryAddress(Address.newBuilder()
+								.setCustomerId(order.getDeliveryInfo().getDeliveryAddress().getCustomerId())
+								.setPincode(order.getDeliveryInfo().getDeliveryAddress().getPincode())
+								.setHouseNoOrBuildingName(
+										order.getDeliveryInfo().getDeliveryAddress().getHouseNoOrBuildingName())
+								.setRoadNameAreaOrStreet(
+										order.getDeliveryInfo().getDeliveryAddress().getRoadNameAreaOrStreet())
+								.setCity(order.getDeliveryInfo().getDeliveryAddress().getCity())
+								.setState(order.getDeliveryInfo().getDeliveryAddress().getState())
+								.setLandmark(order.getDeliveryInfo().getDeliveryAddress().getLandmark())
+								.setPhone(order.getDeliveryInfo().getDeliveryAddress().getPhone())
+								.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
+								.build())
+						.build())
+				.setStatus(Status.newBuilder().setId(Integer.parseInt(order.getStatus().getId() + ""))
+						.setName(order.getStatus().getName()).build())
+				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()))
+				.build();
+		orderAvro.setOrderCountRestaurant(restaurantCount);
+		orderAvro.setOrderCountgraeshoppe(graeshoppeCount);
+		if (order.getApprovalDetails() == null) {
+			orderAvro.setApprovalDetails(
+					ApprovalDetails.newBuilder().setAcceptedAt(order.getDate().toEpochMilli()).build());
+		} else {
+			orderAvro.setApprovalDetails(ApprovalDetails.newBuilder().setAcceptedAt(order.getDate().toEpochMilli())
+					.setExpectedDelivery(order.getApprovalDetails().getExpectedDelivery().toEpochMilli())
+					.setDecision(order.getApprovalDetails().getDecision()).build());
+		}
+		return messageChannel.orderOut().send(MessageBuilder.withPayload(orderAvro).build());
+	}
 
+	private com.diviso.graeshoppe.order.avro.OrderLine toAvroOrderLine(OrderLine orderline) {
+		return com.diviso.graeshoppe.order.avro.OrderLine.newBuilder().setProductId(orderline.getProductId())
+				.setQuantity(orderline.getQuantity()).setPricePerUnit(orderline.getPricePerUnit())
+				.setTotal(orderline.getTotal()).setAuxilaryOrderLines(orderline.getRequiedAuxilaries().stream()
+						.map(this::toAvroAuxilaryLine).collect(Collectors.toList()))
+				.build();
+	}
+
+	private com.diviso.graeshoppe.order.avro.AuxilaryOrderLine toAvroAuxilaryLine(AuxilaryOrderLine auxilaryOrderLine) {
+		return com.diviso.graeshoppe.order.avro.AuxilaryOrderLine.newBuilder()
+				.setProductId(auxilaryOrderLine.getProductId()).setQuantity(auxilaryOrderLine.getQuantity())
+				.setPricePerUnit(auxilaryOrderLine.getPricePerUnit()).setTotal(auxilaryOrderLine.getTotal()).build();
+	}
 }

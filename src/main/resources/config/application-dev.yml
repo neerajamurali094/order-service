@@ -45,11 +45,21 @@ spring:
         stream:
             kafka:
                 binder:
-                    brokers: 
-                    zk-nodes: 
+                    brokers: dev.servers.divisosofttech.com
+                    zk-nodes: dev.servers.divisosofttech.com
+                    configuration:
+                       key.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+                       value.serializer: com.diviso.graeshoppe.order.config.SerdeConfig
             bindings:
                 output:
                     destination: topic-jhipster
+                payment:
+                    destination: order
+                    contentType: application/*+avro
+                    producer:
+                       useNativeEncoding: true
+            schemaRegistryClient:
+              endpoint: http://dev.servers.divisosofttech.com:8081
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/orderdb?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC

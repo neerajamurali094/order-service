@@ -16,6 +16,7 @@ import java.util.Optional;
  */
 public interface OrderCommandService {
 
+	boolean publishMesssage(String orderId);
     /**
      * Save a order.
      *

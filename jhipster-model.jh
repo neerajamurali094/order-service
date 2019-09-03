@@ -4,7 +4,7 @@ entity Order{
 	storeId String,
 	date Instant,
 	grandTotal Double,
-	paymentRef String,
+	paymentRef String,  
 	email String
 }
 entity DeliveryInfo{

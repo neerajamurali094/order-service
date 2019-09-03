@@ -152,5 +152,9 @@ public class OrderCommandResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @PostMapping("/pulishMessage/{orderId}")
+    public boolean publishOrderToMessagebroker(@PathVariable String orderId) {
+    	return orderService.publishMesssage(orderId);
+    }
    
 }

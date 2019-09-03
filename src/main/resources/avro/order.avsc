@@ -1,0 +1,107 @@
+[
+
+ 
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"Address",
+	"fields":[
+		{"name":"customerId","type":["null","string"]},
+		{"name":"pincode","type":"long"},
+		{"name":"houseNoOrBuildingName","type":["null","string"]},
+		{"name":"roadNameAreaOrStreet","type":["null","string"]},
+		{"name":"city","type":["null","string"]},
+		{"name":"state","type":["null","string"]},
+		{"name":"landmark","type":["null","string"]},
+		{"name":"name","type":["null","string"]},
+		{"name":"addressType","type":["null","string"]},
+		{"name":"phone","type":"long"},
+		{"name":"alternatePhone","type":"long"}	
+		]
+	},
+	
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"DeliveryInfo",
+	"fields":[
+		{"name":"deliveryType","type":["null","string"]},
+		{"name":"deliveryCharge","type":"double"},
+		{"name":"deliveryNotes","type":["null","string"]},
+		{"name":"deliveryAddress","type":"com.diviso.graeshoppe.order.avro.Address"}	
+		]
+	},
+	
+	
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"ApprovalDetails",
+	"fields":[
+		{"name":"acceptedAt","type":"long","logicalType":"date"},
+		{"name":"expectedDelivery","type":"long","logicalType":"date"},
+		{"name":"decision","type":["null","string"]}
+				]
+	},
+	
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"Status",
+	"fields":[
+		{"name":"id","type":"int"},
+		{"name":"name","type":["null","string"]}
+		]
+	},
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"AuxilaryOrderLine",
+	"fields":[
+		{"name":"productId","type":"long"},
+		{"name":"quantity","type":"int"},
+		{"name":"pricePerUnit","type":"double"},
+		{"name":"total","type":"double"}
+
+		]
+	},
+	
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"OrderLine",
+	"fields":[
+		{"name":"productId","type":"long"},
+		{"name":"quantity","type":"int"},
+		{"name":"pricePerUnit","type":"double"},
+		{"name":"total","type":"double"},
+		{"name":"auxilaryOrderLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.AuxilaryOrderLine"}}
+	]
+	},
+	
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"name":"Order",
+	"type":"record",
+	"fields":[
+			   {"name":"orderId","type":["null","string"]},
+			   {"name":"customerId","type":["null","string"]},
+			   {"name":"storeId","type":["null","string"]},
+			   {"name":"date","type":"long","logicalType":"date"},
+			   {"name":"grandTotal","type":"double"},
+			   {"name":"paymentRef","type":["null","string"]},
+			   {"name":"email","type":["null","string"]},
+			   {"name":"orderCountRestaurant","type":"long"},
+			   {"name":"orderCountgraeshoppe","type":"long"},
+			   {"name":"deliveryInfo","type":"com.diviso.graeshoppe.order.avro.DeliveryInfo"},
+			   {"name":"approvalDetails","type":"com.diviso.graeshoppe.order.avro.ApprovalDetails"},
+			   {"name":"status","type":"com.diviso.graeshoppe.order.avro.Status"},
+			   {"name":"orderLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.OrderLine"}}
+			   
+			]
+	}
+	
+	
+	
+	
+]

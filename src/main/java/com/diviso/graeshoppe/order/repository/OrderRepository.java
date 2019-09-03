@@ -24,7 +24,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	Optional<Order> findByOrderIdAndStatus_Name(String orderId, String status);
 
-	long countByDateBetweenAndStoreId(Instant dateBegin, Instant dateEnd, String storeId);
+	public long countByDateBetweenAndStoreId(Instant dateBegin, Instant dateEnd, String storeId);
+	
+	public long countByStoreIdAndCustomerId(String storeId,String customerId);
+	
+	long countByCustomerId(String customerId);
 
 	@Query(value = "SELECT COUNT(c) FROM Order c  WHERE c.date BETWEEN :dateBegin AND :dateEnd AND c.storeId=:storeId AND  c.deliveryInfo.deliveryType LIKE CONCAT('%',:deliveryType,'%')")
 	public Integer countBystoreIdAndDeliveryType(@Param("dateBegin") Instant dateBegin,

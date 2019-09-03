@@ -70,7 +70,12 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
         deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
         DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
         deliveryInfoSearchRepository.save(deliveryInfo);
-        Long phone=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
+        Long phone=0l;
+        if(deliveryInfoDTO.getDeliveryAddressId()!=null) {
+        	phone=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
+        }else {
+        	phone=9809203816l;
+        }
         CommandResource commandResource=confirmDelivery(taskId,phone,deliveryInfoDTO.getDeliveryType());
         commandResource.setSelfId(result.getId());
         update(result);

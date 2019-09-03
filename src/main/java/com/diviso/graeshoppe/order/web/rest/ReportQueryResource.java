@@ -22,6 +22,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,7 @@ public class ReportQueryResource {
 		 if(order==null) {
 			 return null;
 		 }
-		 List<OrderLine> orderLines= orderLineRepository.findByOrder_Id(order.getId());
+		 Set<OrderLine> orderLines= orderLineRepository.findByOrder_Id(order.getId());
 		 List<Offer> offers= offerRepository.findByOrder_Id(order.getId());
 		 if(order.getDeliveryInfo()!=null) {
 			 orderMaster.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
