@@ -91,11 +91,11 @@
 			   {"name":"grandTotal","type":"double"},
 			   {"name":"paymentRef","type":["null","string"]},
 			   {"name":"email","type":["null","string"]},
-			   {"name":"orderCountRestaurant","type":"long"},
-			   {"name":"orderCountgraeshoppe","type":"long"},
+			   {"name":"orderCountRestaurant","type":["null","long"]},
+			   {"name":"orderCountgraeshoppe","type":["null","long"]},
 			   {"name":"deliveryInfo","type":"com.diviso.graeshoppe.order.avro.DeliveryInfo"},
-			   {"name":"approvalDetails","type":"com.diviso.graeshoppe.order.avro.ApprovalDetails"},
-			   {"name":"status","type":"com.diviso.graeshoppe.order.avro.Status"},
+			   {"name":"approvalDetails","type":["null","com.diviso.graeshoppe.order.avro.ApprovalDetails"]},
+			   {"name":"status","type":["null","com.diviso.graeshoppe.order.avro.Status"]},
 			   {"name":"orderLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.OrderLine"}}
 			   
 			]
