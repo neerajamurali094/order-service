@@ -60,6 +60,9 @@ spring:
                        useNativeEncoding: true
             schemaRegistryClient:
               endpoint: http://dev.servers.divisosofttech.com:8081
+            schema:
+              avro:
+                schema-locations: classpath:avro/order.avsc
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/orderdb?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
