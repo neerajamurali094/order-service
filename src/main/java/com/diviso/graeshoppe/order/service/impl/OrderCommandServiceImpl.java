@@ -286,23 +286,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		com.diviso.graeshoppe.order.avro.Order orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
 				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
-				.setDeliveryInfo(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
-						.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge())
-						.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes())
-						.setDeliveryAddress(Address.newBuilder()
-								.setCustomerId(order.getDeliveryInfo().getDeliveryAddress().getCustomerId())
-								.setPincode(order.getDeliveryInfo().getDeliveryAddress().getPincode())
-								.setHouseNoOrBuildingName(
-										order.getDeliveryInfo().getDeliveryAddress().getHouseNoOrBuildingName())
-								.setRoadNameAreaOrStreet(
-										order.getDeliveryInfo().getDeliveryAddress().getRoadNameAreaOrStreet())
-								.setCity(order.getDeliveryInfo().getDeliveryAddress().getCity())
-								.setState(order.getDeliveryInfo().getDeliveryAddress().getState())
-								.setLandmark(order.getDeliveryInfo().getDeliveryAddress().getLandmark())
-								.setPhone(order.getDeliveryInfo().getDeliveryAddress().getPhone())
-								.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
-								.build())
-						.build())
 				.setStatus(Status.newBuilder().setId(Integer.parseInt(order.getStatus().getId() + ""))
 						.setName(order.getStatus().getName()).build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()))
@@ -317,6 +300,28 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.setExpectedDelivery(order.getApprovalDetails().getExpectedDelivery().toEpochMilli())
 					.setDecision(order.getApprovalDetails().getDecision()).build());
 		}
+		
+		if(order.getDeliveryInfo().getDeliveryAddress() != null ) {
+				
+			orderAvro.setDeliveryInfo(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
+					.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge())
+					.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes())
+					.setDeliveryAddress(Address.newBuilder()
+							.setCustomerId(order.getDeliveryInfo().getDeliveryAddress().getCustomerId())
+							.setPincode(order.getDeliveryInfo().getDeliveryAddress().getPincode())
+							.setHouseNoOrBuildingName(
+									order.getDeliveryInfo().getDeliveryAddress().getHouseNoOrBuildingName())
+							.setRoadNameAreaOrStreet(
+									order.getDeliveryInfo().getDeliveryAddress().getRoadNameAreaOrStreet())
+							.setCity(order.getDeliveryInfo().getDeliveryAddress().getCity())
+							.setState(order.getDeliveryInfo().getDeliveryAddress().getState())
+							.setLandmark(order.getDeliveryInfo().getDeliveryAddress().getLandmark())
+							.setPhone(order.getDeliveryInfo().getDeliveryAddress().getPhone())
+							.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
+							.build())
+					.build());
+			
+		} 
 		return messageChannel.orderOut().send(MessageBuilder.withPayload(orderAvro).build());
 	}
 

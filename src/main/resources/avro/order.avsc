@@ -16,7 +16,7 @@
 		{"name":"name","type":["null","string"]},
 		{"name":"addressType","type":["null","string"]},
 		{"name":"phone","type":"long"},
-		{"name":"alternatePhone","type":"long"}	
+		{"name":"alternatePhone","type":["null","long"]}	
 		]
 	},
 	
