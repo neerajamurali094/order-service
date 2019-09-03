@@ -286,13 +286,14 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		com.diviso.graeshoppe.order.avro.Order orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
 				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef())
+				.setOrderCountgraeshoppe(graeshoppeCount)
+				.setOrderCountRestaurant(restaurantCount)
 				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
 				.setStatus(Status.newBuilder().setId(Integer.parseInt(order.getStatus().getId() + ""))
 						.setName(order.getStatus().getName()).build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()))
 				.build();
-		orderAvro.setOrderCountRestaurant(restaurantCount);
-		orderAvro.setOrderCountgraeshoppe(graeshoppeCount);
+		
 
 		if (order.getApprovalDetails() == null) {
 			orderAvro.setApprovalDetails(
