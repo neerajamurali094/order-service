@@ -310,12 +310,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.setDecision(order.getApprovalDetails().getDecision()).build());
 		}
 		
+		orderAvro.setDeliveryInfoBuilder(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
+				.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge())
+				.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes()));
 		if(order.getDeliveryInfo().getDeliveryAddress() != null ) {
 				
-			orderAvro.setDeliveryInfo(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
-					.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge())
-					.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes())
-					.setDeliveryAddress(Address.newBuilder()
+			
+					orderAvro.getDeliveryInfoBuilder().setDeliveryAddress(Address.newBuilder()
 							.setCustomerId(order.getDeliveryInfo().getDeliveryAddress().getCustomerId())
 							.setPincode(order.getDeliveryInfo().getDeliveryAddress().getPincode())
 							.setHouseNoOrBuildingName(
@@ -327,11 +328,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 							.setLandmark(order.getDeliveryInfo().getDeliveryAddress().getLandmark())
 							.setPhone(order.getDeliveryInfo().getDeliveryAddress().getPhone())
 							.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
-							.build())
-					.build());
+							.build());
 			
-		} 
-	
+		}
+		orderAvro.getDeliveryInfoBuilder().build();
 		orderAvro.setOfferLines(order.getAppliedOffers().stream().map(this::toAvroOffer).collect(Collectors.toList()));
 		com.diviso.graeshoppe.order.avro.Order message =orderAvro.build();
 		return messageChannel.orderOut().send(MessageBuilder.withPayload(message).build());
