@@ -28,7 +28,7 @@
 		{"name":"deliveryType","type":["null","string"]},
 		{"name":"deliveryCharge","type":"double"},
 		{"name":"deliveryNotes","type":["null","string"],"default": null},
-		{"name":"deliveryAddress","type":"com.diviso.graeshoppe.order.avro.Address","default": null}	
+		{"name":"deliveryAddress","type":["null","com.diviso.graeshoppe.order.avro.Address"],"default": null}	
 		]
 	},
 	
