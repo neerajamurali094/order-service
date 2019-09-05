@@ -2,6 +2,7 @@ package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.ApprovalDetailsService;
 import com.diviso.graeshoppe.order.service.NotificationService;
+import com.diviso.graeshoppe.order.service.OrderCommandService;
 import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
@@ -46,6 +47,9 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
     
     @Autowired
     private TasksApi tasksApi;
+    
+    @Autowired
+    private OrderCommandService orderCommandService;
     
     @Autowired
     private NotificationService notificationService;
@@ -115,6 +119,7 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		// orderRepository.findByOrderId(acceptOrderRequest.getOrderId());
 		sendNotification(acceptOrderRequest.getOrderId(),acceptOrderRequest.getCustomerId());
 		CommandResource commandResource = resourceAssembler.toResource(processInstanceId);
+		orderCommandService.publishMesssage(acceptOrderRequest.getOrderId());
 		return commandResource;
 	}
 	
