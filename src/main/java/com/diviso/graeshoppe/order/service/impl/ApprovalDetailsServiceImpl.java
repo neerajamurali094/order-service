@@ -47,10 +47,7 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
     
     @Autowired
     private TasksApi tasksApi;
-    
-    @Autowired
-    private OrderCommandService orderCommandService;
-    
+        
     @Autowired
     private NotificationService notificationService;
     
@@ -119,7 +116,6 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		// orderRepository.findByOrderId(acceptOrderRequest.getOrderId());
 		sendNotification(acceptOrderRequest.getOrderId(),acceptOrderRequest.getCustomerId());
 		CommandResource commandResource = resourceAssembler.toResource(processInstanceId);
-		orderCommandService.publishMesssage(acceptOrderRequest.getOrderId());
 		return commandResource;
 	}
 	
