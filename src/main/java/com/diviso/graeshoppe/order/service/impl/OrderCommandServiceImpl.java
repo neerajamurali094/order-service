@@ -292,7 +292,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setPaymentRef(order.getPaymentRef())
 				.setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount)
-				.setDate(order.getDate().toEpochMilli()).setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
+				.setDate(order.getDate().toEpochMilli()).setGrandTotal(
+						Math.round(order.getGrandTotal())).setEmail(order.getEmail())
 				.setStatus(Status.newBuilder().setId(order.getStatus().getId())
 						.setName(order.getStatus().getName()).build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
@@ -311,7 +312,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		}
 		
 		orderAvro.setDeliveryInfoBuilder(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
-				.setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge())
 				.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes()));
 		if(order.getDeliveryInfo().getDeliveryAddress() != null ) {
 				
@@ -331,6 +331,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 							.build());
 			
 		}
+		if(order.getDeliveryInfo().getDeliveryCharge() == null) {
+			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(0.0d);
+		} else {
+			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
+		}
 		orderAvro.getDeliveryInfoBuilder().build();
 		orderAvro.setOfferLines(order.getAppliedOffers().stream().map(this::toAvroOffer).collect(Collectors.toList()));
 		com.diviso.graeshoppe.order.avro.Order message =orderAvro.build();
@@ -340,7 +345,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private com.diviso.graeshoppe.order.avro.OrderLine toAvroOrderLine(OrderLine orderline) {
 		return com.diviso.graeshoppe.order.avro.OrderLine.newBuilder().setProductId(orderline.getProductId())
 				.setQuantity(orderline.getQuantity()).setPricePerUnit(orderline.getPricePerUnit())
-				.setTotal(orderline.getTotal()).setAuxilaryOrderLines(orderline.getRequiedAuxilaries().stream()
+				.setTotal(Math.round(orderline.getTotal())).setAuxilaryOrderLines(orderline.getRequiedAuxilaries().stream()
 						.map(this::toAvroAuxilaryLine).collect(Collectors.toList()))
 				.build();
 	}
