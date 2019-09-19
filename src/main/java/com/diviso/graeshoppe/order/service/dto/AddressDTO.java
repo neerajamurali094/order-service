@@ -11,7 +11,7 @@ public class AddressDTO implements Serializable {
 
     private String customerId;
 
-    private Long pincode;
+    private String pincode;
 
     private String houseNoOrBuildingName;
 
@@ -48,11 +48,11 @@ public class AddressDTO implements Serializable {
         this.customerId = customerId;
     }
 
-    public Long getPincode() {
+    public String getPincode() {
         return pincode;
     }
 
-    public void setPincode(Long pincode) {
+    public void setPincode(String pincode) {
         this.pincode = pincode;
     }
 
@@ -154,7 +154,7 @@ public class AddressDTO implements Serializable {
         return "AddressDTO{" +
             "id=" + getId() +
             ", customerId='" + getCustomerId() + "'" +
-            ", pincode=" + getPincode() +
+            ", pincode='" + getPincode() + "'" +
             ", houseNoOrBuildingName='" + getHouseNoOrBuildingName() + "'" +
             ", roadNameAreaOrStreet='" + getRoadNameAreaOrStreet() + "'" +
             ", city='" + getCity() + "'" +

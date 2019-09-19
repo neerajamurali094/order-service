@@ -52,8 +52,8 @@ public class AddressResourceIntTest {
     private static final String DEFAULT_CUSTOMER_ID = "AAAAAAAAAA";
     private static final String UPDATED_CUSTOMER_ID = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_PINCODE = 1L;
-    private static final Long UPDATED_PINCODE = 2L;
+    private static final String DEFAULT_PINCODE = "AAAAAAAAAA";
+    private static final String UPDATED_PINCODE = "BBBBBBBBBB";
 
     private static final String DEFAULT_HOUSE_NO_OR_BUILDING_NAME = "AAAAAAAAAA";
     private static final String UPDATED_HOUSE_NO_OR_BUILDING_NAME = "BBBBBBBBBB";
@@ -224,7 +224,7 @@ public class AddressResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(address.getId().intValue())))
             .andExpect(jsonPath("$.[*].customerId").value(hasItem(DEFAULT_CUSTOMER_ID.toString())))
-            .andExpect(jsonPath("$.[*].pincode").value(hasItem(DEFAULT_PINCODE.intValue())))
+            .andExpect(jsonPath("$.[*].pincode").value(hasItem(DEFAULT_PINCODE.toString())))
             .andExpect(jsonPath("$.[*].houseNoOrBuildingName").value(hasItem(DEFAULT_HOUSE_NO_OR_BUILDING_NAME.toString())))
             .andExpect(jsonPath("$.[*].roadNameAreaOrStreet").value(hasItem(DEFAULT_ROAD_NAME_AREA_OR_STREET.toString())))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
@@ -248,7 +248,7 @@ public class AddressResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(address.getId().intValue()))
             .andExpect(jsonPath("$.customerId").value(DEFAULT_CUSTOMER_ID.toString()))
-            .andExpect(jsonPath("$.pincode").value(DEFAULT_PINCODE.intValue()))
+            .andExpect(jsonPath("$.pincode").value(DEFAULT_PINCODE.toString()))
             .andExpect(jsonPath("$.houseNoOrBuildingName").value(DEFAULT_HOUSE_NO_OR_BUILDING_NAME.toString()))
             .andExpect(jsonPath("$.roadNameAreaOrStreet").value(DEFAULT_ROAD_NAME_AREA_OR_STREET.toString()))
             .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
@@ -375,7 +375,7 @@ public class AddressResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(address.getId().intValue())))
             .andExpect(jsonPath("$.[*].customerId").value(hasItem(DEFAULT_CUSTOMER_ID)))
-            .andExpect(jsonPath("$.[*].pincode").value(hasItem(DEFAULT_PINCODE.intValue())))
+            .andExpect(jsonPath("$.[*].pincode").value(hasItem(DEFAULT_PINCODE)))
             .andExpect(jsonPath("$.[*].houseNoOrBuildingName").value(hasItem(DEFAULT_HOUSE_NO_OR_BUILDING_NAME)))
             .andExpect(jsonPath("$.[*].roadNameAreaOrStreet").value(hasItem(DEFAULT_ROAD_NAME_AREA_OR_STREET)))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))

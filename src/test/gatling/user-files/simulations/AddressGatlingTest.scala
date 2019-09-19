@@ -102,7 +102,7 @@ class AddressGatlingTest extends Simulation {
             .body(StringBody("""{
                 "id":null
                 , "customerId":"SAMPLE_TEXT"
-                , "pincode":null
+                , "pincode":"SAMPLE_TEXT"
                 , "houseNoOrBuildingName":"SAMPLE_TEXT"
                 , "roadNameAreaOrStreet":"SAMPLE_TEXT"
                 , "city":"SAMPLE_TEXT"

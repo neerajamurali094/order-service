@@ -26,7 +26,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="pincode" type="bigint">
+            <column name="pincode" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

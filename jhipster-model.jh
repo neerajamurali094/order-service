@@ -22,7 +22,7 @@ entity Offer{
 }
 entity Address{
 	customerId String,
-	pincode Long,
+	pincode String,
 	houseNoOrBuildingName String,
 	roadNameAreaOrStreet String,
 	city String,

@@ -7,7 +7,7 @@
 	"name":"Address",
 	"fields":[
 		{"name":"customerId","type":["null","string"],"default": null},
-		{"name":"pincode","type":"long"},
+		{"name":"pincode","type":["null","string"],"default": null},
 		{"name":"houseNoOrBuildingName","type":["null","string"],"default": null},
 		{"name":"roadNameAreaOrStreet","type":["null","string"],"default": null},
 		{"name":"city","type":["null","string"],"default": null},
