@@ -19,7 +19,7 @@ public interface DeliveryInfoService {
      * @param taskId 
      * @return the persisted entity
      */
-    CommandResource save(DeliveryInfoDTO deliveryInfoDTO,String taskId);
+    CommandResource save(DeliveryInfoDTO deliveryInfoDTO,String taskId,String orderId);
     
     DeliveryInfoDTO update(DeliveryInfoDTO deliveryInfoDTO);
 

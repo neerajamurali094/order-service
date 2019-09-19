@@ -58,6 +58,11 @@ spring:
                     contentType: application/*+avro
                     producer:
                        useNativeEncoding: true
+                notificaton:
+                    destination: notificaton
+                    contentType: application/*+avro
+                    producer:
+                       useNativeEncoding: true                       
             schemaRegistryClient:
               endpoint: http://dev.servers.divisosofttech.com:8081
             schema:

@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 import java.time.Instant;
-import java.util.List;
 import org.springframework.data.repository.query.Param;
 
 /**
@@ -18,7 +17,7 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-	Order findByOrderId(String orderId);
+	Optional<Order> findByOrderId(String orderId);
 
 	List<Order> findByStoreId(String storeId);
 

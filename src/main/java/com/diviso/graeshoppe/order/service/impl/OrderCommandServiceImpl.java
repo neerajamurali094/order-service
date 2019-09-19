@@ -1,8 +1,6 @@
 package com.diviso.graeshoppe.order.service.impl;
 
-import com.diviso.graeshoppe.order.service.NotificationService;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
-import com.diviso.graeshoppe.order.service.OrderLineService;
 import com.diviso.graeshoppe.order.service.UniqueOrderIDService;
 import com.diviso.graeshoppe.order.service.UserService;
 import com.diviso.graeshoppe.order.avro.Address;
@@ -25,16 +23,12 @@ import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Offer;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.domain.OrderLine;
-import com.diviso.graeshoppe.order.models.AcceptOrderRequest;
-import com.diviso.graeshoppe.order.models.ProcessPaymentRequest;
 import com.diviso.graeshoppe.order.repository.OfferRepository;
 import com.diviso.graeshoppe.order.repository.OrderLineRepository;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.repository.search.OrderSearchRepository;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
 import com.diviso.graeshoppe.order.resource.assembler.ResourceAssembler;
-import com.diviso.graeshoppe.order.security.SecurityUtils;
-import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import com.diviso.graeshoppe.order.service.dto.UniqueOrderIDDTO;
 import com.diviso.graeshoppe.order.service.mapper.OrderMapper;
@@ -47,16 +41,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -360,5 +350,11 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return com.diviso.graeshoppe.order.avro.Offer.newBuilder()
 				.setOfferRef(offer.getOfferRef()).build();
 				
+	}
+
+	@Override
+	public Optional<OrderDTO> findByOrderID(String orderId) {
+		
+		return orderRepository.findByOrderId(orderId).map(orderMapper::toDto);
 	}
 }

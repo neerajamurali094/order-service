@@ -1,12 +1,9 @@
 package com.diviso.graeshoppe.order.web.rest;
-import com.diviso.graeshoppe.order.models.AcceptOrderRequest;
-import com.diviso.graeshoppe.order.models.ProcessPaymentRequest;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
 import com.diviso.graeshoppe.order.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.order.web.rest.util.HeaderUtil;
 import com.diviso.graeshoppe.order.web.rest.util.PaginationUtil;
-import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -65,6 +62,7 @@ public class OrderCommandResource {
     @PostMapping("/orders")
     public ResponseEntity<CommandResource> createOrder(@RequestBody OrderDTO orderDTO) throws URISyntaxException {
 		orderDTO.setDate(Instant.now());
+		orderDTO.setStatusId(1l);
         log.debug("REST request to save Order : {}", orderDTO);
         if (orderDTO.getId() != null) {
             throw new BadRequestAlertException("A new order cannot already have an ID", ENTITY_NAME, "idexists");

@@ -20,7 +20,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	@Override
 	public OrderDTO findByOrderId(String orderId) {
 
-		return orderMapper.toDto(orderRepository.findByOrderId(orderId));
+		return orderMapper.toDto(orderRepository.findByOrderId(orderId).get());
 	}
 
 }

@@ -2,16 +2,21 @@ package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.AddressService;
 import com.diviso.graeshoppe.order.service.DeliveryInfoService;
+import com.diviso.graeshoppe.order.service.NotificationCommandService;
+import com.diviso.graeshoppe.order.service.OrderCommandService;
 import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
+import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.repository.DeliveryInfoRepository;
 import com.diviso.graeshoppe.order.repository.search.DeliveryInfoSearchRepository;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
 import com.diviso.graeshoppe.order.resource.assembler.ResourceAssembler;
 import com.diviso.graeshoppe.order.service.dto.DeliveryInfoDTO;
+import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
+import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import com.diviso.graeshoppe.order.service.mapper.DeliveryInfoMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,12 +45,21 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
     private final DeliveryInfoRepository deliveryInfoRepository;
 
     @Autowired
+    private OrderCommandService orderService;
+    
+    @Autowired
+    private NotificationCommandService notificationService;
+    
+    @Autowired
 	private AddressService addressService;
 
 	@Autowired
 	private TasksApi tasksApi;
 	@Autowired
 	private FormsApi formsApi;
+	
+	@Autowired
+	private CustomerResourceApi customerResourceApi;
 	@Autowired
 	private ResourceAssembler resourceAssembler;
     private final DeliveryInfoMapper deliveryInfoMapper;
@@ -61,16 +76,16 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
      * Save a deliveryInfo.
      *
      * @param deliveryInfoDTO the entity to save
-     * @return the persisted entity
+     * @return the persisted entityorderId
      */
     @Override
-    public CommandResource save(DeliveryInfoDTO deliveryInfoDTO,String taskId) {
+    public CommandResource save(DeliveryInfoDTO deliveryInfoDTO,String taskId,String orderId) {
         log.debug("Request to save DeliveryInfo : {}", deliveryInfoDTO);
         DeliveryInfo deliveryInfo = deliveryInfoMapper.toEntity(deliveryInfoDTO);
         deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
         DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
         deliveryInfoSearchRepository.save(deliveryInfo);
-        Long phone=0l;
+        Long phone;
         if(deliveryInfoDTO.getDeliveryAddressId()!=null) {
         	phone=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
         }else {
@@ -79,6 +94,26 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
         CommandResource commandResource=confirmDelivery(taskId,phone,deliveryInfoDTO.getDeliveryType());
         commandResource.setSelfId(result.getId());
         update(result);
+        OrderDTO orderDTO=orderService.findByOrderID(orderId).get();
+        orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
+        commandResource.setOrderId(orderId);
+        if (commandResource.getNextTaskName().equals("Accept Order")) {
+        	NotificationDTO notificationDTO=new NotificationDTO();
+        	notificationDTO.setDate(Instant.now());
+        	notificationDTO.setMessage("You have new order request");
+        	notificationDTO.setTitle("Order Request");
+        	notificationDTO.setTargetId(orderId);
+        	notificationDTO.setStatus("unread");
+        	notificationDTO.setReceiverId(orderDTO.getStoreId());
+        	notificationDTO.setType("Pending-Notification");
+        	notificationService.save(notificationDTO); //sending notifications from here to the store
+			orderDTO.setStatusId(2l); // order is unapproved
+		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
+			orderDTO.setStatusId(3l); // order is auto approved
+			orderService.publishMesssage(orderId); // sending order to MOM
+
+		}
+        orderService.update(orderDTO);
         return commandResource;
     }
     

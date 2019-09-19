@@ -128,20 +128,24 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findByStoreId(storeId);
 	}
 
+	@Override
 	public long countAllOrdersByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
 		
 		return orderRepository.countByDateBetweenAndStoreId(dateBegin, dateEnd, storeId);
 	}
 
+	@Override
 	public Integer countOrdersByStoreIdAndDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,
 			String deliveryType) {
 		return orderRepository.countBystoreIdAndDeliveryType(dateBegin, dateEnd, storeId, deliveryType);
 	}
 
+	@Override
 	public List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId) {
 		return orderRepository.findAllPaymentRef(dateBegin, dateEnd, storeId);
 	}
 	
+	@Override
 	public List<String> findAllPaymentRefByDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,String deliveryType)
 	{
 		return orderRepository.findAllPaymentRefByDeliveryType(dateBegin, dateEnd, storeId,deliveryType);

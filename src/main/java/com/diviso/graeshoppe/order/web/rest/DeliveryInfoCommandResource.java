@@ -44,13 +44,13 @@ public class DeliveryInfoCommandResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new deliveryInfoDTO, or with status 400 (Bad Request) if the deliveryInfo has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/delivery-infos/{taskId}")
-    public ResponseEntity<CommandResource> createDeliveryInfo(@RequestBody DeliveryInfoDTO deliveryInfoDTO,@PathVariable String taskId) throws URISyntaxException {
+    @PostMapping("/delivery-infos/{taskId}/{orderId}")
+    public ResponseEntity<CommandResource> createDeliveryInfo(@RequestBody DeliveryInfoDTO deliveryInfoDTO,@PathVariable String taskId,@PathVariable String orderId) throws URISyntaxException {
         log.debug("REST request to save DeliveryInfo : {}", deliveryInfoDTO);
         if (deliveryInfoDTO.getId() != null) {
             throw new BadRequestAlertException("A new deliveryInfo cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        CommandResource result = deliveryInfoService.save(deliveryInfoDTO,taskId);
+        CommandResource result = deliveryInfoService.save(deliveryInfoDTO,taskId,orderId);
         return ResponseEntity.created(new URI("/api/delivery-infos/" + result.getNextTaskId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getNextTaskId().toString()))
             .body(result);

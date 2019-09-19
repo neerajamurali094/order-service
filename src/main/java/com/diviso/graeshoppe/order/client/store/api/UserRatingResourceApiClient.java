@@ -1,8 +1,8 @@
 package com.diviso.graeshoppe.order.client.store.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import com.diviso.graeshoppe.order.client.store.StoreClientConfiguration;
+import com.diviso.graeshoppe.order.client.store.ClientConfiguration;
 
-@FeignClient(name="${store.name:store}", url="${store.url:dev.ci1.divisosofttech.com:8071/}", configuration = StoreClientConfiguration.class)
+@FeignClient(name="${store.name:store}", url="${store.url:dev.ci1.divisosofttech.com:8071/}", configuration = ClientConfiguration.class)
 public interface UserRatingResourceApiClient extends UserRatingResourceApi {
 }

@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +19,6 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing ApprovalDetails.
@@ -55,7 +51,7 @@ public class ApprovalDetailsResource {
         if (approvalDetailsDTO.getId() != null) {
             throw new BadRequestAlertException("A new approvalDetails cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        CommandResource result = approvalDetailsService.save(approvalDetailsDTO,taskId);
+        CommandResource result = approvalDetailsService.save(approvalDetailsDTO,taskId );
         return ResponseEntity.created(new URI("/api/approval-details/" + result.getSelfId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getSelfId().toString()))
             .body(result);

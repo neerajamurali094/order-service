@@ -5,7 +5,7 @@ import com.diviso.graeshoppe.order.OrderApp;
 import com.diviso.graeshoppe.order.domain.Notification;
 import com.diviso.graeshoppe.order.repository.NotificationRepository;
 import com.diviso.graeshoppe.order.repository.search.NotificationSearchRepository;
-import com.diviso.graeshoppe.order.service.NotificationService;
+import com.diviso.graeshoppe.order.service.NotificationCommandService;
 import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
 import com.diviso.graeshoppe.order.service.mapper.NotificationMapper;
 import com.diviso.graeshoppe.order.web.rest.errors.ExceptionTranslator;
@@ -85,7 +85,7 @@ public class NotificationResourceIntTest {
     private NotificationMapper notificationMapper;
 
     @Autowired
-    private NotificationService notificationService;
+    private NotificationCommandService notificationService;
 
     /**
      * This repository is mocked in the com.diviso.graeshoppe.order.repository.search test package.

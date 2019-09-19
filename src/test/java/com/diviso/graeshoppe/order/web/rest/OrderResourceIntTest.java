@@ -6,7 +6,6 @@ import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.repository.search.OrderSearchRepository;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
-import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import com.diviso.graeshoppe.order.service.mapper.OrderMapper;
 import com.diviso.graeshoppe.order.web.rest.errors.ExceptionTranslator;

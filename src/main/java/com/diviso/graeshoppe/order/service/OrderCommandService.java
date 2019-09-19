@@ -1,9 +1,6 @@
 package com.diviso.graeshoppe.order.service;
 
-import com.diviso.graeshoppe.order.models.AcceptOrderRequest;
-import com.diviso.graeshoppe.order.models.ProcessPaymentRequest;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
-import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 
 import org.springframework.data.domain.Page;
@@ -60,4 +57,6 @@ public interface OrderCommandService {
     Page<OrderDTO> search(String query, Pageable pageable);
 
 	OrderDTO update(OrderDTO orderDTO);
+	
+	Optional<OrderDTO> findByOrderID(String orderId);
 }

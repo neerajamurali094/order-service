@@ -1,0 +1,19 @@
+ 
+	{
+	"namespace":"com.diviso.graeshoppe.order.avro",
+	"type":"record",
+	"name":"Notificaton",
+	"fields":[
+		{"name":"id","type":"long"},
+		{"name":"title","type":["null","string"],"default": null},
+		{"name":"message","type":["null","string"],"default": null},
+		{"name":"targetId","type":["null","string"],"default": null},
+		{"name":"type","type":["null","string"],"default": null},
+		{"name":"image","type":"bytes","default": null},
+		{"name":"imageContentType","type":["null","string"],"default": null},
+		{"name":"date","type":"long","logicalType":"date"},
+		{"name":"receiverId","type":["null","string"],"default": null},
+		{"name":"status","type":["null","string"],"default": null}	
+		]
+	}
+	

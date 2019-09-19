@@ -11,10 +11,12 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {AddressMapper.class})
 public interface DeliveryInfoMapper extends EntityMapper<DeliveryInfoDTO, DeliveryInfo> {
 
-    @Mapping(source = "deliveryAddress.id", target = "deliveryAddressId")
+    @Override
+	@Mapping(source = "deliveryAddress.id", target = "deliveryAddressId")
     DeliveryInfoDTO toDto(DeliveryInfo deliveryInfo);
 
-    @Mapping(source = "deliveryAddressId", target = "deliveryAddress")
+    @Override
+	@Mapping(source = "deliveryAddressId", target = "deliveryAddress")
     DeliveryInfo toEntity(DeliveryInfoDTO deliveryInfoDTO);
 
     default DeliveryInfo fromId(Long id) {
