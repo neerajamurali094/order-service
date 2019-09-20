@@ -321,9 +321,12 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 							.build());
 			
 		}
+		log.info("deliveryy arge is $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ "+order.getDeliveryInfo().getDeliveryCharge());
 		if(order.getDeliveryInfo().getDeliveryCharge() == null) {
+			log.info("is Null");
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(0.0d);
 		} else {
+			log.info("not Null");
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 		}
 		orderAvro.getDeliveryInfoBuilder().build();
