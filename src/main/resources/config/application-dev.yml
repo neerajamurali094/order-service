@@ -58,8 +58,8 @@ spring:
                     contentType: application/*+avro
                     producer:
                        useNativeEncoding: true
-                notificaton:
-                    destination: notificaton
+                notification:
+                    destination: notification
                     contentType: application/*+avro
                     producer:
                        useNativeEncoding: true                       

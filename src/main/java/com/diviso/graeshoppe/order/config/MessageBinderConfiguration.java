@@ -7,7 +7,7 @@ public interface MessageBinderConfiguration {
 
 	String ORDER="order";
 	
-	String NOTIFICATION="notificaton";
+	String NOTIFICATION="notification";
 	
 	@Output(ORDER)
 	MessageChannel orderOut();
