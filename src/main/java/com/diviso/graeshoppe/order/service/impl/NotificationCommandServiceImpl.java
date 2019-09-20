@@ -2,6 +2,7 @@ package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.NotificationCommandService;
 import com.diviso.graeshoppe.order.avro.Notificaton;
+import com.diviso.graeshoppe.order.avro.Notificaton.Builder;
 import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.order.domain.Notification;
 import com.diviso.graeshoppe.order.repository.NotificationRepository;
@@ -64,7 +65,7 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     }
     
     private Boolean publishNotificationToMessageBroker(NotificationDTO notification) {
-    	Notificaton message=Notificaton.newBuilder()
+    	Builder messageBuilder =Notificaton.newBuilder()
     			.setDate(notification.getDate().toEpochMilli())
     			.setId(notification.getId())
     			.setMessage(notification.getMessage())
@@ -72,9 +73,11 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     			.setReceiverId(notification.getReceiverId())
     			.setType(notification.getType())
     			.setImageContentType(notification.getImageContentType())
-    			.setTitle(notification.getTitle())
-    			.setImage(ByteBuffer.wrap(notification.getImage())).build();
-		return messageChannel.notificationOut().send(MessageBuilder.withPayload(message).build());
+    			.setTitle(notification.getTitle());
+    	if(notification.getImage()!=null) {
+    		messageBuilder.setImage(ByteBuffer.wrap(notification.getImage()));
+    	}
+		return messageChannel.notificationOut().send(MessageBuilder.withPayload(messageBuilder.build()).build());
     }
 
     /**
