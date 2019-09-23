@@ -10,79 +10,79 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * StateDTO
+ * Message
  */
 @Validated
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-23T15:56:07.947542+05:30[Asia/Kolkata]")
 
-public class StateDTO   {
-  @JsonProperty("countryId")
-  private Long countryId = null;
+public class Message   {
+  @JsonProperty("content")
+  private String content = null;
 
-  @JsonProperty("id")
-  private Long id = null;
+  @JsonProperty("numParts")
+  private Long numParts = null;
 
-  @JsonProperty("name")
-  private String name = null;
+  @JsonProperty("sender")
+  private String sender = null;
 
-  public StateDTO countryId(Long countryId) {
-    this.countryId = countryId;
+  public Message content(String content) {
+    this.content = content;
     return this;
   }
 
   /**
-   * Get countryId
-   * @return countryId
+   * Get content
+   * @return content
   **/
   @ApiModelProperty(value = "")
 
 
-  public Long getCountryId() {
-    return countryId;
+  public String getContent() {
+    return content;
   }
 
-  public void setCountryId(Long countryId) {
-    this.countryId = countryId;
+  public void setContent(String content) {
+    this.content = content;
   }
 
-  public StateDTO id(Long id) {
-    this.id = id;
+  public Message numParts(Long numParts) {
+    this.numParts = numParts;
     return this;
   }
 
   /**
-   * Get id
-   * @return id
+   * Get numParts
+   * @return numParts
   **/
   @ApiModelProperty(value = "")
 
 
-  public Long getId() {
-    return id;
+  public Long getNumParts() {
+    return numParts;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setNumParts(Long numParts) {
+    this.numParts = numParts;
   }
 
-  public StateDTO name(String name) {
-    this.name = name;
+  public Message sender(String sender) {
+    this.sender = sender;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get sender
+   * @return sender
   **/
   @ApiModelProperty(value = "")
 
 
-  public String getName() {
-    return name;
+  public String getSender() {
+    return sender;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setSender(String sender) {
+    this.sender = sender;
   }
 
 
@@ -94,25 +94,25 @@ public class StateDTO   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    StateDTO stateDTO = (StateDTO) o;
-    return Objects.equals(this.countryId, stateDTO.countryId) &&
-        Objects.equals(this.id, stateDTO.id) &&
-        Objects.equals(this.name, stateDTO.name);
+    Message message = (Message) o;
+    return Objects.equals(this.content, message.content) &&
+        Objects.equals(this.numParts, message.numParts) &&
+        Objects.equals(this.sender, message.sender);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(countryId, id, name);
+    return Objects.hash(content, numParts, sender);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class StateDTO {\n");
+    sb.append("class Message {\n");
     
-    sb.append("    countryId: ").append(toIndentedString(countryId)).append("\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    content: ").append(toIndentedString(content)).append("\n");
+    sb.append("    numParts: ").append(toIndentedString(numParts)).append("\n");
+    sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
     sb.append("}");
     return sb.toString();
   }

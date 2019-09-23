@@ -1,7 +1,6 @@
 package com.diviso.graeshoppe.order.client.customer.model;
 
 import java.util.Objects;
-import com.diviso.graeshoppe.order.client.customer.model.Customer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -11,43 +10,19 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * FavouriteProduct
+ * MessageRecipient
  */
 @Validated
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-23T15:56:07.947542+05:30[Asia/Kolkata]")
 
-public class FavouriteProduct   {
-  @JsonProperty("customer")
-  private Customer customer = null;
-
+public class MessageRecipient   {
   @JsonProperty("id")
   private Long id = null;
 
-  @JsonProperty("productId")
-  private Long productId = null;
+  @JsonProperty("recipient")
+  private Long recipient = null;
 
-  public FavouriteProduct customer(Customer customer) {
-    this.customer = customer;
-    return this;
-  }
-
-  /**
-   * Get customer
-   * @return customer
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public Customer getCustomer() {
-    return customer;
-  }
-
-  public void setCustomer(Customer customer) {
-    this.customer = customer;
-  }
-
-  public FavouriteProduct id(Long id) {
+  public MessageRecipient id(Long id) {
     this.id = id;
     return this;
   }
@@ -67,24 +42,24 @@ public class FavouriteProduct   {
     this.id = id;
   }
 
-  public FavouriteProduct productId(Long productId) {
-    this.productId = productId;
+  public MessageRecipient recipient(Long recipient) {
+    this.recipient = recipient;
     return this;
   }
 
   /**
-   * Get productId
-   * @return productId
+   * Get recipient
+   * @return recipient
   **/
   @ApiModelProperty(value = "")
 
 
-  public Long getProductId() {
-    return productId;
+  public Long getRecipient() {
+    return recipient;
   }
 
-  public void setProductId(Long productId) {
-    this.productId = productId;
+  public void setRecipient(Long recipient) {
+    this.recipient = recipient;
   }
 
 
@@ -96,25 +71,23 @@ public class FavouriteProduct   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FavouriteProduct favouriteProduct = (FavouriteProduct) o;
-    return Objects.equals(this.customer, favouriteProduct.customer) &&
-        Objects.equals(this.id, favouriteProduct.id) &&
-        Objects.equals(this.productId, favouriteProduct.productId);
+    MessageRecipient messageRecipient = (MessageRecipient) o;
+    return Objects.equals(this.id, messageRecipient.id) &&
+        Objects.equals(this.recipient, messageRecipient.recipient);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customer, id, productId);
+    return Objects.hash(id, recipient);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FavouriteProduct {\n");
+    sb.append("class MessageRecipient {\n");
     
-    sb.append("    customer: ").append(toIndentedString(customer)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    productId: ").append(toIndentedString(productId)).append("\n");
+    sb.append("    recipient: ").append(toIndentedString(recipient)).append("\n");
     sb.append("}");
     return sb.toString();
   }

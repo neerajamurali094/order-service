@@ -73,7 +73,8 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
     			.setReceiverId(notification.getReceiverId())
     			.setType(notification.getType())
     			.setImageContentType(notification.getImageContentType())
-    			.setTitle(notification.getTitle());
+    			.setTitle(notification.getTitle())
+    			.setStatus(notification.getStatus());
     	if(notification.getImage()!=null) {
     		messageBuilder.setImage(ByteBuffer.wrap(notification.getImage()));
     	}

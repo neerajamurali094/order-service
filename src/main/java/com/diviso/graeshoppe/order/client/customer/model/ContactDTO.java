@@ -2,14 +2,18 @@ package com.diviso.graeshoppe.order.client.customer.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * ContactDTO
  */
 @Validated
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-19T14:05:40.905965+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-23T15:56:07.947542+05:30[Asia/Kolkata]")
 
 public class ContactDTO   {
   @JsonProperty("email")
@@ -19,13 +23,13 @@ public class ContactDTO   {
   private Long id = null;
 
   @JsonProperty("mobileNumber")
-  private String mobileNumber = null;
+  private Long mobileNumber = null;
 
   @JsonProperty("phoneCode")
-  private String phoneCode = null;
+  private Long phoneCode = null;
 
   @JsonProperty("telephone")
-  private String telephone = null;
+  private Long telephone = null;
 
   public ContactDTO email(String email) {
     this.email = email;
@@ -67,7 +71,7 @@ public class ContactDTO   {
     this.id = id;
   }
 
-  public ContactDTO mobileNumber(String mobileNumber) {
+  public ContactDTO mobileNumber(Long mobileNumber) {
     this.mobileNumber = mobileNumber;
     return this;
   }
@@ -79,15 +83,15 @@ public class ContactDTO   {
   @ApiModelProperty(value = "")
 
 
-  public String getMobileNumber() {
+  public Long getMobileNumber() {
     return mobileNumber;
   }
 
-  public void setMobileNumber(String mobileNumber) {
+  public void setMobileNumber(Long mobileNumber) {
     this.mobileNumber = mobileNumber;
   }
 
-  public ContactDTO phoneCode(String phoneCode) {
+  public ContactDTO phoneCode(Long phoneCode) {
     this.phoneCode = phoneCode;
     return this;
   }
@@ -99,15 +103,15 @@ public class ContactDTO   {
   @ApiModelProperty(value = "")
 
 
-  public String getPhoneCode() {
+  public Long getPhoneCode() {
     return phoneCode;
   }
 
-  public void setPhoneCode(String phoneCode) {
+  public void setPhoneCode(Long phoneCode) {
     this.phoneCode = phoneCode;
   }
 
-  public ContactDTO telephone(String telephone) {
+  public ContactDTO telephone(Long telephone) {
     this.telephone = telephone;
     return this;
   }
@@ -119,11 +123,11 @@ public class ContactDTO   {
   @ApiModelProperty(value = "")
 
 
-  public String getTelephone() {
+  public Long getTelephone() {
     return telephone;
   }
 
-  public void setTelephone(String telephone) {
+  public void setTelephone(Long telephone) {
     this.telephone = telephone;
   }
 
