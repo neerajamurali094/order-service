@@ -98,8 +98,8 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		notificationDTO.setStatus("unread");
 		notificationDTO.setReceiverId(orderDTO.getCustomerId());
 		notificationDTO.setType("Approved-Notification");
-		notificationService.save(notificationDTO); // sending notifications from here to the customer
-		Boolean status = notificationService.publishNotificationToMessageBroker(notificationDTO);
+		NotificationDTO resultNotification=notificationService.save(notificationDTO); // sending notifications from here to the customer
+		Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
 		log.info("Notification publish status is " + status);
 		orderDTO.setApprovalDetailsId(result.getId());
 		orderDTO.setStatusId(3l);

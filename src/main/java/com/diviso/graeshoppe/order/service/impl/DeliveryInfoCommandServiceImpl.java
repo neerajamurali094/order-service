@@ -106,8 +106,8 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
         	notificationDTO.setStatus("unread");
         	notificationDTO.setReceiverId(orderDTO.getStoreId());
         	notificationDTO.setType("Pending-Notification");
-        	notificationService.save(notificationDTO); //sending notifications from here to the store
-            Boolean status=notificationService.publishNotificationToMessageBroker(notificationDTO);
+        	NotificationDTO resultNotification=notificationService.save(notificationDTO); //sending notifications from here to the store
+            Boolean status=notificationService.publishNotificationToMessageBroker(resultNotification);
             log.info("Notification publish status is "+status);
 			orderDTO.setStatusId(2l); // order is unapproved
 		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
