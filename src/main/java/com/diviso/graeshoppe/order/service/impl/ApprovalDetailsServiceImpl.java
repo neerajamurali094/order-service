@@ -97,7 +97,7 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		notificationDTO.setTargetId(approvalDetailsDTO.getOrderId());
 		notificationDTO.setStatus("unread");
 		notificationDTO.setReceiverId(orderDTO.getCustomerId());
-		notificationDTO.setType("Pending-Notification");
+		notificationDTO.setType("Approved-Notification");
 		notificationService.save(notificationDTO); // sending notifications from here to the customer
 		orderDTO.setApprovalDetailsId(result.getId());
 		orderDTO.setStatusId(3l);
@@ -134,7 +134,7 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		formRequest.setTaskId(taskId);
 		formsApi.submitForm(formRequest);
 		// orderRepository.findByOrderId(acceptOrderRequest.getOrderId());
-		sendNotification(acceptOrderRequest.getOrderId(), acceptOrderRequest.getCustomerId());
+		// sendNotification(acceptOrderRequest.getOrderId(), acceptOrderRequest.getCustomerId());
 		CommandResource commandResource = resourceAssembler.toResource(processInstanceId);
 		return commandResource;
 	}
