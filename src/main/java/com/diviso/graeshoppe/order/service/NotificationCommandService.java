@@ -12,12 +12,15 @@ import java.util.Optional;
  */
 public interface NotificationCommandService {
 
+	
+	  Boolean publishNotificationToMessageBroker(NotificationDTO notification);
     /**
      * Save a notification.
      *
      * @param notificationDTO the entity to save
      * @return the persisted entity
      */
+	
     NotificationDTO save(NotificationDTO notificationDTO);
 
     /**

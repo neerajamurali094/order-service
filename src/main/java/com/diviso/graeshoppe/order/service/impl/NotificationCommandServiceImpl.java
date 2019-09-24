@@ -1,8 +1,8 @@
 package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.NotificationCommandService;
-import com.diviso.graeshoppe.order.avro.Notificaton;
-import com.diviso.graeshoppe.order.avro.Notificaton.Builder;
+import com.diviso.graeshoppe.notification.avro.Notificaton;
+import com.diviso.graeshoppe.notification.avro.Notificaton.Builder;
 import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.order.domain.Notification;
 import com.diviso.graeshoppe.order.repository.NotificationRepository;
@@ -59,12 +59,11 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         notification = notificationRepository.save(notification);
         NotificationDTO result = notificationMapper.toDto(notification);
         notificationSearchRepository.save(notification);
-        Boolean status=publishNotificationToMessageBroker(result);
-        log.info("Notification publish status is "+status);
         return result;
     }
     
-    private Boolean publishNotificationToMessageBroker(NotificationDTO notification) {
+    @Override
+    public Boolean publishNotificationToMessageBroker(NotificationDTO notification) {
     	Builder messageBuilder =Notificaton.newBuilder()
     			.setDate(notification.getDate().toEpochMilli())
     			.setId(notification.getId())
