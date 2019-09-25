@@ -97,6 +97,8 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		} else {
 			phone = customer.getContact().getPhoneCode();
 		}
+		log.info("Phone Number is "+phone);
+		log.info("Phonecode is "+phoneCode);
 		CommandResource commandResource = confirmDelivery(taskId, phone,phoneCode, deliveryInfoDTO.getDeliveryType());
 		commandResource.setSelfId(result.getId());
 		update(result);
