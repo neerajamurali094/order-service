@@ -2,7 +2,7 @@
 	{
 	"namespace":"com.diviso.graeshoppe.notification.avro",
 	"type":"record",
-	"name":"Notificaton",
+	"name":"Notification",
 	"fields":[
 		{"name":"id","type":"long"},
 		{"name":"title","type":["null","string"],"default": null},
