@@ -25,7 +25,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-23T15:56:07.947542+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-25T16:27:29.477214+05:30[Asia/Kolkata]")
 
 @Api(value = "NoteResource", description = "the NoteResource API")
 public interface NoteResourceApi {

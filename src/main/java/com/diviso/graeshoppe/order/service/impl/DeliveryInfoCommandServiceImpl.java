@@ -9,6 +9,7 @@ import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
 import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
+import com.diviso.graeshoppe.order.client.customer.model.Customer;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.repository.DeliveryInfoRepository;
 import com.diviso.graeshoppe.order.repository.search.DeliveryInfoSearchRepository;
@@ -40,89 +41,92 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @Transactional
 public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 
-    private final Logger log = LoggerFactory.getLogger(DeliveryInfoCommandServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(DeliveryInfoCommandServiceImpl.class);
 
-    private final DeliveryInfoRepository deliveryInfoRepository;
+	private final DeliveryInfoRepository deliveryInfoRepository;
 
-    @Autowired
-    private OrderCommandService orderService;
-    
-    @Autowired
-    private NotificationCommandService notificationService;
-    
-    @Autowired
+	@Autowired
+	private OrderCommandService orderService;
+
+	@Autowired
+	private NotificationCommandService notificationService;
+
+	@Autowired
 	private AddressService addressService;
 
 	@Autowired
 	private TasksApi tasksApi;
 	@Autowired
 	private FormsApi formsApi;
-	
+
 	@Autowired
 	private CustomerResourceApi customerResourceApi;
 	@Autowired
 	private ResourceAssembler resourceAssembler;
-    private final DeliveryInfoMapper deliveryInfoMapper;
+	private final DeliveryInfoMapper deliveryInfoMapper;
 
-    private final DeliveryInfoSearchRepository deliveryInfoSearchRepository;
+	private final DeliveryInfoSearchRepository deliveryInfoSearchRepository;
 
-    public DeliveryInfoCommandServiceImpl(DeliveryInfoRepository deliveryInfoRepository, DeliveryInfoMapper deliveryInfoMapper, DeliveryInfoSearchRepository deliveryInfoSearchRepository) {
-        this.deliveryInfoRepository = deliveryInfoRepository;
-        this.deliveryInfoMapper = deliveryInfoMapper;
-        this.deliveryInfoSearchRepository = deliveryInfoSearchRepository;
-    }
+	public DeliveryInfoCommandServiceImpl(DeliveryInfoRepository deliveryInfoRepository,
+			DeliveryInfoMapper deliveryInfoMapper, DeliveryInfoSearchRepository deliveryInfoSearchRepository) {
+		this.deliveryInfoRepository = deliveryInfoRepository;
+		this.deliveryInfoMapper = deliveryInfoMapper;
+		this.deliveryInfoSearchRepository = deliveryInfoSearchRepository;
+	}
 
-    /**
-     * Save a deliveryInfo.
-     *
-     * @param deliveryInfoDTO the entity to save
-     * @return the persisted entityorderId
-     */
-    @Override
-    public CommandResource save(DeliveryInfoDTO deliveryInfoDTO,String taskId,String orderId) {
-        log.debug("Request to save DeliveryInfo : {}", deliveryInfoDTO);
-        DeliveryInfo deliveryInfo = deliveryInfoMapper.toEntity(deliveryInfoDTO);
-        deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
-        DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
-        deliveryInfoSearchRepository.save(deliveryInfo);
-        Long phone;
-        if(deliveryInfoDTO.getDeliveryAddressId()!=null) {
-        	phone=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
-        }else {
-        	phone=9809203816l;
-        }
-        CommandResource commandResource=confirmDelivery(taskId,phone,deliveryInfoDTO.getDeliveryType());
-        commandResource.setSelfId(result.getId());
-        update(result);
-        OrderDTO orderDTO=orderService.findByOrderID(orderId).get();
-        orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
-        commandResource.setOrderId(orderId);
-        if (commandResource.getNextTaskName().equals("Accept Order")) {
-        	NotificationDTO notificationDTO=new NotificationDTO();
-        	notificationDTO.setDate(Instant.now());
-        	notificationDTO.setMessage("You have new order request");
-        	notificationDTO.setTitle("Order Request");
-        	notificationDTO.setTargetId(orderId);
-        	notificationDTO.setStatus("unread");
-        	notificationDTO.setReceiverId(orderDTO.getStoreId());
-        	notificationDTO.setType("Pending-Notification");
-        	NotificationDTO resultNotification=notificationService.save(notificationDTO); //sending notifications from here to the store
-            Boolean status=notificationService.publishNotificationToMessageBroker(resultNotification);
-            log.info("Notification publish status is "+status);
+	/**
+	 * Save a deliveryInfo.
+	 *
+	 * @param deliveryInfoDTO the entity to save
+	 * @return the persisted entityorderId
+	 */
+	@Override
+	public CommandResource save(DeliveryInfoDTO deliveryInfoDTO, String taskId, String orderId) {
+		log.debug("Request to save DeliveryInfo : {}", deliveryInfoDTO);
+		DeliveryInfo deliveryInfo = deliveryInfoMapper.toEntity(deliveryInfoDTO);
+		deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
+		DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
+		deliveryInfoSearchRepository.save(deliveryInfo);
+		OrderDTO orderDTO = orderService.findByOrderID(orderId).get();
+		Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
+		Long phone;
+		Long phoneCode = customer.getContact().getPhoneCode();
+		if (deliveryInfoDTO.getDeliveryAddressId() != null) {
+			phone = addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
+
+		} else {
+			phone = customer.getContact().getPhoneCode();
+		}
+		CommandResource commandResource = confirmDelivery(taskId, phone,phoneCode, deliveryInfoDTO.getDeliveryType());
+		commandResource.setSelfId(result.getId());
+		update(result);
+		orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
+		commandResource.setOrderId(orderId);
+		if (commandResource.getNextTaskName().equals("Accept Order")) {
+			NotificationDTO notificationDTO = new NotificationDTO();
+			notificationDTO.setDate(Instant.now());
+			notificationDTO.setMessage("You have new order request");
+			notificationDTO.setTitle("Order Request");
+			notificationDTO.setTargetId(orderId);
+			notificationDTO.setStatus("unread");
+			notificationDTO.setReceiverId(orderDTO.getStoreId());
+			notificationDTO.setType("Pending-Notification");
+			NotificationDTO resultNotification = notificationService.save(notificationDTO); // sending notifications
+																							// from here to the store
+			Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
+			log.info("Notification publish status is " + status);
 			orderDTO.setStatusId(2l); // order is unapproved
 		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
 			orderDTO.setStatusId(3l); // order is auto approved
 			orderService.publishMesssage(orderId); // sending order to MOM
 
 		}
-        orderService.update(orderDTO);
-        return commandResource;
-    }
-    
-   
-    
-	public CommandResource confirmDelivery( String taskId,Long phone,String deliveryType) {
-		log.info("Task id is "+taskId+ " Phone number is ^^^^^^^^^^^^^^^^^^^^^ "+phone);
+		orderService.update(orderDTO);
+		return commandResource;
+	}
+
+	public CommandResource confirmDelivery(String taskId, Long phone,Long phoneCode, String deliveryType) {
+		log.info("Task id is " + taskId + " Phone number is ^^^^^^^^^^^^^^^^^^^^^ " + phone);
 		String processInstanceId = tasksApi.getTask(taskId).getBody().getProcessInstanceId();
 		SubmitFormRequest formRequest = new SubmitFormRequest();
 		List<RestFormProperty> properties = new ArrayList<RestFormProperty>();
@@ -133,84 +137,86 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		phoneProperty.setValue(phone.toString());
 		properties.add(phoneProperty);
 		
+		RestFormProperty phoneCodeProperty = new RestFormProperty();
+		phoneProperty.setId("phoneCode");
+		phoneProperty.setName("phoneCode");
+		phoneProperty.setType("long");
+		phoneProperty.setValue(phoneCode.toString());
+		properties.add(phoneCodeProperty);
+
 		RestFormProperty deliveryTypeProperty = new RestFormProperty();
 		deliveryTypeProperty.setId("deliveryType");
 		deliveryTypeProperty.setName("deliveryType");
 		deliveryTypeProperty.setType("string");
 		deliveryTypeProperty.setValue(deliveryType);
 		properties.add(deliveryTypeProperty);
-		
+
 		formRequest.setProperties(properties);
 		formRequest.setAction("completed");
 		formRequest.setTaskId(taskId);
 		formsApi.submitForm(formRequest);
 		return resourceAssembler.toResource(processInstanceId);
 	}
-    
-	
-	 @Override
-	    public DeliveryInfoDTO update(DeliveryInfoDTO deliveryInfoDTO) {
-	        log.debug("Request to save DeliveryInfo : {}", deliveryInfoDTO);
-	        DeliveryInfo deliveryInfo = deliveryInfoMapper.toEntity(deliveryInfoDTO);
-	        deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
-	        DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
-	        deliveryInfoSearchRepository.save(deliveryInfo);
-	        return result;
-	    }
 
-    /**
-     * Get all the deliveryInfos.
-     *
-     * @param pageable the pagination information
-     * @return the list of entities
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<DeliveryInfoDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all DeliveryInfos");
-        return deliveryInfoRepository.findAll(pageable)
-            .map(deliveryInfoMapper::toDto);
-    }
+	@Override
+	public DeliveryInfoDTO update(DeliveryInfoDTO deliveryInfoDTO) {
+		log.debug("Request to save DeliveryInfo : {}", deliveryInfoDTO);
+		DeliveryInfo deliveryInfo = deliveryInfoMapper.toEntity(deliveryInfoDTO);
+		deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
+		DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
+		deliveryInfoSearchRepository.save(deliveryInfo);
+		return result;
+	}
 
+	/**
+	 * Get all the deliveryInfos.
+	 *
+	 * @param pageable the pagination information
+	 * @return the list of entities
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<DeliveryInfoDTO> findAll(Pageable pageable) {
+		log.debug("Request to get all DeliveryInfos");
+		return deliveryInfoRepository.findAll(pageable).map(deliveryInfoMapper::toDto);
+	}
 
-    /**
-     * Get one deliveryInfo by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<DeliveryInfoDTO> findOne(Long id) {
-        log.debug("Request to get DeliveryInfo : {}", id);
-        return deliveryInfoRepository.findById(id)
-            .map(deliveryInfoMapper::toDto);
-    }
+	/**
+	 * Get one deliveryInfo by id.
+	 *
+	 * @param id the id of the entity
+	 * @return the entity
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<DeliveryInfoDTO> findOne(Long id) {
+		log.debug("Request to get DeliveryInfo : {}", id);
+		return deliveryInfoRepository.findById(id).map(deliveryInfoMapper::toDto);
+	}
 
-    /**
-     * Delete the deliveryInfo by id.
-     *
-     * @param id the id of the entity
-     */
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete DeliveryInfo : {}", id);
-        deliveryInfoRepository.deleteById(id);
-        deliveryInfoSearchRepository.deleteById(id);
-    }
+	/**
+	 * Delete the deliveryInfo by id.
+	 *
+	 * @param id the id of the entity
+	 */
+	@Override
+	public void delete(Long id) {
+		log.debug("Request to delete DeliveryInfo : {}", id);
+		deliveryInfoRepository.deleteById(id);
+		deliveryInfoSearchRepository.deleteById(id);
+	}
 
-    /**
-     * Search for the deliveryInfo corresponding to the query.
-     *
-     * @param query the query of the search
-     * @param pageable the pagination information
-     * @return the list of entities
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<DeliveryInfoDTO> search(String query, Pageable pageable) {
-        log.debug("Request to search for a page of DeliveryInfos for query {}", query);
-        return deliveryInfoSearchRepository.search(queryStringQuery(query), pageable)
-            .map(deliveryInfoMapper::toDto);
-    }
+	/**
+	 * Search for the deliveryInfo corresponding to the query.
+	 *
+	 * @param query    the query of the search
+	 * @param pageable the pagination information
+	 * @return the list of entities
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<DeliveryInfoDTO> search(String query, Pageable pageable) {
+		log.debug("Request to search for a page of DeliveryInfos for query {}", query);
+		return deliveryInfoSearchRepository.search(queryStringQuery(query), pageable).map(deliveryInfoMapper::toDto);
+	}
 }

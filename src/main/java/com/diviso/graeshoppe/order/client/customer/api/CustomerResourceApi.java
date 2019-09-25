@@ -28,7 +28,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-23T15:56:07.947542+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-25T16:27:29.477214+05:30[Asia/Kolkata]")
 
 @Api(value = "CustomerResource", description = "the CustomerResource API")
 public interface CustomerResourceApi {
@@ -56,6 +56,18 @@ public interface CustomerResourceApi {
     @RequestMapping(value = "/api/customers/{id}",
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteCustomerUsingDELETE(@ApiParam(value = "id",required=true) @PathVariable("id") Long id);
+
+
+    @ApiOperation(value = "findByReference", nickname = "findByReferenceUsingGET", notes = "", response = Customer.class, tags={ "customer-resource", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Customer.class),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Not Found") })
+    @RequestMapping(value = "/api/findByReference",
+        produces = "*/*", 
+        method = RequestMethod.GET)
+    ResponseEntity<Customer> findByReferenceUsingGET(@ApiParam(value = "reference",required=true) @PathVariable("reference") String reference);
 
 
     @ApiOperation(value = "getAllCustomers", nickname = "getAllCustomersUsingGET", notes = "", response = CustomerDTO.class, responseContainer = "List", tags={ "customer-resource", })
@@ -130,7 +142,7 @@ public interface CustomerResourceApi {
     @RequestMapping(value = "/api/customer/otp_send",
         produces = "*/*", 
         method = RequestMethod.POST)
-    ResponseEntity<OTPResponse> sendSMSUsingPOST(@NotNull @ApiParam(value = "apiKey", required = true) @Valid @RequestParam(value = "apiKey", required = true) String apiKey,@NotNull @ApiParam(value = "message", required = true) @Valid @RequestParam(value = "message", required = true) String message,@NotNull @ApiParam(value = "numbers", required = true) @Valid @RequestParam(value = "numbers", required = true) Long numbers,@NotNull @ApiParam(value = "sender", required = true) @Valid @RequestParam(value = "sender", required = true) String sender);
+    ResponseEntity<OTPResponse> sendSMSUsingPOST(@NotNull @ApiParam(value = "numbers", required = true) @Valid @RequestParam(value = "numbers", required = true) Long numbers);
 
 
     @ApiOperation(value = "sendSMS", nickname = "sendSMSUsingPOST1", notes = "", response = CustomerDTO.class, tags={ "customer-resource", })
@@ -171,6 +183,6 @@ public interface CustomerResourceApi {
     @RequestMapping(value = "/api/customer/otp_challenge",
         produces = "*/*", 
         method = RequestMethod.POST)
-    ResponseEntity<OTPChallenge> verifyOTPUsingPOST(@NotNull @ApiParam(value = "apiKey", required = true) @Valid @RequestParam(value = "apiKey", required = true) String apiKey,@NotNull @ApiParam(value = "code", required = true) @Valid @RequestParam(value = "code", required = true) String code,@NotNull @ApiParam(value = "numbers", required = true) @Valid @RequestParam(value = "numbers", required = true) Long numbers);
+    ResponseEntity<OTPChallenge> verifyOTPUsingPOST(@NotNull @ApiParam(value = "code", required = true) @Valid @RequestParam(value = "code", required = true) String code,@NotNull @ApiParam(value = "numbers", required = true) @Valid @RequestParam(value = "numbers", required = true) Long numbers);
 
 }
