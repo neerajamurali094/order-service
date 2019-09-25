@@ -140,10 +140,10 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		properties.add(phoneProperty);
 		
 		RestFormProperty phoneCodeProperty = new RestFormProperty();
-		phoneProperty.setId("phoneCode");
-		phoneProperty.setName("phoneCode");
-		phoneProperty.setType("long");
-		phoneProperty.setValue(phoneCode.toString());
+		phoneCodeProperty.setId("phoneCode");
+		phoneCodeProperty.setName("phoneCode");
+		phoneCodeProperty.setType("long");
+		phoneCodeProperty.setValue(phoneCode.toString());
 		properties.add(phoneCodeProperty);
 
 		RestFormProperty deliveryTypeProperty = new RestFormProperty();
