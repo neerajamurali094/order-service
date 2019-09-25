@@ -95,7 +95,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 			phone = addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
 
 		} else {
-			phone = customer.getContact().getPhoneCode();
+			phone = customer.getContact().getMobileNumber();
 		}
 		log.info("Phone Number is "+phone);
 		log.info("Phonecode is "+phoneCode);
