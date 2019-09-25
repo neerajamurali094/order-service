@@ -64,7 +64,7 @@ public interface CustomerResourceApi {
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 404, message = "Not Found") })
-    @RequestMapping(value = "/api/findByReference",
+    @RequestMapping(value = "/api/findByReference/{reference}",
         produces = "*/*", 
         method = RequestMethod.GET)
     ResponseEntity<Customer> findByReferenceUsingGET(@ApiParam(value = "reference",required=true) @PathVariable("reference") String reference);
