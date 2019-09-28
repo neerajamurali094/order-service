@@ -118,12 +118,13 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 			Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
 			log.info("Notification publish status is " + status);
 			orderDTO.setStatusId(2l); // order is unapproved
+			orderService.update(orderDTO);
 		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
 			orderDTO.setStatusId(3l); // order is auto approved
+			orderService.update(orderDTO);
 			orderService.publishMesssage(orderId); // sending order to MOM
 
 		}
-		orderService.update(orderDTO);
 		return commandResource;
 	}
 
