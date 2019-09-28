@@ -9,8 +9,10 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,8 @@ import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.DataResponse;
 import com.diviso.graeshoppe.order.models.OpenTask;
 import com.diviso.graeshoppe.order.service.OrderQueryService;
+
+import io.github.jhipster.service.QueryService;
 
 @RestController
 @RequestMapping("/api")
@@ -114,6 +118,10 @@ public class OrderQueryResource {
 	}
 	
 	
+	@GetMapping("/count-by-customerid-statusname/{customerId}/{statusName}")
+	public ResponseEntity<Long> countByCustomerIdAndStatusName(@PathVariable String customerId,@PathVariable String statusName) {
+		return new ResponseEntity<Long>(orderQueryService.countByCustomerIdAndStatusName(customerId,statusName), HttpStatus.OK);
+	}
 	
 	
 	

@@ -6,6 +6,6 @@ public interface OrderQueryService {
 
 	
 	public OrderDTO findByOrderId(String orderId);
-	
+	public Long countByCustomerIdAndStatusName(String customerId,String statusName);
 	
 }

@@ -23,4 +23,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		return orderMapper.toDto(orderRepository.findByOrderId(orderId).get());
 	}
 
+	@Override
+	public Long countByCustomerIdAndStatusName(String customerId, String statusName) {
+	
+		return orderRepository.countByCustomerIdAndStatus_Name(customerId, statusName);
+	}
+
 }
