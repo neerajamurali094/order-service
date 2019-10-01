@@ -23,8 +23,6 @@ import com.diviso.graeshoppe.order.client.bpmn.model.DataResponse;
 import com.diviso.graeshoppe.order.models.OpenTask;
 import com.diviso.graeshoppe.order.service.OrderQueryService;
 
-import io.github.jhipster.service.QueryService;
-
 @RestController
 @RequestMapping("/api")
 @SuppressWarnings("unchecked")
@@ -43,7 +41,12 @@ public class OrderQueryResource {
 	private OrderQueryService orderQueryService;
 	
 	
-	
+	@GetMapping("/taskDetails/{orderId}/{storeId}")
+	public OpenTask getTaskDetails(@PathVariable String orderId,@PathVariable String storeId) {
+		return getTasks("Accept Order", null, storeId, null, null, null, null, null, null, null)
+				.stream().filter(openTask->openTask.getOrderId().equals(orderId)).findFirst().get();
+		
+	}
 
 	@GetMapping("/tasks")
 	public List<OpenTask> getTasks(@RequestParam(value = "name", required = false) String name,
