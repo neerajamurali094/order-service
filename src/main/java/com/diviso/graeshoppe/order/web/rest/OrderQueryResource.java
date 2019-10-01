@@ -41,9 +41,9 @@ public class OrderQueryResource {
 	private OrderQueryService orderQueryService;
 	
 	
-	@GetMapping("/taskDetails/{orderId}/{storeId}")
-	public OpenTask getTaskDetails(@PathVariable String orderId,@PathVariable String storeId) {
-		return getTasks("Accept Order", null, storeId, null, null, null, null, null, null, null)
+	@GetMapping("/taskDetails/{taskName}/{orderId}/{storeId}")
+	public OpenTask getTaskDetails(@PathVariable String taskName,@PathVariable String orderId,@PathVariable String storeId) {
+		return getTasks(taskName, null, storeId, null, null, null, null, null, null, null)
 				.stream().filter(openTask->openTask.getOrderId().equals(orderId)).findFirst().get();
 		
 	}
