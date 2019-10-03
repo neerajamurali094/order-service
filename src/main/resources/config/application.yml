@@ -151,7 +151,7 @@ security:
   oauth2:
     client:
       access-token-uri: https://dev.servers.divisosofttech.com/auth/realms/graeshoppe/protocol/openid-connect/token
-      user-authorization-uri: http://dev.servers.divisosofttech.com:8888/auth/realms/graeshoppe/protocol/openid-connect/auth
+      user-authorization-uri: https://dev.servers.divisosofttech.com/auth/realms/graeshoppe/protocol/openid-connect/auth
       client-id: account
       client-secret: 61aed705-1f70-4955-ad23-94bc15c09c29
       scope: openid profile email
