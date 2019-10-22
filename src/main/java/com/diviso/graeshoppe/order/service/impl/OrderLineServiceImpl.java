@@ -113,7 +113,7 @@ public class OrderLineServiceImpl implements OrderLineService {
 
 	@Override
 	public List<OrderLineDTO> findByOrderId(String orderId) {
-		return orderLineRepository.findByOrder_Id(orderId).stream()
+		return orderLineRepository.findByOrder_OrderId(orderId).stream()
 				.map(orderLineMapper::toDto)
 				.collect(Collectors.toList());
 	}

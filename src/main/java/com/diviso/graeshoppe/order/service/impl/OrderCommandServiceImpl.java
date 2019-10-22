@@ -271,7 +271,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	@Override
 	public boolean publishMesssage(String orderId,Long phone) {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
-		order.setOrderLines(orderLineRepository.findByOrder_Id(order.getOrderId()));
+		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
