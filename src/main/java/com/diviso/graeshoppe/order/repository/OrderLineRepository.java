@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {
 	
-	Set<OrderLine> findByOrder_Id(Long id);
+	Set<OrderLine> findByOrder_Id(String orderId);
+	
 
 }

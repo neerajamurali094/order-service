@@ -16,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "address")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "orderaddress",type="orderaddress")
+@Document(indexName = "address")
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,6 +30,9 @@ public class Address implements Serializable {
 
     @Column(name = "pincode")
     private String pincode;
+
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "house_no_or_building_name")
     private String houseNoOrBuildingName;
@@ -91,6 +94,19 @@ public class Address implements Serializable {
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Address email(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getHouseNoOrBuildingName() {
@@ -237,6 +253,7 @@ public class Address implements Serializable {
             "id=" + getId() +
             ", customerId='" + getCustomerId() + "'" +
             ", pincode='" + getPincode() + "'" +
+            ", email='" + getEmail() + "'" +
             ", houseNoOrBuildingName='" + getHouseNoOrBuildingName() + "'" +
             ", roadNameAreaOrStreet='" + getRoadNameAreaOrStreet() + "'" +
             ", city='" + getCity() + "'" +

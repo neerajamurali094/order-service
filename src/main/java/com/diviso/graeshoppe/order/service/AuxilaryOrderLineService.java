@@ -4,7 +4,9 @@ import com.diviso.graeshoppe.order.service.dto.AuxilaryOrderLineDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,4 +55,6 @@ public interface AuxilaryOrderLineService {
      * @return the list of entities
      */
     Page<AuxilaryOrderLineDTO> search(String query, Pageable pageable);
+
+	List<AuxilaryOrderLineDTO> findByOrderLineId(Long id);
 }

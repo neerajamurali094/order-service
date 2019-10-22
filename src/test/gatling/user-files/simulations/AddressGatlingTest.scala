@@ -103,6 +103,7 @@ class AddressGatlingTest extends Simulation {
                 "id":null
                 , "customerId":"SAMPLE_TEXT"
                 , "pincode":"SAMPLE_TEXT"
+                , "email":"SAMPLE_TEXT"
                 , "houseNoOrBuildingName":"SAMPLE_TEXT"
                 , "roadNameAreaOrStreet":"SAMPLE_TEXT"
                 , "city":"SAMPLE_TEXT"

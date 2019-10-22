@@ -22,6 +22,10 @@ public class OrderDTO implements Serializable {
 
     private String paymentRef;
 
+    private String allergyNote;
+
+    private Instant preOrderDate;
+
     private String email;
 
 
@@ -87,6 +91,22 @@ public class OrderDTO implements Serializable {
         this.paymentRef = paymentRef;
     }
 
+    public String getAllergyNote() {
+        return allergyNote;
+    }
+
+    public void setAllergyNote(String allergyNote) {
+        this.allergyNote = allergyNote;
+    }
+
+    public Instant getPreOrderDate() {
+        return preOrderDate;
+    }
+
+    public void setPreOrderDate(Instant preOrderDate) {
+        this.preOrderDate = preOrderDate;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -150,6 +170,8 @@ public class OrderDTO implements Serializable {
             ", date='" + getDate() + "'" +
             ", grandTotal=" + getGrandTotal() +
             ", paymentRef='" + getPaymentRef() + "'" +
+            ", allergyNote='" + getAllergyNote() + "'" +
+            ", preOrderDate='" + getPreOrderDate() + "'" +
             ", email='" + getEmail() + "'" +
             ", deliveryInfo=" + getDeliveryInfoId() +
             ", approvalDetails=" + getApprovalDetailsId() +

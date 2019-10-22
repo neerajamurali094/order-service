@@ -122,7 +122,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
 			orderDTO.setStatusId(3l); // order is auto approved
 			orderService.update(orderDTO);
-			orderService.publishMesssage(orderId); // sending order to MOM
+			orderService.publishMesssage(orderId,phone); // sending order to MOM
 
 		}
 		return commandResource;

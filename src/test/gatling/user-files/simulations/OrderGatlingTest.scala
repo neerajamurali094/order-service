@@ -107,6 +107,8 @@ class OrderGatlingTest extends Simulation {
                 , "date":"2020-01-01T00:00:00.000Z"
                 , "grandTotal":null
                 , "paymentRef":"SAMPLE_TEXT"
+                , "allergyNote":"SAMPLE_TEXT"
+                , "preOrderDate":"2020-01-01T00:00:00.000Z"
                 , "email":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))

@@ -1,6 +1,5 @@
 package com.diviso.graeshoppe.order.web.rest;
-import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
-import com.diviso.graeshoppe.order.service.OrderCommandService;
+import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.order.web.rest.util.HeaderUtil;
 import com.diviso.graeshoppe.order.web.rest.util.PaginationUtil;
@@ -8,47 +7,36 @@ import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.Principal;
-import java.time.Instant;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Order.
  */
 @RestController
-@RequestMapping("/api")
-public class OrderCommandResource {
+@RequestMapping("/api/command")
+public class OrderResource {
 
-	@Autowired
-	private  SimpMessagingTemplate template;
-	
-
-    private final Logger log = LoggerFactory.getLogger(OrderCommandResource.class);
+    private final Logger log = LoggerFactory.getLogger(OrderResource.class);
 
     private static final String ENTITY_NAME = "orderOrder";
 
-    private final OrderCommandService orderService;
-    
-    @GetMapping("/send")
-    public void send(Principal principal) {
-    	log.info("User is #################################### "+principal.getName());
-    	template.convertAndSendToUser(principal.getName(), "/queue/notification", "Message from "+principal.getName());
-   
-    	
-    }
+    private final OrderService orderService;
 
-    public OrderCommandResource(OrderCommandService orderService) {
+    public OrderResource(OrderService orderService) {
         this.orderService = orderService;
     }
 
@@ -60,16 +48,14 @@ public class OrderCommandResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/orders")
-    public ResponseEntity<CommandResource> createOrder(@RequestBody OrderDTO orderDTO) throws URISyntaxException {
-		orderDTO.setDate(Instant.now());
-		orderDTO.setStatusId(1l);
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) throws URISyntaxException {
         log.debug("REST request to save Order : {}", orderDTO);
         if (orderDTO.getId() != null) {
             throw new BadRequestAlertException("A new order cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        CommandResource result = orderService.save(orderDTO);
-        return ResponseEntity.created(new URI("/api/orders/" + result.getNextTaskId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getNextTaskId().toString()))
+        OrderDTO result = orderService.save(orderDTO);
+        return ResponseEntity.created(new URI("/api/orders/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -88,7 +74,7 @@ public class OrderCommandResource {
         if (orderDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        OrderDTO result = orderService.update(orderDTO);
+        OrderDTO result = orderService.save(orderDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, orderDTO.getId().toString()))
             .body(result);
@@ -150,9 +136,4 @@ public class OrderCommandResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-//    @PostMapping("/pulishMessage/{orderId}")
-//    public boolean publishOrderToMessagebroker(@PathVariable String orderId) {
-//    	return orderService.publishMesssage(orderId);
-//    }
-   
 }

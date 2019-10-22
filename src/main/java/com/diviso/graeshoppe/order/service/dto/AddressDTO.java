@@ -13,6 +13,8 @@ public class AddressDTO implements Serializable {
 
     private String pincode;
 
+    private String email;
+
     private String houseNoOrBuildingName;
 
     private String roadNameAreaOrStreet;
@@ -54,6 +56,14 @@ public class AddressDTO implements Serializable {
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getHouseNoOrBuildingName() {
@@ -155,6 +165,7 @@ public class AddressDTO implements Serializable {
             "id=" + getId() +
             ", customerId='" + getCustomerId() + "'" +
             ", pincode='" + getPincode() + "'" +
+            ", email='" + getEmail() + "'" +
             ", houseNoOrBuildingName='" + getHouseNoOrBuildingName() + "'" +
             ", roadNameAreaOrStreet='" + getRoadNameAreaOrStreet() + "'" +
             ", city='" + getCity() + "'" +

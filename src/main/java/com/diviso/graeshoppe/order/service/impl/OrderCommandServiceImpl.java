@@ -269,9 +269,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	}
 
 	@Override
-	public boolean publishMesssage(String orderId) {
+	public boolean publishMesssage(String orderId,Long phone) {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
-		order.setOrderLines(orderLineRepository.findByOrder_Id(order.getId()));
+		order.setOrderLines(orderLineRepository.findByOrder_Id(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
@@ -280,6 +280,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
 				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef())
+				.setCustomerPhone(phone)
 				.setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount)
 				.setDate(order.getDate().toEpochMilli()).setGrandTotal(
@@ -320,7 +321,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 							.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
 							.build());
 			
-		}
+		} 
 		log.info("deliveryy arge is $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ "+order.getDeliveryInfo().getDeliveryCharge());
 		if(order.getDeliveryInfo().getDeliveryCharge() == null) {
 			log.info("is Null");

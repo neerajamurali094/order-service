@@ -5,6 +5,8 @@ entity Order{
 	date Instant,
 	grandTotal Double,
 	paymentRef String,  
+	allergyNote String,
+	preOrderDate Instant,
 	email String
 }
 entity DeliveryInfo{
@@ -23,6 +25,7 @@ entity Offer{
 entity Address{
 	customerId String,
 	pincode String,
+	email String,
 	houseNoOrBuildingName String,
 	roadNameAreaOrStreet String,
 	city String,

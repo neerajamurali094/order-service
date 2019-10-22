@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.order.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -47,6 +48,12 @@ public class Order implements Serializable {
     @Column(name = "payment_ref")
     private String paymentRef;
 
+    @Column(name = "allergy_note")
+    private String allergyNote;
+
+    @Column(name = "pre_order_date")
+    private Instant preOrderDate;
+
     @Column(name = "email")
     private String email;
 
@@ -58,10 +65,10 @@ public class Order implements Serializable {
     @JoinColumn(unique = true)
     private ApprovalDetails approvalDetails;
 
-    @OneToMany(mappedBy = "order",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<OrderLine> orderLines = new HashSet<>();
-    @OneToMany(mappedBy = "order",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Offer> appliedOffers = new HashSet<>();
     @ManyToOne
@@ -153,6 +160,32 @@ public class Order implements Serializable {
 
     public void setPaymentRef(String paymentRef) {
         this.paymentRef = paymentRef;
+    }
+
+    public String getAllergyNote() {
+        return allergyNote;
+    }
+
+    public Order allergyNote(String allergyNote) {
+        this.allergyNote = allergyNote;
+        return this;
+    }
+
+    public void setAllergyNote(String allergyNote) {
+        this.allergyNote = allergyNote;
+    }
+
+    public Instant getPreOrderDate() {
+        return preOrderDate;
+    }
+
+    public Order preOrderDate(Instant preOrderDate) {
+        this.preOrderDate = preOrderDate;
+        return this;
+    }
+
+    public void setPreOrderDate(Instant preOrderDate) {
+        this.preOrderDate = preOrderDate;
     }
 
     public String getEmail() {
@@ -288,6 +321,8 @@ public class Order implements Serializable {
             ", date='" + getDate() + "'" +
             ", grandTotal=" + getGrandTotal() +
             ", paymentRef='" + getPaymentRef() + "'" +
+            ", allergyNote='" + getAllergyNote() + "'" +
+            ", preOrderDate='" + getPreOrderDate() + "'" +
             ", email='" + getEmail() + "'" +
             "}";
     }

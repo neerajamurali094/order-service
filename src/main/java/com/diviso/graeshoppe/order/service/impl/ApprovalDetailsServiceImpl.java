@@ -7,8 +7,12 @@ import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
+import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
+import com.diviso.graeshoppe.order.client.customer.model.Customer;
 import com.diviso.graeshoppe.order.domain.ApprovalDetails;
+import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.repository.ApprovalDetailsRepository;
+import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.repository.search.ApprovalDetailsSearchRepository;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
 import com.diviso.graeshoppe.order.resource.assembler.ResourceAssembler;
@@ -47,11 +51,15 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 
 	@Autowired
 	private TasksApi tasksApi;
-
+	@Autowired
+	private CustomerResourceApi customerResourceApi;
 	@Autowired
 	private NotificationCommandService notificationService;
 	@Autowired
 	private OrderCommandService orderService;
+	
+	@Autowired
+	private OrderRepository orderRespository;
 	@Autowired
 	private ResourceAssembler resourceAssembler;
 
@@ -104,7 +112,15 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		orderDTO.setApprovalDetailsId(result.getId());
 		orderDTO.setStatusId(3l);
 		orderService.update(orderDTO);
-		orderService.publishMesssage(approvalDetailsDTO.getOrderId());
+		Long phone=0l;
+		DeliveryInfo deliveryInfo=orderRespository.findDeliveryInfoByOrderId(orderDTO.getOrderId());
+		if(deliveryInfo.getDeliveryAddress()!=null) {
+			phone = deliveryInfo.getDeliveryAddress().getPhone();
+		} else {
+			Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
+			phone = customer.getContact().getMobileNumber();
+		}
+		orderService.publishMesssage(approvalDetailsDTO.getOrderId(),phone);
 		return result1;
 	}
 

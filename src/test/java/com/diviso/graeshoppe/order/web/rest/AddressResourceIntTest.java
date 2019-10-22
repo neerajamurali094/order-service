@@ -55,6 +55,9 @@ public class AddressResourceIntTest {
     private static final String DEFAULT_PINCODE = "AAAAAAAAAA";
     private static final String UPDATED_PINCODE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
+    private static final String UPDATED_EMAIL = "BBBBBBBBBB";
+
     private static final String DEFAULT_HOUSE_NO_OR_BUILDING_NAME = "AAAAAAAAAA";
     private static final String UPDATED_HOUSE_NO_OR_BUILDING_NAME = "BBBBBBBBBB";
 
@@ -140,6 +143,7 @@ public class AddressResourceIntTest {
         Address address = new Address()
             .customerId(DEFAULT_CUSTOMER_ID)
             .pincode(DEFAULT_PINCODE)
+            .email(DEFAULT_EMAIL)
             .houseNoOrBuildingName(DEFAULT_HOUSE_NO_OR_BUILDING_NAME)
             .roadNameAreaOrStreet(DEFAULT_ROAD_NAME_AREA_OR_STREET)
             .city(DEFAULT_CITY)
@@ -175,6 +179,7 @@ public class AddressResourceIntTest {
         Address testAddress = addressList.get(addressList.size() - 1);
         assertThat(testAddress.getCustomerId()).isEqualTo(DEFAULT_CUSTOMER_ID);
         assertThat(testAddress.getPincode()).isEqualTo(DEFAULT_PINCODE);
+        assertThat(testAddress.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testAddress.getHouseNoOrBuildingName()).isEqualTo(DEFAULT_HOUSE_NO_OR_BUILDING_NAME);
         assertThat(testAddress.getRoadNameAreaOrStreet()).isEqualTo(DEFAULT_ROAD_NAME_AREA_OR_STREET);
         assertThat(testAddress.getCity()).isEqualTo(DEFAULT_CITY);
@@ -225,6 +230,7 @@ public class AddressResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(address.getId().intValue())))
             .andExpect(jsonPath("$.[*].customerId").value(hasItem(DEFAULT_CUSTOMER_ID.toString())))
             .andExpect(jsonPath("$.[*].pincode").value(hasItem(DEFAULT_PINCODE.toString())))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
             .andExpect(jsonPath("$.[*].houseNoOrBuildingName").value(hasItem(DEFAULT_HOUSE_NO_OR_BUILDING_NAME.toString())))
             .andExpect(jsonPath("$.[*].roadNameAreaOrStreet").value(hasItem(DEFAULT_ROAD_NAME_AREA_OR_STREET.toString())))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
@@ -249,6 +255,7 @@ public class AddressResourceIntTest {
             .andExpect(jsonPath("$.id").value(address.getId().intValue()))
             .andExpect(jsonPath("$.customerId").value(DEFAULT_CUSTOMER_ID.toString()))
             .andExpect(jsonPath("$.pincode").value(DEFAULT_PINCODE.toString()))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
             .andExpect(jsonPath("$.houseNoOrBuildingName").value(DEFAULT_HOUSE_NO_OR_BUILDING_NAME.toString()))
             .andExpect(jsonPath("$.roadNameAreaOrStreet").value(DEFAULT_ROAD_NAME_AREA_OR_STREET.toString()))
             .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
@@ -283,6 +290,7 @@ public class AddressResourceIntTest {
         updatedAddress
             .customerId(UPDATED_CUSTOMER_ID)
             .pincode(UPDATED_PINCODE)
+            .email(UPDATED_EMAIL)
             .houseNoOrBuildingName(UPDATED_HOUSE_NO_OR_BUILDING_NAME)
             .roadNameAreaOrStreet(UPDATED_ROAD_NAME_AREA_OR_STREET)
             .city(UPDATED_CITY)
@@ -305,6 +313,7 @@ public class AddressResourceIntTest {
         Address testAddress = addressList.get(addressList.size() - 1);
         assertThat(testAddress.getCustomerId()).isEqualTo(UPDATED_CUSTOMER_ID);
         assertThat(testAddress.getPincode()).isEqualTo(UPDATED_PINCODE);
+        assertThat(testAddress.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testAddress.getHouseNoOrBuildingName()).isEqualTo(UPDATED_HOUSE_NO_OR_BUILDING_NAME);
         assertThat(testAddress.getRoadNameAreaOrStreet()).isEqualTo(UPDATED_ROAD_NAME_AREA_OR_STREET);
         assertThat(testAddress.getCity()).isEqualTo(UPDATED_CITY);
@@ -376,6 +385,7 @@ public class AddressResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(address.getId().intValue())))
             .andExpect(jsonPath("$.[*].customerId").value(hasItem(DEFAULT_CUSTOMER_ID)))
             .andExpect(jsonPath("$.[*].pincode").value(hasItem(DEFAULT_PINCODE)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
             .andExpect(jsonPath("$.[*].houseNoOrBuildingName").value(hasItem(DEFAULT_HOUSE_NO_OR_BUILDING_NAME)))
             .andExpect(jsonPath("$.[*].roadNameAreaOrStreet").value(hasItem(DEFAULT_ROAD_NAME_AREA_OR_STREET)))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))

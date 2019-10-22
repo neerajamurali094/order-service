@@ -5,7 +5,7 @@ import com.diviso.graeshoppe.order.OrderApp;
 import com.diviso.graeshoppe.order.domain.Order;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.repository.search.OrderSearchRepository;
-import com.diviso.graeshoppe.order.service.OrderCommandService;
+import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import com.diviso.graeshoppe.order.service.mapper.OrderMapper;
 import com.diviso.graeshoppe.order.web.rest.errors.ExceptionTranslator;
@@ -69,6 +69,12 @@ public class OrderResourceIntTest {
     private static final String DEFAULT_PAYMENT_REF = "AAAAAAAAAA";
     private static final String UPDATED_PAYMENT_REF = "BBBBBBBBBB";
 
+    private static final String DEFAULT_ALLERGY_NOTE = "AAAAAAAAAA";
+    private static final String UPDATED_ALLERGY_NOTE = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_PRE_ORDER_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_PRE_ORDER_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
     private static final String UPDATED_EMAIL = "BBBBBBBBBB";
 
@@ -79,7 +85,7 @@ public class OrderResourceIntTest {
     private OrderMapper orderMapper;
 
     @Autowired
-    private OrderCommandService orderService;
+    private OrderService orderService;
 
     /**
      * This repository is mocked in the com.diviso.graeshoppe.order.repository.search test package.
@@ -111,7 +117,7 @@ public class OrderResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final OrderCommandResource orderResource = new OrderCommandResource(orderService);
+        final OrderResource orderResource = new OrderResource(orderService);
         this.restOrderMockMvc = MockMvcBuilders.standaloneSetup(orderResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -134,6 +140,8 @@ public class OrderResourceIntTest {
             .date(DEFAULT_DATE)
             .grandTotal(DEFAULT_GRAND_TOTAL)
             .paymentRef(DEFAULT_PAYMENT_REF)
+            .allergyNote(DEFAULT_ALLERGY_NOTE)
+            .preOrderDate(DEFAULT_PRE_ORDER_DATE)
             .email(DEFAULT_EMAIL);
         return order;
     }
@@ -165,6 +173,8 @@ public class OrderResourceIntTest {
         assertThat(testOrder.getDate()).isEqualTo(DEFAULT_DATE);
         assertThat(testOrder.getGrandTotal()).isEqualTo(DEFAULT_GRAND_TOTAL);
         assertThat(testOrder.getPaymentRef()).isEqualTo(DEFAULT_PAYMENT_REF);
+        assertThat(testOrder.getAllergyNote()).isEqualTo(DEFAULT_ALLERGY_NOTE);
+        assertThat(testOrder.getPreOrderDate()).isEqualTo(DEFAULT_PRE_ORDER_DATE);
         assertThat(testOrder.getEmail()).isEqualTo(DEFAULT_EMAIL);
 
         // Validate the Order in Elasticsearch
@@ -211,6 +221,8 @@ public class OrderResourceIntTest {
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
             .andExpect(jsonPath("$.[*].grandTotal").value(hasItem(DEFAULT_GRAND_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].paymentRef").value(hasItem(DEFAULT_PAYMENT_REF.toString())))
+            .andExpect(jsonPath("$.[*].allergyNote").value(hasItem(DEFAULT_ALLERGY_NOTE.toString())))
+            .andExpect(jsonPath("$.[*].preOrderDate").value(hasItem(DEFAULT_PRE_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
     }
     
@@ -231,6 +243,8 @@ public class OrderResourceIntTest {
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
             .andExpect(jsonPath("$.grandTotal").value(DEFAULT_GRAND_TOTAL.doubleValue()))
             .andExpect(jsonPath("$.paymentRef").value(DEFAULT_PAYMENT_REF.toString()))
+            .andExpect(jsonPath("$.allergyNote").value(DEFAULT_ALLERGY_NOTE.toString()))
+            .andExpect(jsonPath("$.preOrderDate").value(DEFAULT_PRE_ORDER_DATE.toString()))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()));
     }
 
@@ -261,6 +275,8 @@ public class OrderResourceIntTest {
             .date(UPDATED_DATE)
             .grandTotal(UPDATED_GRAND_TOTAL)
             .paymentRef(UPDATED_PAYMENT_REF)
+            .allergyNote(UPDATED_ALLERGY_NOTE)
+            .preOrderDate(UPDATED_PRE_ORDER_DATE)
             .email(UPDATED_EMAIL);
         OrderDTO orderDTO = orderMapper.toDto(updatedOrder);
 
@@ -279,6 +295,8 @@ public class OrderResourceIntTest {
         assertThat(testOrder.getDate()).isEqualTo(UPDATED_DATE);
         assertThat(testOrder.getGrandTotal()).isEqualTo(UPDATED_GRAND_TOTAL);
         assertThat(testOrder.getPaymentRef()).isEqualTo(UPDATED_PAYMENT_REF);
+        assertThat(testOrder.getAllergyNote()).isEqualTo(UPDATED_ALLERGY_NOTE);
+        assertThat(testOrder.getPreOrderDate()).isEqualTo(UPDATED_PRE_ORDER_DATE);
         assertThat(testOrder.getEmail()).isEqualTo(UPDATED_EMAIL);
 
         // Validate the Order in Elasticsearch
@@ -346,6 +364,8 @@ public class OrderResourceIntTest {
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
             .andExpect(jsonPath("$.[*].grandTotal").value(hasItem(DEFAULT_GRAND_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].paymentRef").value(hasItem(DEFAULT_PAYMENT_REF)))
+            .andExpect(jsonPath("$.[*].allergyNote").value(hasItem(DEFAULT_ALLERGY_NOTE)))
+            .andExpect(jsonPath("$.[*].preOrderDate").value(hasItem(DEFAULT_PRE_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
     }
 

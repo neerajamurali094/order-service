@@ -1,5 +1,6 @@
 package com.diviso.graeshoppe.order.web.rest;
 import com.diviso.graeshoppe.order.service.OrderLineService;
+import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.order.web.rest.util.HeaderUtil;
 import com.diviso.graeshoppe.order.web.rest.util.PaginationUtil;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -131,6 +133,11 @@ public class OrderLineCommandResource {
         Page<OrderLineDTO> page = orderLineService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/order-lines");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/findbyorderid/{orderId}")
+    public  ResponseEntity<List<OrderLineDTO>> findByOrderId(@PathVariable String orderId){
+    	return new ResponseEntity<List<OrderLineDTO>>(orderLineService.findByOrderId(orderId),HttpStatus.OK);
     }
 
 }

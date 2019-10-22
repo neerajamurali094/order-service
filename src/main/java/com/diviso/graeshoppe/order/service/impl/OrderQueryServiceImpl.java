@@ -29,4 +29,5 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		return orderRepository.countByCustomerIdAndStatus_Name(customerId, statusName);
 	}
 
+	
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -133,4 +134,9 @@ public class AuxilaryOrderLineResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/findByOrderLineId/{id}")
+    public ResponseEntity<List<AuxilaryOrderLineDTO>> getAllAuxilaryOrderLines(@PathVariable Long id) {
+    	return new ResponseEntity<List<AuxilaryOrderLineDTO>>(auxilaryOrderLineService.findByOrderLineId(id), HttpStatus.OK);
+    }
+    
 }
