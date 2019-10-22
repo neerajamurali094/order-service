@@ -129,7 +129,6 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	}
 
 	public CommandResource confirmDelivery(String taskId, Long phone,Long phoneCode, String deliveryType) {
-		log.info("Task id is " + taskId + " Phone number is ^^^^^^^^^^^^^^^^^^^^^ " + phone);
 		String processInstanceId = tasksApi.getTask(taskId).getBody().getProcessInstanceId();
 		SubmitFormRequest formRequest = new SubmitFormRequest();
 		List<RestFormProperty> properties = new ArrayList<RestFormProperty>();

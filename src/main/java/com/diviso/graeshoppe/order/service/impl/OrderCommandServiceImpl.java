@@ -269,78 +269,71 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	}
 
 	@Override
-	public boolean publishMesssage(String orderId,Long phone) {
+	public boolean publishMesssage(String orderId, Long phone) {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
-		log.info("Order fetched from db is  "+ order);
+		log.info("Order fetched from db is  " + order);
 		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
-		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder()
-				.setOrderId(order.getOrderId()).setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
-				.setPaymentRef(order.getPaymentRef())
-				.setCustomerPhone(phone)
-				.setOrderCountgraeshoppe(graeshoppeCount)
-				.setOrderCountRestaurant(restaurantCount)
-				.setDate(order.getDate().toEpochMilli()).setGrandTotal(
-						Math.round(order.getGrandTotal())).setEmail(order.getEmail())
-				.setStatus(Status.newBuilder().setId(order.getStatus().getId())
-						.setName(order.getStatus().getName()).build())
+		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder().setOrderId(order.getOrderId())
+				.setAllergyNote(order.getAllergyNote()).setPreOrderDate(order.getPreOrderDate().getEpochSecond())
+				.setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
+				.setPaymentRef(order.getPaymentRef()).setCustomerPhone(phone).setOrderCountgraeshoppe(graeshoppeCount)
+				.setOrderCountRestaurant(restaurantCount).setDate(order.getDate().toEpochMilli())
+				.setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
+				.setStatus(Status.newBuilder().setId(order.getStatus().getId()).setName(order.getStatus().getName())
+						.build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
-				
+
 		if (order.getApprovalDetails() == null) {
 			log.info("Approval details not exists");
-			orderAvro.setApprovalDetails(
-					ApprovalDetails.newBuilder()
-					.setExpectedDelivery(order.getDate().plus(Duration.ofMinutes(40)).toEpochMilli()).build());
-			
+			orderAvro.setApprovalDetails(ApprovalDetails.newBuilder()
+					.setExpectedDelivery(order.getDate().plus(Duration.ofMinutes(40)).toEpochMilli()).build()); 
 		} else {
 			log.info("Approval details exists");
-			orderAvro.setApprovalDetails(ApprovalDetails.newBuilder().setAcceptedAt(order.getDate().toEpochMilli())
+			orderAvro.setApprovalDetails(ApprovalDetails.newBuilder()
+					.setAcceptedAt(order.getApprovalDetails().getAcceptedAt().toEpochMilli())
 					.setExpectedDelivery(order.getApprovalDetails().getExpectedDelivery().toEpochMilli())
 					.setDecision(order.getApprovalDetails().getDecision()).build());
 		}
-		
-		orderAvro.setDeliveryInfoBuilder(DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
-				.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes()));
-		if(order.getDeliveryInfo().getDeliveryAddress() != null ) {
-				
-			
-					orderAvro.getDeliveryInfoBuilder().setDeliveryAddress(Address.newBuilder()
-							.setCustomerId(order.getDeliveryInfo().getDeliveryAddress().getCustomerId())
-							.setPincode(order.getDeliveryInfo().getDeliveryAddress().getPincode())
-							.setHouseNoOrBuildingName(
-									order.getDeliveryInfo().getDeliveryAddress().getHouseNoOrBuildingName())
-							.setRoadNameAreaOrStreet(
-									order.getDeliveryInfo().getDeliveryAddress().getRoadNameAreaOrStreet())
-							.setCity(order.getDeliveryInfo().getDeliveryAddress().getCity())
-							.setState(order.getDeliveryInfo().getDeliveryAddress().getState())
-							.setLandmark(order.getDeliveryInfo().getDeliveryAddress().getLandmark())
-							.setPhone(order.getDeliveryInfo().getDeliveryAddress().getPhone())
-							.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
-							.build());
-			
-		} 
-		log.info("deliveryy arge is $$$$$$$$$$$$$$$$$$$$$$$$$$$$$ "+order.getDeliveryInfo().getDeliveryCharge());
-		if(order.getDeliveryInfo().getDeliveryCharge() == null) {
-			log.info("is Null");
+
+		orderAvro.setDeliveryInfoBuilder(
+				DeliveryInfo.newBuilder().setDeliveryType(order.getDeliveryInfo().getDeliveryType())
+						.setDeliveryNotes(order.getDeliveryInfo().getDeliveryNotes()));
+		if (order.getDeliveryInfo().getDeliveryAddress() != null) {
+
+			orderAvro.getDeliveryInfoBuilder().setDeliveryAddress(Address.newBuilder()
+					.setCustomerId(order.getDeliveryInfo().getDeliveryAddress().getCustomerId())
+					.setPincode(order.getDeliveryInfo().getDeliveryAddress().getPincode())
+					.setHouseNoOrBuildingName(order.getDeliveryInfo().getDeliveryAddress().getHouseNoOrBuildingName())
+					.setRoadNameAreaOrStreet(order.getDeliveryInfo().getDeliveryAddress().getRoadNameAreaOrStreet())
+					.setCity(order.getDeliveryInfo().getDeliveryAddress().getCity())
+					.setState(order.getDeliveryInfo().getDeliveryAddress().getState())
+					.setLandmark(order.getDeliveryInfo().getDeliveryAddress().getLandmark())
+					.setPhone(order.getDeliveryInfo().getDeliveryAddress().getPhone())
+					.setEmail(order.getDeliveryInfo().getDeliveryAddress().getEmail())
+					.setAlternatePhone(order.getDeliveryInfo().getDeliveryAddress().getAlternatePhone())
+					.build());
+
+		}
+		if (order.getDeliveryInfo().getDeliveryCharge() == null) {
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(0.0d);
 		} else {
-			log.info("not Null");
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 		}
 		orderAvro.getDeliveryInfoBuilder().build();
 		orderAvro.setOfferLines(order.getAppliedOffers().stream().map(this::toAvroOffer).collect(Collectors.toList()));
-		com.diviso.graeshoppe.order.avro.Order message =orderAvro.build();
+		com.diviso.graeshoppe.order.avro.Order message = orderAvro.build();
 		return messageChannel.orderOut().send(MessageBuilder.withPayload(message).build());
 	}
 
 	private com.diviso.graeshoppe.order.avro.OrderLine toAvroOrderLine(OrderLine orderline) {
 		return com.diviso.graeshoppe.order.avro.OrderLine.newBuilder().setProductId(orderline.getProductId())
 				.setQuantity(orderline.getQuantity()).setPricePerUnit(orderline.getPricePerUnit())
-				.setTotal(Math.round(orderline.getTotal())).setAuxilaryOrderLines(orderline.getRequiedAuxilaries().stream()
-						.map(this::toAvroAuxilaryLine).collect(Collectors.toList()))
+				.setTotal(Math.round(orderline.getTotal())).setAuxilaryOrderLines(orderline.getRequiedAuxilaries()
+						.stream().map(this::toAvroAuxilaryLine).collect(Collectors.toList()))
 				.build();
 	}
 
@@ -349,16 +342,15 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setProductId(auxilaryOrderLine.getProductId()).setQuantity(auxilaryOrderLine.getQuantity())
 				.setPricePerUnit(auxilaryOrderLine.getPricePerUnit()).setTotal(auxilaryOrderLine.getTotal()).build();
 	}
-	
+
 	private com.diviso.graeshoppe.order.avro.Offer toAvroOffer(Offer offer) {
-		return com.diviso.graeshoppe.order.avro.Offer.newBuilder()
-				.setOfferRef(offer.getOfferRef()).build();
-				
+		return com.diviso.graeshoppe.order.avro.Offer.newBuilder().setOfferRef(offer.getOfferRef()).build();
+
 	}
 
 	@Override
 	public Optional<OrderDTO> findByOrderID(String orderId) {
-		
+
 		return orderRepository.findByOrderId(orderId).map(orderMapper::toDto);
 	}
 }
