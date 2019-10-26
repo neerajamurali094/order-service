@@ -57,4 +57,6 @@ public interface OrderLineService {
     Page<OrderLineDTO> search(String query, Pageable pageable);
 
 	List<OrderLineDTO> findByOrderId(String orderId);
+
+	void deleteByProductIdAndOrderId(Long productId, Long orderId);
 }

@@ -140,4 +140,9 @@ public class OrderLineCommandResource {
     	return new ResponseEntity<List<OrderLineDTO>>(orderLineService.findByOrderId(orderId),HttpStatus.OK);
     }
 
+    @GetMapping("/deleteByProductIdAndOrderId/{productId}/{orderId}")
+    public  ResponseEntity<List<OrderLineDTO>> deleteByProductIdAndOrderId(@PathVariable Long productId,@PathVariable Long orderId){
+    	orderLineService.deleteByProductIdAndOrderId(productId,orderId);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, productId.toString())).build();
+    }
 }

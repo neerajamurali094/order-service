@@ -117,4 +117,12 @@ public class OrderLineServiceImpl implements OrderLineService {
 				.map(orderLineMapper::toDto)
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public void deleteByProductIdAndOrderId(Long productId, Long orderId) {
+		Optional<OrderLine> s=orderLineRepository.findByProductIdAndOrder_Id(productId, orderId);
+		if(s.isPresent()) {
+			delete(s.get().getId());
+		}
+	}
 }
