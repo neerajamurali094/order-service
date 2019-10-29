@@ -278,7 +278,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		log.info("Order fetched from db is  " + order);
 		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
 		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder().setOrderId(order.getOrderId())
-				.setAllergyNote(order.getAllergyNote()).setPreOrderDate(order.getPreOrderDate().getEpochSecond())
+				.setAllergyNote(order.getAllergyNote())
 				.setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef()).setCustomerPhone(phone).setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount).setDate(order.getDate().toEpochMilli())
@@ -286,7 +286,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setStatus(Status.newBuilder().setId(order.getStatus().getId()).setName(order.getStatus().getName())
 						.build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
-
+		if(order.getPreOrderDate()!=null) {
+			orderAvro.setPreOrderDate(order.getPreOrderDate().getEpochSecond());
+		}
+			
 		if (order.getApprovalDetails() == null) {
 			log.info("Approval details not exists");
 			orderAvro.setApprovalDetails(ApprovalDetails.newBuilder()
