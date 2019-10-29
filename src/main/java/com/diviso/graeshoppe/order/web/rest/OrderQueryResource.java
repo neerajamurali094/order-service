@@ -22,6 +22,7 @@ import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.DataResponse;
 import com.diviso.graeshoppe.order.models.OpenTask;
 import com.diviso.graeshoppe.order.service.OrderQueryService;
+import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 
 @RestController
 @RequestMapping("/api")
@@ -126,7 +127,10 @@ public class OrderQueryResource {
 		return new ResponseEntity<Long>(orderQueryService.countByCustomerIdAndStatusName(customerId,statusName), HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("/findByDeliveryInfoId/{id}")
+	public ResponseEntity<OrderDTO> findByDeliveryInfoId(@PathVariable Long id){
+		return new ResponseEntity<OrderDTO>(orderQueryService.findByDeliveryInfoId(id), HttpStatus.OK);
+	}
 	
 	
 	

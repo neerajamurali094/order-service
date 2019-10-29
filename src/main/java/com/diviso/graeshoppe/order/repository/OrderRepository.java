@@ -48,4 +48,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	
 	@Query(value = "SELECT o.deliveryInfo from Order o WHERE o.orderId=:orderId")
 	public DeliveryInfo findDeliveryInfoByOrderId(@Param("orderId") String orderId);
+	
+	public Optional<Order> findByDeliveryInfo_Id(Long id);
 }
