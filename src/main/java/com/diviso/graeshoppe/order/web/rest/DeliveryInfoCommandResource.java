@@ -72,6 +72,7 @@ public class DeliveryInfoCommandResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         DeliveryInfoDTO result = deliveryInfoService.update(deliveryInfoDTO);
+        deliveryInfoService.update(result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, deliveryInfoDTO.getId().toString()))
             .body(result);
