@@ -89,8 +89,6 @@ public class OrderCommandResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         OrderDTO result = orderService.update(orderDTO);
-        OrderDTO result1=orderService.update(result);
-        orderService.update(result1);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, orderDTO.getId().toString()))
             .body(result);
