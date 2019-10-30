@@ -1,0 +1,45 @@
+{
+    "name": "OrderLine",
+    "fields": [
+        {
+            "fieldName": "productId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "pricePerUnit",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "total",
+            "fieldType": "Double"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "order",
+            "otherEntityName": "order",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "auxilaryOrderLine",
+            "otherEntityRelationshipName": "orderLine",
+            "relationshipName": "requiedAuxilaries"
+        }
+    ],
+    "changelogDate": "20190814105249",
+    "entityTableName": "order_line",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

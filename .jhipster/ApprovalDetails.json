@@ -1,0 +1,28 @@
+{
+    "name": "ApprovalDetails",
+    "fields": [
+        {
+            "fieldName": "acceptedAt",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "expectedDelivery",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "decision",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190814105246",
+    "entityTableName": "approval_details",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

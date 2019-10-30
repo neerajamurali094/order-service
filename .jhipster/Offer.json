@@ -1,0 +1,27 @@
+{
+    "name": "Offer",
+    "fields": [
+        {
+            "fieldName": "offerRef",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "order",
+            "otherEntityName": "order",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190814105247",
+    "entityTableName": "offer",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

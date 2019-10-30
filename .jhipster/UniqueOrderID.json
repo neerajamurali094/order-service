@@ -1,0 +1,15 @@
+{
+    "name": "UniqueOrderID",
+    "fields": [],
+    "relationships": [],
+    "changelogDate": "20190814105252",
+    "entityTableName": "unique_order_id",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

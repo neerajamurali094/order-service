@@ -1,0 +1,20 @@
+{
+    "name": "Status",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190814105251",
+    "entityTableName": "status",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

@@ -10,11 +10,13 @@ import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
 import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
 import com.diviso.graeshoppe.order.client.customer.model.Customer;
+import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.repository.DeliveryInfoRepository;
 import com.diviso.graeshoppe.order.repository.search.DeliveryInfoSearchRepository;
 import com.diviso.graeshoppe.order.resource.assembler.CommandResource;
 import com.diviso.graeshoppe.order.resource.assembler.ResourceAssembler;
+import com.diviso.graeshoppe.order.service.dto.AddressDTO;
 import com.diviso.graeshoppe.order.service.dto.DeliveryInfoDTO;
 import com.diviso.graeshoppe.order.service.dto.NotificationDTO;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
@@ -58,6 +60,9 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	private TasksApi tasksApi;
 	@Autowired
 	private FormsApi formsApi;
+	
+	@Autowired
+	private StoreResourceApi storeResourceApi;
 
 	@Autowired
 	private CustomerResourceApi customerResourceApi;
@@ -89,17 +94,22 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		deliveryInfoSearchRepository.save(deliveryInfo);
 		OrderDTO orderDTO = orderService.findByOrderID(orderId).get();
 		Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
-		Long phone;
+		Long phone = customer.getContact().getMobileNumber();
 		Long phoneCode = customer.getContact().getPhoneCode();
+		String customerEmail = customer.getContact().getEmail();
+		String storeMail=storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody().getEmail();
 		if (deliveryInfoDTO.getDeliveryAddressId() != null) {
-			phone = addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get().getPhone();
-
-		} else {
-			phone = customer.getContact().getMobileNumber();
+			AddressDTO address=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get();
+			phone = address.getPhone();
+			if(address.getEmail()!=null) {
+				customerEmail = address.getEmail();
+			} 
 		}
 		log.info("Phone Number is "+phone);
 		log.info("Phonecode is "+phoneCode);
-		CommandResource commandResource = confirmDelivery(taskId, phone,phoneCode, deliveryInfoDTO.getDeliveryType());
+		log.info("Customer email is "+customerEmail);
+		log.info("Store email is "+storeMail);
+		CommandResource commandResource = confirmDelivery(taskId, phone,phoneCode, deliveryInfoDTO.getDeliveryType(),customerEmail,storeMail);
 		commandResource.setSelfId(result.getId());
 		update(result);
 		orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
@@ -128,7 +138,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		return commandResource;
 	}
 
-	public CommandResource confirmDelivery(String taskId, Long phone,Long phoneCode, String deliveryType) {
+	public CommandResource confirmDelivery(String taskId, Long phone,Long phoneCode, String deliveryType,String customerMail,String storeMail) {
 		String processInstanceId = tasksApi.getTask(taskId).getBody().getProcessInstanceId();
 		SubmitFormRequest formRequest = new SubmitFormRequest();
 		List<RestFormProperty> properties = new ArrayList<RestFormProperty>();
@@ -153,6 +163,20 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		deliveryTypeProperty.setValue(deliveryType);
 		properties.add(deliveryTypeProperty);
 
+		RestFormProperty customerEmail = new RestFormProperty();
+		customerEmail.setId("customerEmail");
+		customerEmail.setName("customerEmail");
+		customerEmail.setType("String");
+		customerEmail.setValue(customerMail);
+		properties.add(customerEmail);
+		
+		RestFormProperty storeEmail = new RestFormProperty();
+		customerEmail.setId("storeEmail");
+		customerEmail.setName("storeEmail");
+		customerEmail.setType("String");
+		customerEmail.setValue(storeMail);
+		properties.add(storeEmail);
+		
 		formRequest.setProperties(properties);
 		formRequest.setAction("completed");
 		formRequest.setTaskId(taskId);

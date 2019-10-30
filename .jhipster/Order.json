@@ -1,0 +1,88 @@
+{
+    "name": "Order",
+    "fields": [
+        {
+            "fieldName": "orderId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "customerId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "storeId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "grandTotal",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "paymentRef",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "allergyNote",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "preOrderDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "email",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "deliveryInfo",
+            "otherEntityRelationshipName": "order",
+            "relationshipName": "deliveryInfo",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "approvalDetails",
+            "otherEntityRelationshipName": "order",
+            "relationshipName": "approvalDetails",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "orderLine",
+            "otherEntityRelationshipName": "order",
+            "relationshipName": "orderLines"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "offer",
+            "otherEntityRelationshipName": "order",
+            "relationshipName": "appliedOffers"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "status",
+            "otherEntityRelationshipName": "order",
+            "relationshipName": "status",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190814105244",
+    "entityTableName": "order",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

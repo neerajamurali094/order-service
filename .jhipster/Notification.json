@@ -1,0 +1,49 @@
+{
+    "name": "Notification",
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "message",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "targetId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "image",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "image"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "receiverId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190814105253",
+    "entityTableName": "notification",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

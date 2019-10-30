@@ -10,6 +10,8 @@ import com.diviso.graeshoppe.order.client.store.model.StoreSettings;
 import com.diviso.graeshoppe.order.client.store.model.StoreType;
 import com.diviso.graeshoppe.order.client.store.model.UserRating;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import javax.validation.constraints.*;
  * Store
  */
 @Validated
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-09-18T12:35:56.219558+05:30[Asia/Kolkata]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2019-10-30T10:34:49.769480+05:30[Asia/Kolkata]")
 
 public class Store   {
   @JsonProperty("banners")

@@ -1,0 +1,39 @@
+{
+    "name": "AuxilaryOrderLine",
+    "fields": [
+        {
+            "fieldName": "productId",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "pricePerUnit",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "total",
+            "fieldType": "Double"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "orderLine",
+            "otherEntityName": "orderLine",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190814105250",
+    "entityTableName": "auxilary_order_line",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

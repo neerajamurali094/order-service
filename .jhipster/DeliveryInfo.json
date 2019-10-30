@@ -1,0 +1,36 @@
+{
+    "name": "DeliveryInfo",
+    "fields": [
+        {
+            "fieldName": "deliveryType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "deliveryCharge",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "deliveryNotes",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "address",
+            "otherEntityRelationshipName": "deliveryInfo",
+            "relationshipName": "deliveryAddress",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190814105245",
+    "entityTableName": "delivery_info",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

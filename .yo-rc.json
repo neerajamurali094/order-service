@@ -1,0 +1,97 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.diviso.graeshoppe.order",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "5.8.2",
+    "applicationType": "microservice",
+    "baseName": "order",
+    "packageName": "com.diviso.graeshoppe.order",
+    "packageFolder": "com/diviso/graeshoppe/order",
+    "serverPort": "8081",
+    "authenticationType": "oauth2",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "elasticsearch",
+    "messageBroker": "kafka",
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZWYyM2JkZmEzYzM4MWJlZjM2YmU1OTQ1NWU1MzA4Y2ZkYTU5ZTFjZWQ2YmRmMGM4MjA0MDY3NTE4YjE2NzAwNDE0ZTI2MjBkOTEzMzlhODA0YWYxZjQ3YjJmMTBjZjMzNTVmZjc4NDViOTM0OTJmMzRhMmY1N2FiOTAxODYzNTc=",
+    "testFrameworks": [
+      "gatling"
+    ],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "en",
+    "languages": [
+      "en",
+      "al",
+      "ar-ly",
+      "hy",
+      "by",
+      "bn",
+      "ca",
+      "zh-cn",
+      "zh-tw",
+      "cs",
+      "da",
+      "nl",
+      "et",
+      "fa",
+      "fr",
+      "gl",
+      "de",
+      "el",
+      "hi",
+      "hu",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "mr",
+      "my",
+      "pl",
+      "pt-br",
+      "pt-pt",
+      "ro",
+      "ru",
+      "sk",
+      "sr",
+      "es",
+      "sv",
+      "tr",
+      "ta",
+      "te",
+      "th",
+      "ua",
+      "uz-lat",
+      "vi"
+    ],
+    "skipClient": true,
+    "skipUserManagement": true
+  },
+  "generator-jhipster-swagger-cli": {
+    "promptValues": {
+      "inputSpec": "http://dev.ci1.divisosofttech.com:8071/v2/api-docs",
+      "cliName": "store"
+    },
+    "apis": {
+      "store": {
+        "spec": "http://dev.ci1.divisosofttech.com:8071/v2/api-docs"
+      },
+      "customer": {
+        "spec": "http://dev.ci1.divisosofttech.com:8088/v2/api-docs"
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+    "name": "Address",
+    "fields": [
+        {
+            "fieldName": "customerId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "pincode",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "email",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "houseNoOrBuildingName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "roadNameAreaOrStreet",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "city",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "state",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "landmark",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "phone",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "alternatePhone",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "addressType",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190814105248",
+    "entityTableName": "address",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "order",
+    "applications": "*",
+    "microserviceName": "order"
+}

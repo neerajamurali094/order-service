@@ -131,8 +131,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		order = orderRepository.save(order);
 		OrderDTO result = orderMapper.toDto(order);
 		orderSearchRepository.save(order);
-		CommandResource resource = initiateOrder(orderId, orderDTO.getStoreId(), orderDTO.getCustomerId(),
-				orderDTO.getEmail());
+		CommandResource resource = initiateOrder(orderId, orderDTO.getStoreId(), orderDTO.getCustomerId());
 		resource.setSelfId(result.getId());
 		log.info("Result Resource is " + resource);
 		update(result);
@@ -156,7 +155,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return result;
 	}
 
-	public CommandResource initiateOrder(String trackingId, String storeId, String customerId, String email) {
+	public CommandResource initiateOrder(String trackingId, String storeId, String customerId) {
 		ProcessInstanceCreateRequest processInstanceCreateRequest = new ProcessInstanceCreateRequest();
 		processInstanceCreateRequest.setProcessDefinitionId(BPM_PROCESSDEFINITION_ID);
 
@@ -199,13 +198,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		acceptType.setType("String");
 		acceptType.setValue(type);
 		properties.add(acceptType);
-
-		RestFormProperty customerEmail = new RestFormProperty();
-		customerEmail.setId("customerEmail");
-		customerEmail.setName("customerEmail");
-		customerEmail.setType("String");
-		customerEmail.setValue(email);
-		properties.add(customerEmail);
 
 		formRequest.setProperties(properties);
 		formRequest.setAction("completed");

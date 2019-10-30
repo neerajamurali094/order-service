@@ -215,7 +215,7 @@ jhipster:
 
 bpmn:
    url: http://dev.servers.divisosofttech.com:8080/activiti-rest/service
-   processId: process:2:42632 #process:1:10004
+   processId: process:3:78648 #process:2:42632 #process:1:10004
    security:
       basicAuth:
          username: kermit
