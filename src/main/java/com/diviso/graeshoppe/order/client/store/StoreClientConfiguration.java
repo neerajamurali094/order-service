@@ -1,7 +1,14 @@
 package com.diviso.graeshoppe.order.client.store;
 
 import com.diviso.graeshoppe.order.client.ExcludeFromComponentScan;
+import com.diviso.graeshoppe.order.client.TokenRelayRequestInterceptor;
+import com.diviso.graeshoppe.order.security.oauth2.AuthorizationHeaderUtil;
+
+import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;
+
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,4 +28,9 @@ import org.springframework.security.oauth2.client.token.grant.password.ResourceO
 @EnableConfigurationProperties
 public class StoreClientConfiguration {
 
+	
+	@Bean(name = "oauth2RequestInterceptor")
+    public RequestInterceptor getOAuth2RequestInterceptor(AuthorizationHeaderUtil authorizationHeaderUtil) throws IOException {
+        return new TokenRelayRequestInterceptor(authorizationHeaderUtil);
+    }
 }
