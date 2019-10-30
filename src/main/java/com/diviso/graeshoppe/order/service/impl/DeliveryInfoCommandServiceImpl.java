@@ -139,7 +139,6 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	}
 
 	public CommandResource confirmDelivery(String taskId, Long phone,Long phoneCode, String deliveryType,String customerMail,String storeMail) {
-		log.info("Taskid is "+taskId+" phone is "+phone+" phonecode is "+phoneCode+" deliveryType is "+deliveryType+" customeremail is "+customerMail+" store email is "+storeMail);
 		String processInstanceId = tasksApi.getTask(taskId).getBody().getProcessInstanceId();
 		SubmitFormRequest formRequest = new SubmitFormRequest();
 		List<RestFormProperty> properties = new ArrayList<RestFormProperty>();
@@ -167,15 +166,15 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		RestFormProperty customerEmail = new RestFormProperty();
 		customerEmail.setId("customerEmail");
 		customerEmail.setName("customerEmail");
-		customerEmail.setType("String");
+		customerEmail.setType("string");
 		customerEmail.setValue(customerMail);
 		properties.add(customerEmail);
 		
 		RestFormProperty storeEmail = new RestFormProperty();
-		customerEmail.setId("storeEmail");
-		customerEmail.setName("storeEmail");
-		customerEmail.setType("String");
-		customerEmail.setValue(storeMail);
+		storeEmail.setId("storeEmail");
+		storeEmail.setName("storeEmail");
+		storeEmail.setType("string");
+		storeEmail.setValue(storeMail);
 		properties.add(storeEmail);
 		
 		formRequest.setProperties(properties);
