@@ -109,7 +109,8 @@
 			   {"name":"approvalDetails","type":["null","com.diviso.graeshoppe.order.avro.ApprovalDetails"]},
 			   {"name":"status","type":["null","com.diviso.graeshoppe.order.avro.Status"]},
 			   {"name":"orderLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.OrderLine"}},
-			   {"name":"offerLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.Offer"}}
+			   {"name":"offerLines","type":{"type":"array","items":"com.diviso.graeshoppe.order.avro.Offer"}},
+			   {"name":"eventType","type":["null","string"]}
 			   
 			]
 	}

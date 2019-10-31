@@ -120,7 +120,7 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 			Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
 			phone = customer.getContact().getMobileNumber();
 		}
-		orderService.publishMesssage(approvalDetailsDTO.getOrderId(),phone);
+		orderService.publishMesssage(approvalDetailsDTO.getOrderId(),phone,"CREATE");
 		return result1;
 	}
 

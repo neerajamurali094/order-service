@@ -208,6 +208,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return commandResource;
 	}
 
+	Object s1=("");
+	String s=("");
 	/**
 	 * Get all the orders.
 	 *
@@ -260,8 +262,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return orderSearchRepository.search(queryStringQuery(query), pageable).map(orderMapper::toDto);
 	}
 
+	
 	@Override
-	public boolean publishMesssage(String orderId, Long phone) {
+	public boolean publishMesssage(String orderId, Long phone,String eventType) {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
@@ -271,6 +274,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
 		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder().setOrderId(order.getOrderId())
 				.setAllergyNote(order.getAllergyNote())
+				.setEventType(eventType)
 				.setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef()).setCustomerPhone(phone).setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount).setDate(order.getDate().toEpochMilli())

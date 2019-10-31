@@ -153,7 +153,7 @@ security:
       access-token-uri: https://dev.servers.divisosofttech.com/auth/realms/graeshoppe/protocol/openid-connect/token
       user-authorization-uri: https://dev.servers.divisosofttech.com/auth/realms/graeshoppe/protocol/openid-connect/auth
       client-id: account
-      client-secret: 61aed705-1f70-4955-ad23-94bc15c09c29
+      client-secret: d4f03412-cdad-45b0-9ccc-beddd8399ac5
       scope: openid profile email
     resource:
       user-info-uri: https://dev.servers.divisosofttech.com/auth/realms/graeshoppe/protocol/openid-connect/userinfo
@@ -214,8 +214,8 @@ jhipster:
 # application:
 
 bpmn:
-   url: http://dev.servers.divisosofttech.com:8080/activiti-rest/service
-   processId: process:4:78797 #process:2:42632 #process:1:10004
+   url: http://dev.servers.divisosofttech.com/activiti-rest/service
+   processId: process:1:43 #process:4:78797 #process:2:42632 #process:1:10004
    security:
       basicAuth:
          username: kermit
