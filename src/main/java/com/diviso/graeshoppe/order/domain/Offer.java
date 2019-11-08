@@ -11,13 +11,12 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * A Offer.
+/** * A Offer.
  */
 @Entity
 @Table(name = "offer")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "offer")
+@Document(indexName = "offerline")
 public class Offer implements Serializable {
 
     private static final long serialVersionUID = 1L;
