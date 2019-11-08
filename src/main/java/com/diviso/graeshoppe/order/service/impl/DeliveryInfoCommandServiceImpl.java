@@ -197,7 +197,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
 		DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
 		deliveryInfoSearchRepository.save(deliveryInfo);
-		OrderDTO order = orderQueryService.findByDeliveryInfoId(deliveryInfoDTO.getId());
+		/*OrderDTO order = orderQueryService.findByDeliveryInfoId(deliveryInfoDTO.getId());
 		Long phone = 0l;
 		if (deliveryInfo.getDeliveryAddress() != null) {
 			if (deliveryInfo.getDeliveryAddress().getPhone() != null) {
@@ -207,7 +207,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 			Customer customer = customerResourceApi.findByReferenceUsingGET(order.getCustomerId()).getBody();
 			phone = customer.getContact().getMobileNumber();
 		}
-		 // orderService.publishMesssage(order.getOrderId(), phone, "UPDATE"); // sending order to MOM
+		 // orderService.publishMesssage(order.getOrderId(), phone, "UPDATE"); // sending order to MOM */
 		return result;
 	}
 
