@@ -106,6 +106,7 @@ class OrderGatlingTest extends Simulation {
                 , "storeId":"SAMPLE_TEXT"
                 , "date":"2020-01-01T00:00:00.000Z"
                 , "grandTotal":null
+                , "subTotal":null
                 , "paymentRef":"SAMPLE_TEXT"
                 , "allergyNote":"SAMPLE_TEXT"
                 , "preOrderDate":"2020-01-01T00:00:00.000Z"

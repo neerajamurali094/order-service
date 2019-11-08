@@ -20,6 +20,8 @@ public class OrderDTO implements Serializable {
 
     private Double grandTotal;
 
+    private Double subTotal;
+
     private String paymentRef;
 
     private String allergyNote;
@@ -81,6 +83,14 @@ public class OrderDTO implements Serializable {
 
     public void setGrandTotal(Double grandTotal) {
         this.grandTotal = grandTotal;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
     }
 
     public String getPaymentRef() {
@@ -169,6 +179,7 @@ public class OrderDTO implements Serializable {
             ", storeId='" + getStoreId() + "'" +
             ", date='" + getDate() + "'" +
             ", grandTotal=" + getGrandTotal() +
+            ", subTotal=" + getSubTotal() +
             ", paymentRef='" + getPaymentRef() + "'" +
             ", allergyNote='" + getAllergyNote() + "'" +
             ", preOrderDate='" + getPreOrderDate() + "'" +

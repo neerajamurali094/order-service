@@ -4,6 +4,7 @@ entity Order{
 	storeId String,
 	date Instant,
 	grandTotal Double,
+	subTotal Double,
 	paymentRef String,  
 	allergyNote String,
 	preOrderDate Instant,

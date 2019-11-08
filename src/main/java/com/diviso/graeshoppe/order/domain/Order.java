@@ -45,6 +45,9 @@ public class Order implements Serializable {
     @Column(name = "grand_total")
     private Double grandTotal;
 
+    @Column(name = "sub_total")
+    private Double subTotal;
+
     @Column(name = "payment_ref")
     private String paymentRef;
 
@@ -147,6 +150,19 @@ public class Order implements Serializable {
 
     public void setGrandTotal(Double grandTotal) {
         this.grandTotal = grandTotal;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public Order subTotal(Double subTotal) {
+        this.subTotal = subTotal;
+        return this;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
     }
 
     public String getPaymentRef() {
@@ -320,6 +336,7 @@ public class Order implements Serializable {
             ", storeId='" + getStoreId() + "'" +
             ", date='" + getDate() + "'" +
             ", grandTotal=" + getGrandTotal() +
+            ", subTotal=" + getSubTotal() +
             ", paymentRef='" + getPaymentRef() + "'" +
             ", allergyNote='" + getAllergyNote() + "'" +
             ", preOrderDate='" + getPreOrderDate() + "'" +

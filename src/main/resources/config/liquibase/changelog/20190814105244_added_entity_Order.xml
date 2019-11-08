@@ -42,6 +42,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="sub_total" type="double">
+                <constraints nullable="true" />
+            </column>
+
             <column name="payment_ref" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
