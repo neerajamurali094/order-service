@@ -4,6 +4,7 @@ import com.diviso.graeshoppe.order.service.AddressService;
 import com.diviso.graeshoppe.order.service.DeliveryInfoService;
 import com.diviso.graeshoppe.order.service.NotificationCommandService;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
+import com.diviso.graeshoppe.order.service.OrderQueryService;
 import com.diviso.graeshoppe.order.client.bpmn.api.FormsApi;
 import com.diviso.graeshoppe.order.client.bpmn.api.TasksApi;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
@@ -51,6 +52,9 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	private OrderCommandService orderService;
 
 	@Autowired
+	private OrderQueryService orderQueryService;
+
+	@Autowired
 	private NotificationCommandService notificationService;
 
 	@Autowired
@@ -60,7 +64,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	private TasksApi tasksApi;
 	@Autowired
 	private FormsApi formsApi;
-	
+
 	@Autowired
 	private StoreResourceApi storeResourceApi;
 
@@ -97,19 +101,20 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		Long phone = customer.getContact().getMobileNumber();
 		Long phoneCode = customer.getContact().getPhoneCode();
 		String customerEmail = customer.getContact().getEmail();
-		String storeMail=storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody().getEmail();
+		String storeMail = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody().getEmail();
 		if (deliveryInfoDTO.getDeliveryAddressId() != null) {
-			AddressDTO address=addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get();
+			AddressDTO address = addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get();
 			phone = address.getPhone();
-			if(address.getEmail()!=null) {
+			if (address.getEmail() != null) {
 				customerEmail = address.getEmail();
-			} 
+			}
 		}
-		log.info("Phone Number is "+phone);
-		log.info("Phonecode is "+phoneCode);
-		log.info("Customer email is "+customerEmail);
-		log.info("Store email is "+storeMail);
-		CommandResource commandResource = confirmDelivery(taskId, phone,phoneCode, deliveryInfoDTO.getDeliveryType(),customerEmail,storeMail);
+		log.info("Phone Number is " + phone);
+		log.info("Phonecode is " + phoneCode);
+		log.info("Customer email is " + customerEmail);
+		log.info("Store email is " + storeMail);
+		CommandResource commandResource = confirmDelivery(taskId, phone, phoneCode, deliveryInfoDTO.getDeliveryType(),
+				customerEmail, storeMail);
 		commandResource.setSelfId(result.getId());
 		update(result);
 		orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
@@ -132,13 +137,14 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
 			orderDTO.setStatusId(3l); // order is auto approved
 			orderService.update(orderDTO);
-			orderService.publishMesssage(orderId,phone,"CREATE"); // sending order to MOM
+			orderService.publishMesssage(orderId, phone, "CREATE"); // sending order to MOM
 
 		}
 		return commandResource;
 	}
 
-	public CommandResource confirmDelivery(String taskId, Long phone,Long phoneCode, String deliveryType,String customerMail,String storeMail) {
+	public CommandResource confirmDelivery(String taskId, Long phone, Long phoneCode, String deliveryType,
+			String customerMail, String storeMail) {
 		String processInstanceId = tasksApi.getTask(taskId).getBody().getProcessInstanceId();
 		SubmitFormRequest formRequest = new SubmitFormRequest();
 		List<RestFormProperty> properties = new ArrayList<RestFormProperty>();
@@ -148,7 +154,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		phoneProperty.setType("long");
 		phoneProperty.setValue(phone.toString());
 		properties.add(phoneProperty);
-		
+
 		RestFormProperty phoneCodeProperty = new RestFormProperty();
 		phoneCodeProperty.setId("phoneCode");
 		phoneCodeProperty.setName("phoneCode");
@@ -169,14 +175,14 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		customerEmail.setType("string");
 		customerEmail.setValue(customerMail);
 		properties.add(customerEmail);
-		
+
 		RestFormProperty storeEmail = new RestFormProperty();
 		storeEmail.setId("storeEmail");
 		storeEmail.setName("storeEmail");
 		storeEmail.setType("string");
 		storeEmail.setValue(storeMail);
 		properties.add(storeEmail);
-		
+
 		formRequest.setProperties(properties);
 		formRequest.setAction("completed");
 		formRequest.setTaskId(taskId);
@@ -191,6 +197,17 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		deliveryInfo = deliveryInfoRepository.save(deliveryInfo);
 		DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
 		deliveryInfoSearchRepository.save(deliveryInfo);
+		OrderDTO order = orderQueryService.findByDeliveryInfoId(deliveryInfoDTO.getId());
+		Long phone = 0l;
+		if (deliveryInfo.getDeliveryAddress() != null) {
+			if (deliveryInfo.getDeliveryAddress().getPhone() != null) {
+				phone = deliveryInfo.getDeliveryAddress().getPhone();
+			}
+		} else {
+			Customer customer = customerResourceApi.findByReferenceUsingGET(order.getCustomerId()).getBody();
+			phone = customer.getContact().getMobileNumber();
+		}
+		 // orderService.publishMesssage(order.getOrderId(), phone, "UPDATE"); // sending order to MOM
 		return result;
 	}
 

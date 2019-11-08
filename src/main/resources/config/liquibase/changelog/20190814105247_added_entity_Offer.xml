@@ -26,6 +26,14 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="order_discount_amount" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="order_id" type="bigint">
                 <constraints nullable="true" />
             </column>

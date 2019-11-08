@@ -52,6 +52,12 @@ public class OfferResourceIntTest {
     private static final String DEFAULT_OFFER_REF = "AAAAAAAAAA";
     private static final String UPDATED_OFFER_REF = "BBBBBBBBBB";
 
+    private static final Double DEFAULT_ORDER_DISCOUNT_AMOUNT = 1D;
+    private static final Double UPDATED_ORDER_DISCOUNT_AMOUNT = 2D;
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     @Autowired
     private OfferRepository offerRepository;
 
@@ -108,7 +114,9 @@ public class OfferResourceIntTest {
      */
     public static Offer createEntity(EntityManager em) {
         Offer offer = new Offer()
-            .offerRef(DEFAULT_OFFER_REF);
+            .offerRef(DEFAULT_OFFER_REF)
+            .orderDiscountAmount(DEFAULT_ORDER_DISCOUNT_AMOUNT)
+            .description(DEFAULT_DESCRIPTION);
         return offer;
     }
 
@@ -134,6 +142,8 @@ public class OfferResourceIntTest {
         assertThat(offerList).hasSize(databaseSizeBeforeCreate + 1);
         Offer testOffer = offerList.get(offerList.size() - 1);
         assertThat(testOffer.getOfferRef()).isEqualTo(DEFAULT_OFFER_REF);
+        assertThat(testOffer.getOrderDiscountAmount()).isEqualTo(DEFAULT_ORDER_DISCOUNT_AMOUNT);
+        assertThat(testOffer.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
 
         // Validate the Offer in Elasticsearch
         verify(mockOfferSearchRepository, times(1)).save(testOffer);
@@ -173,7 +183,9 @@ public class OfferResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(offer.getId().intValue())))
-            .andExpect(jsonPath("$.[*].offerRef").value(hasItem(DEFAULT_OFFER_REF.toString())));
+            .andExpect(jsonPath("$.[*].offerRef").value(hasItem(DEFAULT_OFFER_REF.toString())))
+            .andExpect(jsonPath("$.[*].orderDiscountAmount").value(hasItem(DEFAULT_ORDER_DISCOUNT_AMOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
     
     @Test
@@ -187,7 +199,9 @@ public class OfferResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(offer.getId().intValue()))
-            .andExpect(jsonPath("$.offerRef").value(DEFAULT_OFFER_REF.toString()));
+            .andExpect(jsonPath("$.offerRef").value(DEFAULT_OFFER_REF.toString()))
+            .andExpect(jsonPath("$.orderDiscountAmount").value(DEFAULT_ORDER_DISCOUNT_AMOUNT.doubleValue()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
 
     @Test
@@ -211,7 +225,9 @@ public class OfferResourceIntTest {
         // Disconnect from session so that the updates on updatedOffer are not directly saved in db
         em.detach(updatedOffer);
         updatedOffer
-            .offerRef(UPDATED_OFFER_REF);
+            .offerRef(UPDATED_OFFER_REF)
+            .orderDiscountAmount(UPDATED_ORDER_DISCOUNT_AMOUNT)
+            .description(UPDATED_DESCRIPTION);
         OfferDTO offerDTO = offerMapper.toDto(updatedOffer);
 
         restOfferMockMvc.perform(put("/api/offers")
@@ -224,6 +240,8 @@ public class OfferResourceIntTest {
         assertThat(offerList).hasSize(databaseSizeBeforeUpdate);
         Offer testOffer = offerList.get(offerList.size() - 1);
         assertThat(testOffer.getOfferRef()).isEqualTo(UPDATED_OFFER_REF);
+        assertThat(testOffer.getOrderDiscountAmount()).isEqualTo(UPDATED_ORDER_DISCOUNT_AMOUNT);
+        assertThat(testOffer.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
 
         // Validate the Offer in Elasticsearch
         verify(mockOfferSearchRepository, times(1)).save(testOffer);
@@ -284,7 +302,9 @@ public class OfferResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(offer.getId().intValue())))
-            .andExpect(jsonPath("$.[*].offerRef").value(hasItem(DEFAULT_OFFER_REF)));
+            .andExpect(jsonPath("$.[*].offerRef").value(hasItem(DEFAULT_OFFER_REF)))
+            .andExpect(jsonPath("$.[*].orderDiscountAmount").value(hasItem(DEFAULT_ORDER_DISCOUNT_AMOUNT.doubleValue())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
 
     @Test

@@ -21,6 +21,8 @@ entity ApprovalDetails{
 }
 entity Offer{
 	offerRef String
+	orderDiscountAmount Double,
+	description String
 }
 entity Address{
 	customerId String,

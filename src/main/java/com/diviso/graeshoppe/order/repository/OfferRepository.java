@@ -16,4 +16,4 @@ import org.springframework.stereotype.Repository;
 public interface OfferRepository extends JpaRepository<Offer, Long> {
 
 	Set<Offer> findByOrder_Id(Long id);
-}
+	}

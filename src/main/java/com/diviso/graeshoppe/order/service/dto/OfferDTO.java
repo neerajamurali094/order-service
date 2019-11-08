@@ -11,6 +11,10 @@ public class OfferDTO implements Serializable {
 
     private String offerRef;
 
+    private Double orderDiscountAmount;
+
+    private String description;
+
 
     private Long orderId;
 
@@ -28,6 +32,22 @@ public class OfferDTO implements Serializable {
 
     public void setOfferRef(String offerRef) {
         this.offerRef = offerRef;
+    }
+
+    public Double getOrderDiscountAmount() {
+        return orderDiscountAmount;
+    }
+
+    public void setOrderDiscountAmount(Double orderDiscountAmount) {
+        this.orderDiscountAmount = orderDiscountAmount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getOrderId() {
@@ -64,6 +84,8 @@ public class OfferDTO implements Serializable {
         return "OfferDTO{" +
             "id=" + getId() +
             ", offerRef='" + getOfferRef() + "'" +
+            ", orderDiscountAmount=" + getOrderDiscountAmount() +
+            ", description='" + getDescription() + "'" +
             ", order=" + getOrderId() +
             "}";
     }

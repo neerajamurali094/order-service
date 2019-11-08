@@ -11,12 +11,10 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {OrderMapper.class})
 public interface OfferMapper extends EntityMapper<OfferDTO, Offer> {
 
-    @Override
-	@Mapping(source = "order.id", target = "orderId")
+    @Mapping(source = "order.id", target = "orderId")
     OfferDTO toDto(Offer offer);
 
-    @Override
-	@Mapping(source = "orderId", target = "order")
+    @Mapping(source = "orderId", target = "order")
     Offer toEntity(OfferDTO offerDTO);
 
     default Offer fromId(Long id) {

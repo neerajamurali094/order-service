@@ -102,6 +102,8 @@ class OfferGatlingTest extends Simulation {
             .body(StringBody("""{
                 "id":null
                 , "offerRef":"SAMPLE_TEXT"
+                , "orderDiscountAmount":null
+                , "description":"SAMPLE_TEXT"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_offer_url"))).exitHereIfFailed

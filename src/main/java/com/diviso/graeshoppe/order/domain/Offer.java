@@ -17,7 +17,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "offer")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "offerline",type = "offerline")
+@Document(indexName = "offer")
 public class Offer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,6 +28,12 @@ public class Offer implements Serializable {
 
     @Column(name = "offer_ref")
     private String offerRef;
+
+    @Column(name = "order_discount_amount")
+    private Double orderDiscountAmount;
+
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne
     @JsonIgnoreProperties("appliedOffers")
@@ -53,6 +59,32 @@ public class Offer implements Serializable {
 
     public void setOfferRef(String offerRef) {
         this.offerRef = offerRef;
+    }
+
+    public Double getOrderDiscountAmount() {
+        return orderDiscountAmount;
+    }
+
+    public Offer orderDiscountAmount(Double orderDiscountAmount) {
+        this.orderDiscountAmount = orderDiscountAmount;
+        return this;
+    }
+
+    public void setOrderDiscountAmount(Double orderDiscountAmount) {
+        this.orderDiscountAmount = orderDiscountAmount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Offer description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Order getOrder() {
@@ -94,6 +126,8 @@ public class Offer implements Serializable {
         return "Offer{" +
             "id=" + getId() +
             ", offerRef='" + getOfferRef() + "'" +
+            ", orderDiscountAmount=" + getOrderDiscountAmount() +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }
