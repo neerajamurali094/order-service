@@ -83,6 +83,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 	@Autowired
 	private ProcessInstancesApi processInstancesApi;
+	
+	@Value("${application.orderId-prefix}")
+	private String orderIdPrefix;
 
 	@Autowired
 	private UserService userService;
@@ -123,7 +126,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	@Override
 	public CommandResource save(OrderDTO orderDTO) {
 		UniqueOrderIDDTO orderIdDTO = orderIdService.save(new UniqueOrderIDDTO());
-		String orderId = "GR-" + orderIdDTO.getId();
+		String orderId = orderIdPrefix+""+ orderIdDTO.getId();
 		log.info("Generated Order id is " + orderId);
 		orderDTO.setOrderId(orderId);
 		log.debug("Request to save Order : {}", orderDTO);

@@ -1,6 +1,5 @@
 package com.diviso.graeshoppe.order.web.rest;
 import com.diviso.graeshoppe.order.service.OrderLineService;
-import com.diviso.graeshoppe.order.service.OrderService;
 import com.diviso.graeshoppe.order.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.order.web.rest.util.HeaderUtil;
 import com.diviso.graeshoppe.order.web.rest.util.PaginationUtil;

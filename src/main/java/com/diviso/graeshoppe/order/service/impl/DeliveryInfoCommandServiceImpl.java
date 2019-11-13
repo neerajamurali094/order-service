@@ -135,6 +135,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 			orderDTO.setStatusId(2l); // order is unapproved
 			orderService.update(orderDTO);
 		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
+			
 			orderDTO.setStatusId(3l); // order is auto approved
 			orderService.update(orderDTO);
 			orderService.publishMesssage(orderId, phone, "CREATE"); // sending order to MOM

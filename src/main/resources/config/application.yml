@@ -211,7 +211,8 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+   orderId-prefix: FEXP-
 
 bpmn:
    url: http://dev.servers.divisosofttech.com/activiti-rest/service
@@ -220,3 +221,4 @@ bpmn:
       basicAuth:
          username: kermit
          password: kermit
+         
