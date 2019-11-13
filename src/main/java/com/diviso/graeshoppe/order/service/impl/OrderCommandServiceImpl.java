@@ -84,7 +84,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	@Autowired
 	private ProcessInstancesApi processInstancesApi;
 	
-	@Value("${application.orderId-prefix}")
+	@Value("${app.orderId-prefix}")
 	private String orderIdPrefix;
 
 	@Autowired
