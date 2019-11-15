@@ -271,7 +271,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
-		log.info("Applied offers in order is ***********"+order.getAppliedOffers());
+		log.info("Applied offers in order is "+order.getAppliedOffers());
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
 		log.info("Order fetched from db is  " + order);
@@ -323,14 +323,14 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.build());
 
 		}
-		log.info("applied offers in setted (((((((((((((((("+order.getAppliedOffers());
-		log.info("order is (((((((((("+order);
+		List<com.diviso.graeshoppe.order.avro.Offer> offerAvroList=new ArrayList<>();
 		order.getAppliedOffers().forEach(offer->{
 			com.diviso.graeshoppe.order.avro.Offer offerAvro=com.diviso.graeshoppe.order.avro.Offer.newBuilder()
 					.setOfferRef(offer.getOfferRef()).setDiscountAmount(offer.getOrderDiscountAmount()).build();
-			orderAvro.getOfferLines().add(offerAvro);
+			offerAvroList.add(offerAvro);
 			orderAvro.setDiscountAmount(offer.getOrderDiscountAmount()); //needs to change
 		});
+		orderAvro.setOfferLines(offerAvroList);
 		if (order.getDeliveryInfo().getDeliveryCharge() == null) {
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(0.0d);
 		} else {
