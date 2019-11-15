@@ -281,7 +281,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef()).setCustomerPhone(phone).setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount).setDate(order.getDate().toEpochMilli())
-				.setGrandTotal(order.getGrandTotal()).setEmail(order.getEmail())
+				.setGrandTotal(order.getGrandTotal())
+				.setSubTotal(order.getSubTotal()).setEmail(order.getEmail())
 				.setStatus(Status.newBuilder().setId(order.getStatus().getId()).setName(order.getStatus().getName())
 						.build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
@@ -321,6 +322,13 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.build());
 
 		}
+		
+		order.getAppliedOffers().forEach(offer->{
+			com.diviso.graeshoppe.order.avro.Offer offerAvro=com.diviso.graeshoppe.order.avro.Offer.newBuilder()
+					.setOfferRef(offer.getOfferRef()).setDiscountAmount(offer.getOrderDiscountAmount()).build();
+			orderAvro.getOfferLines().add(offerAvro);
+			orderAvro.setDiscountAmount(offer.getOrderDiscountAmount()); //needs to change
+		});
 		if (order.getDeliveryInfo().getDeliveryCharge() == null) {
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(0.0d);
 		} else {

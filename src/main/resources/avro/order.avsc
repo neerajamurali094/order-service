@@ -38,7 +38,8 @@
 	"type":"record",
 	"name":"Offer",
 	"fields":[
-		{"name":"offerRef","type":["null","string"],"default": null}
+		{"name":"offerRef","type":["null","string"],"default": null},
+		{"name":"discountAmount","type":"double"}
 		]
 	},
 	
@@ -97,6 +98,8 @@
 			   {"name":"customerId","type":["null","string"]},
 			   {"name":"storeId","type":["null","string"]},
 			   {"name":"date","type":"long","logicalType":"date"},
+			   {"name":"subTotal","type":"double"},
+			   {"name":"discountAmount","type":"double"},
 			   {"name":"grandTotal","type":"double"},
 			   {"name":"paymentRef","type":["null","string"]},
 			   {"name":"allergyNote","type":["null","string"],"default": null},
