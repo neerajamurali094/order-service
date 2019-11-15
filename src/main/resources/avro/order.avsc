@@ -99,7 +99,7 @@
 			   {"name":"storeId","type":["null","string"]},
 			   {"name":"date","type":"long","logicalType":"date"},
 			   {"name":"subTotal","type":"double"},
-			   {"name":"discountAmount","type":"double"},
+			   {"name":"discountAmount","type":"double","default": 0.0},
 			   {"name":"grandTotal","type":"double"},
 			   {"name":"paymentRef","type":["null","string"]},
 			   {"name":"allergyNote","type":["null","string"],"default": null},

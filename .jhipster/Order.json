@@ -22,6 +22,10 @@
             "fieldType": "Double"
         },
         {
+            "fieldName": "subTotal",
+            "fieldType": "Double"
+        },
+        {
             "fieldName": "paymentRef",
             "fieldType": "String"
         },

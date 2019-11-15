@@ -4,6 +4,14 @@
         {
             "fieldName": "offerRef",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "orderDiscountAmount",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
         }
     ],
     "relationships": [
