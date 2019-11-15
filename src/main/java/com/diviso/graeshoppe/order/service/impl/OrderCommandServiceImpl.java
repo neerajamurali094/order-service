@@ -323,7 +323,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.build());
 
 		}
-		
+		log.info("applied offers in setted (((((((((((((((("+order.getAppliedOffers());
+		log.info("order is (((((((((("+order);
 		order.getAppliedOffers().forEach(offer->{
 			com.diviso.graeshoppe.order.avro.Offer offerAvro=com.diviso.graeshoppe.order.avro.Offer.newBuilder()
 					.setOfferRef(offer.getOfferRef()).setDiscountAmount(offer.getOrderDiscountAmount()).build();
