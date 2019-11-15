@@ -271,6 +271,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
+		log.info("Applied offers in order is ***********"+order.getAppliedOffers());
 		long restaurantCount = orderRepository.countByStoreIdAndCustomerId(order.getStoreId(), order.getCustomerId());
 		long graeshoppeCount = orderRepository.countByCustomerId(order.getCustomerId());
 		log.info("Order fetched from db is  " + order);
