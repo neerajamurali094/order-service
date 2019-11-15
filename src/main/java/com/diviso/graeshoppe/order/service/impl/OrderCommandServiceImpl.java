@@ -329,6 +329,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.setOfferRef(offer.getOfferRef()).setDiscountAmount(offer.getOrderDiscountAmount()).build();
 			offerAvroList.add(offerAvro);
 			orderAvro.setDiscountAmount(offer.getOrderDiscountAmount()); //needs to change
+			log.info("order discount setted is ^^^^^^^^^^^^^^^^"+orderAvro.getDiscountAmount());
 		});
 		orderAvro.setOfferLines(offerAvroList);
 		if (order.getDeliveryInfo().getDeliveryCharge() == null) {
@@ -337,7 +338,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 			orderAvro.getDeliveryInfoBuilder().setDeliveryCharge(order.getDeliveryInfo().getDeliveryCharge());
 		}
 		orderAvro.getDeliveryInfoBuilder().build();
-		orderAvro.setOfferLines(order.getAppliedOffers().stream().map(this::toAvroOffer).collect(Collectors.toList()));
+		// orderAvro.setOfferLines(order.getAppliedOffers().stream().map(this::toAvroOffer).collect(Collectors.toList()));
 		com.diviso.graeshoppe.order.avro.Order message = orderAvro.build();
 		return messageChannel.orderOut().send(MessageBuilder.withPayload(message).build());
 	}
