@@ -132,6 +132,10 @@ public class OrderQueryResource {
 		return new ResponseEntity<OrderDTO>(orderQueryService.findByDeliveryInfoId(id), HttpStatus.OK);
 	}
 	
+	@GetMapping("/count-by-storeid-customerid/{storeId}/{customerId}")
+	public ResponseEntity<Long> countByStoreIdAndCustomerId(@PathVariable String storeId,@PathVariable String customerId) {
+		return new ResponseEntity<Long>(orderQueryService.countByStoreIdAndCustomerId(storeId,customerId),HttpStatus.OK);
+	}
 	
 	
 	

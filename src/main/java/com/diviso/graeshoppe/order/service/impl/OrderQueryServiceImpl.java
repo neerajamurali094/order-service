@@ -34,5 +34,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 		return orderRepository.findByDeliveryInfo_Id(id).map(orderMapper::toDto).get();
 	}
 
+	@Override
+	public long countByStoreIdAndCustomerId(String storeId, String customerId) {
+		return orderRepository.countByStoreIdAndCustomerId(storeId, customerId);
+	}
+
 	
 }
