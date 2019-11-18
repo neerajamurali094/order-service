@@ -346,7 +346,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private com.diviso.graeshoppe.order.avro.OrderLine toAvroOrderLine(OrderLine orderline) {
 		return com.diviso.graeshoppe.order.avro.OrderLine.newBuilder().setProductId(orderline.getProductId())
 				.setQuantity(orderline.getQuantity()).setPricePerUnit(orderline.getPricePerUnit())
-				.setTotal(Math.round(orderline.getTotal())).setAuxilaryOrderLines(orderline.getRequiedAuxilaries()
+				.setTotal(orderline.getTotal()).setAuxilaryOrderLines(orderline.getRequiedAuxilaries()
 						.stream().map(this::toAvroAuxilaryLine).collect(Collectors.toList()))
 				.build();
 	}
