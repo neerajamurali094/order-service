@@ -9,6 +9,6 @@ public interface SinkConfiguration {
 	
 	String PAYMENT="payment";
 
-	//@Input(PAYMENT)
+	@Input(PAYMENT)
 	KStream<String, Payment> payment();
 }
