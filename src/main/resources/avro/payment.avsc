@@ -4,6 +4,7 @@
 	"name":"Payment",
 	"type":"record",
 	"fields":[
+			   {"name":"id","type":"long"},
 			   {"name":"ref","type":["null","string"]},
 			   {"name":"payee","type":["null","string"]},
 			   {"name":"payer","type":["null","string"]},
