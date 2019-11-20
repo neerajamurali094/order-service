@@ -24,6 +24,8 @@ public class OrderDTO implements Serializable {
 
     private String paymentRef;
 
+    private String paymentMode;
+
     private String allergyNote;
 
     private Instant preOrderDate;
@@ -99,6 +101,14 @@ public class OrderDTO implements Serializable {
 
     public void setPaymentRef(String paymentRef) {
         this.paymentRef = paymentRef;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
     }
 
     public String getAllergyNote() {
@@ -181,6 +191,7 @@ public class OrderDTO implements Serializable {
             ", grandTotal=" + getGrandTotal() +
             ", subTotal=" + getSubTotal() +
             ", paymentRef='" + getPaymentRef() + "'" +
+            ", paymentMode='" + getPaymentMode() + "'" +
             ", allergyNote='" + getAllergyNote() + "'" +
             ", preOrderDate='" + getPreOrderDate() + "'" +
             ", email='" + getEmail() + "'" +

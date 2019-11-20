@@ -211,8 +211,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		return commandResource;
 	}
 
-	Object s1=("");
-	String s=("");
+	
 	/**
 	 * Get all the orders.
 	 *
@@ -288,7 +287,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 						.build())
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
 		if(order.getPreOrderDate()!=null) {
-			orderAvro.setPreOrderDate(order.getPreOrderDate().getEpochSecond());
+			orderAvro.setPreOrderDate(order.getPreOrderDate().toEpochMilli());
 		}
 			
 		if (order.getApprovalDetails() == null) {
@@ -329,7 +328,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 					.setOfferRef(offer.getOfferRef()).setDiscountAmount(offer.getOrderDiscountAmount()).build();
 			offerAvroList.add(offerAvro);
 			orderAvro.setDiscountAmount(offer.getOrderDiscountAmount()); //needs to change
-			log.info("order discount setted is ^^^^^^^^^^^^^^^^"+orderAvro.getDiscountAmount());
 		});
 		orderAvro.setOfferLines(offerAvroList);
 		if (order.getDeliveryInfo().getDeliveryCharge() == null) {

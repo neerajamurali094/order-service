@@ -121,7 +121,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		commandResource.setOrderId(orderId);
 		if (commandResource.getNextTaskName().equals("Accept Order")) {
 			NotificationDTO notificationDTO = new NotificationDTO();
-			notificationDTO.setDate(Instant.now());
+			notificationDTO.setDate(orderDTO.getDate());
 			notificationDTO.setMessage("You have new order request");
 			notificationDTO.setTitle("Order Request");
 			notificationDTO.setTargetId(orderId);
@@ -129,7 +129,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 			notificationDTO.setReceiverId(orderDTO.getStoreId());
 			notificationDTO.setType("Pending-Notification");
 			NotificationDTO resultNotification = notificationService.save(notificationDTO); // sending notifications
-																							// from here to the store
+																			// from here to the store
 			Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
 			log.info("Notification publish status is " + status);
 			orderDTO.setStatusId(2l); // order is unapproved

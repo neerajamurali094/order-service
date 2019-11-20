@@ -72,6 +72,9 @@ public class OrderResourceIntTest {
     private static final String DEFAULT_PAYMENT_REF = "AAAAAAAAAA";
     private static final String UPDATED_PAYMENT_REF = "BBBBBBBBBB";
 
+    private static final String DEFAULT_PAYMENT_MODE = "AAAAAAAAAA";
+    private static final String UPDATED_PAYMENT_MODE = "BBBBBBBBBB";
+
     private static final String DEFAULT_ALLERGY_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_ALLERGY_NOTE = "BBBBBBBBBB";
 
@@ -144,6 +147,7 @@ public class OrderResourceIntTest {
             .grandTotal(DEFAULT_GRAND_TOTAL)
             .subTotal(DEFAULT_SUB_TOTAL)
             .paymentRef(DEFAULT_PAYMENT_REF)
+            .paymentMode(DEFAULT_PAYMENT_MODE)
             .allergyNote(DEFAULT_ALLERGY_NOTE)
             .preOrderDate(DEFAULT_PRE_ORDER_DATE)
             .email(DEFAULT_EMAIL);
@@ -178,6 +182,7 @@ public class OrderResourceIntTest {
         assertThat(testOrder.getGrandTotal()).isEqualTo(DEFAULT_GRAND_TOTAL);
         assertThat(testOrder.getSubTotal()).isEqualTo(DEFAULT_SUB_TOTAL);
         assertThat(testOrder.getPaymentRef()).isEqualTo(DEFAULT_PAYMENT_REF);
+        assertThat(testOrder.getPaymentMode()).isEqualTo(DEFAULT_PAYMENT_MODE);
         assertThat(testOrder.getAllergyNote()).isEqualTo(DEFAULT_ALLERGY_NOTE);
         assertThat(testOrder.getPreOrderDate()).isEqualTo(DEFAULT_PRE_ORDER_DATE);
         assertThat(testOrder.getEmail()).isEqualTo(DEFAULT_EMAIL);
@@ -227,6 +232,7 @@ public class OrderResourceIntTest {
             .andExpect(jsonPath("$.[*].grandTotal").value(hasItem(DEFAULT_GRAND_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].subTotal").value(hasItem(DEFAULT_SUB_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].paymentRef").value(hasItem(DEFAULT_PAYMENT_REF.toString())))
+            .andExpect(jsonPath("$.[*].paymentMode").value(hasItem(DEFAULT_PAYMENT_MODE.toString())))
             .andExpect(jsonPath("$.[*].allergyNote").value(hasItem(DEFAULT_ALLERGY_NOTE.toString())))
             .andExpect(jsonPath("$.[*].preOrderDate").value(hasItem(DEFAULT_PRE_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
@@ -250,6 +256,7 @@ public class OrderResourceIntTest {
             .andExpect(jsonPath("$.grandTotal").value(DEFAULT_GRAND_TOTAL.doubleValue()))
             .andExpect(jsonPath("$.subTotal").value(DEFAULT_SUB_TOTAL.doubleValue()))
             .andExpect(jsonPath("$.paymentRef").value(DEFAULT_PAYMENT_REF.toString()))
+            .andExpect(jsonPath("$.paymentMode").value(DEFAULT_PAYMENT_MODE.toString()))
             .andExpect(jsonPath("$.allergyNote").value(DEFAULT_ALLERGY_NOTE.toString()))
             .andExpect(jsonPath("$.preOrderDate").value(DEFAULT_PRE_ORDER_DATE.toString()))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()));
@@ -283,6 +290,7 @@ public class OrderResourceIntTest {
             .grandTotal(UPDATED_GRAND_TOTAL)
             .subTotal(UPDATED_SUB_TOTAL)
             .paymentRef(UPDATED_PAYMENT_REF)
+            .paymentMode(UPDATED_PAYMENT_MODE)
             .allergyNote(UPDATED_ALLERGY_NOTE)
             .preOrderDate(UPDATED_PRE_ORDER_DATE)
             .email(UPDATED_EMAIL);
@@ -304,6 +312,7 @@ public class OrderResourceIntTest {
         assertThat(testOrder.getGrandTotal()).isEqualTo(UPDATED_GRAND_TOTAL);
         assertThat(testOrder.getSubTotal()).isEqualTo(UPDATED_SUB_TOTAL);
         assertThat(testOrder.getPaymentRef()).isEqualTo(UPDATED_PAYMENT_REF);
+        assertThat(testOrder.getPaymentMode()).isEqualTo(UPDATED_PAYMENT_MODE);
         assertThat(testOrder.getAllergyNote()).isEqualTo(UPDATED_ALLERGY_NOTE);
         assertThat(testOrder.getPreOrderDate()).isEqualTo(UPDATED_PRE_ORDER_DATE);
         assertThat(testOrder.getEmail()).isEqualTo(UPDATED_EMAIL);
@@ -374,6 +383,7 @@ public class OrderResourceIntTest {
             .andExpect(jsonPath("$.[*].grandTotal").value(hasItem(DEFAULT_GRAND_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].subTotal").value(hasItem(DEFAULT_SUB_TOTAL.doubleValue())))
             .andExpect(jsonPath("$.[*].paymentRef").value(hasItem(DEFAULT_PAYMENT_REF)))
+            .andExpect(jsonPath("$.[*].paymentMode").value(hasItem(DEFAULT_PAYMENT_MODE)))
             .andExpect(jsonPath("$.[*].allergyNote").value(hasItem(DEFAULT_ALLERGY_NOTE)))
             .andExpect(jsonPath("$.[*].preOrderDate").value(hasItem(DEFAULT_PRE_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));

@@ -5,7 +5,8 @@ entity Order{
 	date Instant,
 	grandTotal Double,
 	subTotal Double,
-	paymentRef String,  
+	paymentRef String,
+	paymentMode String,  
 	allergyNote String,
 	preOrderDate Instant,
 	email String

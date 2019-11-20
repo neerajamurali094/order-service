@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.order.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -49,6 +50,9 @@ public class Order implements Serializable {
 
     @Column(name = "payment_ref")
     private String paymentRef;
+
+    @Column(name = "payment_mode")
+    private String paymentMode;
 
     @Column(name = "allergy_note")
     private String allergyNote;
@@ -175,6 +179,19 @@ public class Order implements Serializable {
 
     public void setPaymentRef(String paymentRef) {
         this.paymentRef = paymentRef;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public Order paymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+        return this;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
     }
 
     public String getAllergyNote() {
@@ -337,6 +354,7 @@ public class Order implements Serializable {
             ", grandTotal=" + getGrandTotal() +
             ", subTotal=" + getSubTotal() +
             ", paymentRef='" + getPaymentRef() + "'" +
+            ", paymentMode='" + getPaymentMode() + "'" +
             ", allergyNote='" + getAllergyNote() + "'" +
             ", preOrderDate='" + getPreOrderDate() + "'" +
             ", email='" + getEmail() + "'" +

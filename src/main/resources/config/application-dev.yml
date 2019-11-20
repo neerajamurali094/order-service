@@ -62,7 +62,13 @@ spring:
                     destination: notification
                     contentType: application/*+avro
                     producer:
-                       useNativeEncoding: true                       
+                       useNativeEncoding: true  
+                payment:
+                    consumer:
+                      useNativeDecoding: true
+                    destination: payment
+                    contentType: application/*+avro
+                    group: payment-report-groups                       
             schemaRegistryClient:
               endpoint: http://dev.servers.divisosofttech.com:8081
             schema:

@@ -94,7 +94,7 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		result1.setSelfId(result.getId());
 		OrderDTO orderDTO = orderService.findByOrderID(approvalDetailsDTO.getOrderId()).get();
 		NotificationDTO notificationDTO = new NotificationDTO();
-		notificationDTO.setDate(Instant.now());
+		notificationDTO.setDate(approvalDetailsDTO.getAcceptedAt());
 		if (approvalDetailsDTO.getDecision().equals("accepted")) {
 			notificationDTO.setMessage("Your Order has been accepted cheers");
 			notificationDTO.setTitle("Order Accepted");

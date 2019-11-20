@@ -150,6 +150,11 @@ public class OrderServiceImpl implements OrderService {
 	{
 		return orderRepository.findAllPaymentRefByDeliveryType(dateBegin, dateEnd, storeId,deliveryType);
 	}
+
+	@Override
+	public Optional<OrderDTO> findByOrderId(String string) {
+		return orderRepository.findByOrderId(string).map(orderMapper::toDto);
+	}
 	
 	
 	

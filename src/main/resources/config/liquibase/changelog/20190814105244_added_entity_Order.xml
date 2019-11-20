@@ -50,6 +50,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="payment_mode" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="allergy_note" type="varchar(255)">
                 <constraints nullable="true" />
             </column>

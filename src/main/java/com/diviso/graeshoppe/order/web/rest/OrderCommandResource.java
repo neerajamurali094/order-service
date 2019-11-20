@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +60,6 @@ public class OrderCommandResource {
      */
     @PostMapping("/orders")
     public ResponseEntity<CommandResource> createOrder(@RequestBody OrderDTO orderDTO) throws URISyntaxException {
-		orderDTO.setDate(Instant.now());
 		orderDTO.setStatusId(1l);
         log.debug("REST request to save Order : {}", orderDTO);
         if (orderDTO.getId() != null) {

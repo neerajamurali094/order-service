@@ -67,6 +67,8 @@ public interface OrderService {
     List<String> findAllPaymentReferenceByDateAndStoreId(Instant dateBegin, Instant dateEnd, String storeId);
     
     List<String> findAllPaymentRefByDeliveryType(Instant dateBegin, Instant dateEnd, String storeId,String deliveryType);
+
+	Optional<OrderDTO> findByOrderId(String string);
     
     
     
