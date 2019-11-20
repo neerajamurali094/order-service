@@ -23,7 +23,7 @@ public class PaymentSyncService {
 	@Autowired
 	private OrderCommandService orderService;
 
-	@StreamListener(SinkConfiguration.PAYMENT)
+	//@StreamListener(SinkConfiguration.PAYMENT)
 	public void listenToPayment(KStream<String, Payment> message) {
 		message.foreach((key,value) -> {
 			LOG.info("message consumed payment "+value);
