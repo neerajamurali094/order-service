@@ -30,6 +30,7 @@ public class PaymentSyncService {
 			if(orderDTO.isPresent()) {
 				orderDTO.get().setPaymentMode(value.getPaymentType().toUpperCase());
 				orderDTO.get().setPaymentRef(value.getRef());
+				orderDTO.get().setStatusId(4l);
 				orderService.update(orderDTO.get());
 				Log.info("Order updated with payment ref");
 			}
