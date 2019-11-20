@@ -280,7 +280,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setEventType(eventType)
 				.setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef()).setCustomerPhone(phone).setOrderCountgraeshoppe(graeshoppeCount)
-				.setOrderCountRestaurant(restaurantCount).setDate(order.getDate().toEpochMilli())
+				.setOrderCountRestaurant(restaurantCount)
 				.setGrandTotal(order.getGrandTotal())
 				.setSubTotal(order.getSubTotal()).setEmail(order.getEmail())
 				.setStatus(Status.newBuilder().setId(order.getStatus().getId()).setName(order.getStatus().getName())
@@ -288,6 +288,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 				.setOrderLines(order.getOrderLines().stream().map(this::toAvroOrderLine).collect(Collectors.toList()));
 		if(order.getPreOrderDate()!=null) {
 			orderAvro.setPreOrderDate(order.getPreOrderDate().toEpochMilli());
+		}
+		if(order.getDate()!=null) {
+			orderAvro.setDate(order.getDate().toEpochMilli());
+
 		}
 			
 		if (order.getApprovalDetails() == null) {
