@@ -10,19 +10,20 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
 import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
+import com.diviso.graeshoppe.order.config.SinkConfiguration;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import com.diviso.graeshoppe.payment.avro.Payment;
 import com.esotericsoftware.minlog.Log;
 
-@EnableBinding(MessageBinderConfiguration.class)
+@EnableBinding(SinkConfiguration.class)
 public class PaymentSyncService {
 	private final Logger LOG = LoggerFactory.getLogger(PaymentSyncService.class);
 
 	@Autowired
 	private OrderCommandService orderService;
 
-	@StreamListener(MessageBinderConfiguration.PAYMENT)
+	@StreamListener(SinkConfiguration.PAYMENT)
 	public void listenToPayment(KStream<String, Payment> message) {
 		message.foreach((key,value) -> {
 			LOG.info("message consumed payment "+value);

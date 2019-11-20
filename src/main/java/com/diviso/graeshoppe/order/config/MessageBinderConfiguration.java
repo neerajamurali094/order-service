@@ -13,7 +13,6 @@ public interface MessageBinderConfiguration {
 	
 	String NOTIFICATION="notification";
 	
-	String PAYMENT="payment";
 	
 	@Output(ORDER)
 	MessageChannel orderOut();
@@ -21,6 +20,5 @@ public interface MessageBinderConfiguration {
 	@Output(NOTIFICATION)
 	MessageChannel notificationOut();
 	
-	@Input(PAYMENT)
-	KStream<String, Payment> payment();
+	
 }
