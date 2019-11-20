@@ -50,6 +50,14 @@ spring:
                     configuration:
                        key.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
                        value.serializer: com.diviso.graeshoppe.order.config.SerdeConfig
+                streams:
+                  binder:
+                    brokers: dev.servers.divisosofttech.com
+                    configuration:
+                      schema.registry.url: http://dev.servers.divisosofttech.com:8081
+                      commit.interval.ms: 1000
+                      default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                      default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde 
             bindings:
                 output:
                     destination: topic-jhipster
