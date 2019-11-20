@@ -47,6 +47,9 @@ spring:
                 binder:
                     brokers: dev.servers.divisosofttech.com
                     zk-nodes: dev.servers.divisosofttech.com
+                streams:
+                  binder:
+                    brokers: dev.servers.divisosofttech.com
                     configuration:
                        key.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
                        value.serializer: com.diviso.graeshoppe.order.config.SerdeConfig
