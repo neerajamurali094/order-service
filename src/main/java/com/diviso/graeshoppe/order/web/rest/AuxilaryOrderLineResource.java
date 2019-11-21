@@ -70,7 +70,8 @@ public class AuxilaryOrderLineResource {
     public ResponseEntity<AuxilaryOrderLineDTO> updateAuxilaryOrderLine(@RequestBody AuxilaryOrderLineDTO auxilaryOrderLineDTO) throws URISyntaxException {
         log.debug("REST request to update AuxilaryOrderLine : {}", auxilaryOrderLineDTO);
         if (auxilaryOrderLineDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            //throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        	createAuxilaryOrderLine(auxilaryOrderLineDTO);
         }
         AuxilaryOrderLineDTO result = auxilaryOrderLineService.save(auxilaryOrderLineDTO);
         return ResponseEntity.ok()

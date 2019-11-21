@@ -70,7 +70,8 @@ public class OrderLineCommandResource {
     public ResponseEntity<OrderLineDTO> updateOrderLine(@RequestBody OrderLineDTO orderLineDTO) throws URISyntaxException {
         log.debug("REST request to update OrderLine : {}", orderLineDTO);
         if (orderLineDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+            //throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        	createOrderLine(orderLineDTO);
         }
         OrderLineDTO result = orderLineService.save(orderLineDTO);
         return ResponseEntity.ok()
