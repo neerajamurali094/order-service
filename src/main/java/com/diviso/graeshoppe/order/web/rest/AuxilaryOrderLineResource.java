@@ -69,14 +69,15 @@ public class AuxilaryOrderLineResource {
     @PutMapping("/auxilary-order-lines")
     public ResponseEntity<AuxilaryOrderLineDTO> updateAuxilaryOrderLine(@RequestBody AuxilaryOrderLineDTO auxilaryOrderLineDTO) throws URISyntaxException {
         log.debug("REST request to update AuxilaryOrderLine : {}", auxilaryOrderLineDTO);
+        AuxilaryOrderLineDTO result = null;
         if (auxilaryOrderLineDTO.getId() == null) {
             //throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        	createAuxilaryOrderLine(auxilaryOrderLineDTO);
+        	result = createAuxilaryOrderLine(auxilaryOrderLineDTO).getBody();
+        }else {
+            result = auxilaryOrderLineService.save(auxilaryOrderLineDTO);
+
         }
-        AuxilaryOrderLineDTO result = auxilaryOrderLineService.save(auxilaryOrderLineDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, auxilaryOrderLineDTO.getId().toString()))
-            .body(result);
+        return ResponseEntity.ok().body(result);
     }
 
     /**
