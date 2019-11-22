@@ -69,14 +69,15 @@ public class OrderLineCommandResource {
     @PutMapping("/order-lines")
     public ResponseEntity<OrderLineDTO> updateOrderLine(@RequestBody OrderLineDTO orderLineDTO) throws URISyntaxException {
         log.debug("REST request to update OrderLine : {}", orderLineDTO);
+        OrderLineDTO result = null;
         if (orderLineDTO.getId() == null) {
             //throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        	createOrderLine(orderLineDTO);
+        	result = createOrderLine(orderLineDTO).getBody();
+        }else {
+             result = orderLineService.save(orderLineDTO);
+
         }
-        OrderLineDTO result = orderLineService.save(orderLineDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, orderLineDTO.getId().toString()))
-            .body(result);
+        return ResponseEntity.ok().body(result);
     }
 
     /**
