@@ -46,7 +46,8 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 
 	private final Logger log = LoggerFactory.getLogger(DeliveryInfoCommandServiceImpl.class);
-
+	@Autowired
+	private CustomerResourceApi customerResourceApi;
 	private final DeliveryInfoRepository deliveryInfoRepository;
 
 	@Autowired
@@ -69,8 +70,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	@Autowired
 	private StoreResourceApi storeResourceApi;
 
-	@Autowired
-	private CustomerResourceApi customerResourceApi;
+	
 	@Autowired
 	private ResourceAssembler resourceAssembler;
 	private final DeliveryInfoMapper deliveryInfoMapper;
@@ -98,23 +98,12 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
 		deliveryInfoSearchRepository.save(deliveryInfo);
 		OrderDTO orderDTO = orderService.findByOrderID(orderId).get();
-		Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
 		Store store = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody();
+		String storeMail = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody().getEmail();
+		Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
 		Long phone = customer.getContact().getMobileNumber();
 		Long phoneCode = customer.getContact().getPhoneCode();
 		String customerEmail = customer.getContact().getEmail();
-		String storeMail = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody().getEmail();
-		if (deliveryInfoDTO.getDeliveryAddressId() != null) {
-			AddressDTO address = addressService.findOne(deliveryInfoDTO.getDeliveryAddressId()).get();
-			phone = address.getPhone();
-			if (address.getEmail() != null) {
-				customerEmail = address.getEmail();
-			}
-		}
-		log.info("Phone Number is " + phone);
-		log.info("Phonecode is " + phoneCode);
-		log.info("Customer email is " + customerEmail);
-		log.info("Store email is " + storeMail);
 		CommandResource commandResource = confirmDelivery(taskId, phone, phoneCode, deliveryInfoDTO.getDeliveryType(),
 				customerEmail, storeMail);
 		commandResource.setSelfId(result.getId());
@@ -145,7 +134,6 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 				
 				orderDTO.setStatusId(3l); // order is auto approved
 				orderService.update(orderDTO);
-				orderService.publishMesssage(orderId, phone, "CREATE"); // sending order to MOM
 
 			}
 		}
@@ -271,5 +259,11 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 	public Page<DeliveryInfoDTO> search(String query, Pageable pageable) {
 		log.debug("Request to search for a page of DeliveryInfos for query {}", query);
 		return deliveryInfoSearchRepository.search(queryStringQuery(query), pageable).map(deliveryInfoMapper::toDto);
+	}
+
+	@Override
+	public Optional<DeliveryInfo> findByOrderId(String orderId) {
+		
+		return deliveryInfoRepository.findByOrder_OrderId(orderId);
 	}
 }
