@@ -1,8 +1,11 @@
 package com.diviso.graeshoppe.order.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.repository.OrderRepository;
 import com.diviso.graeshoppe.order.service.OrderQueryService;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
@@ -37,6 +40,12 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 	@Override
 	public long countByStoreIdAndCustomerId(String storeId, String customerId) {
 		return orderRepository.countByStoreIdAndCustomerId(storeId, customerId);
+	}
+
+	@Override
+	public DeliveryInfo findDeliveryInfoByOrderId(String orderId) {
+		
+		return orderRepository.findDeliveryInfoByOrderId(orderId);
 	}
 
 	

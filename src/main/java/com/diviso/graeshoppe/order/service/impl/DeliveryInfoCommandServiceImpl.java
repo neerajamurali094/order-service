@@ -261,9 +261,5 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		return deliveryInfoSearchRepository.search(queryStringQuery(query), pageable).map(deliveryInfoMapper::toDto);
 	}
 
-	@Override
-	public Optional<DeliveryInfo> findByOrderId(String orderId) {
-		
-		return deliveryInfoRepository.findByOrder_OrderId(orderId);
-	}
+	
 }

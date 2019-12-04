@@ -16,5 +16,4 @@ import org.springframework.stereotype.Repository;
 public interface DeliveryInfoRepository extends JpaRepository<DeliveryInfo, Long> {
 
 	
-	Optional<DeliveryInfo> findByOrder_OrderId(String orderId);
 }

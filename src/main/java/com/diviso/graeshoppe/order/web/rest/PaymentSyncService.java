@@ -16,6 +16,7 @@ import com.diviso.graeshoppe.order.domain.Address;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.service.DeliveryInfoService;
 import com.diviso.graeshoppe.order.service.OrderCommandService;
+import com.diviso.graeshoppe.order.service.OrderQueryService;
 import com.diviso.graeshoppe.order.service.dto.AddressDTO;
 import com.diviso.graeshoppe.order.service.dto.OrderDTO;
 import com.diviso.graeshoppe.payment.avro.Payment;
@@ -27,10 +28,11 @@ public class PaymentSyncService {
 
 	@Autowired
 	private OrderCommandService orderService;
+	
+	@Autowired
+	private OrderQueryService orderQueryService;
 	@Autowired
 	private CustomerResourceApi customerResourceApi;
-	@Autowired
-	private DeliveryInfoService deliveryInfoService;
 	@StreamListener(SinkConfiguration.PAYMENT)
 	public void listenToPayment(KStream<String, Payment> message) {
 		message.foreach((key,value) -> {
@@ -44,10 +46,10 @@ public class PaymentSyncService {
 				LOG.info("Order updated with payment ref");
 				Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.get().getCustomerId()).getBody();
 				Long phone = customer.getContact().getMobileNumber();
-				Optional<DeliveryInfo> deliveryInfo = deliveryInfoService.findByOrderId(orderDTO.get().getOrderId());
-				if(deliveryInfo.isPresent()) {
-					if (deliveryInfo.get().getDeliveryAddress() != null) {
-						Address address =deliveryInfo.get().getDeliveryAddress();
+				DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderDTO.get().getOrderId());
+				if(deliveryInfo!=null) {
+					if (deliveryInfo.getDeliveryAddress() != null) {
+						Address address =deliveryInfo.getDeliveryAddress();
 						if(address.getPhone()!=null) {
 							phone = address.getPhone();
 						}

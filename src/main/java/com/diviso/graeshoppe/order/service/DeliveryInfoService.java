@@ -59,5 +59,4 @@ public interface DeliveryInfoService {
      */
     Page<DeliveryInfoDTO> search(String query, Pageable pageable);
     
-    Optional<DeliveryInfo> findByOrderId(String orderId);
 }
