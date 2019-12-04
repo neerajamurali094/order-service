@@ -12,6 +12,7 @@ import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
 import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
 import com.diviso.graeshoppe.order.client.customer.model.Customer;
 import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
+import com.diviso.graeshoppe.order.client.store.model.Store;
 import com.diviso.graeshoppe.order.domain.DeliveryInfo;
 import com.diviso.graeshoppe.order.repository.DeliveryInfoRepository;
 import com.diviso.graeshoppe.order.repository.search.DeliveryInfoSearchRepository;
@@ -98,6 +99,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		deliveryInfoSearchRepository.save(deliveryInfo);
 		OrderDTO orderDTO = orderService.findByOrderID(orderId).get();
 		Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
+		Store store = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody();
 		Long phone = customer.getContact().getMobileNumber();
 		Long phoneCode = customer.getContact().getPhoneCode();
 		String customerEmail = customer.getContact().getEmail();
@@ -119,28 +121,35 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		update(result);
 		orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
 		commandResource.setOrderId(orderId);
-		if (commandResource.getNextTaskName().equals("Accept Order")) {
-			NotificationDTO notificationDTO = new NotificationDTO();
-			notificationDTO.setDate(orderDTO.getDate());
-			notificationDTO.setMessage("You have new order request");
-			notificationDTO.setTitle("Order Request");
-			notificationDTO.setTargetId(orderId);
-			notificationDTO.setStatus("unread");
-			notificationDTO.setReceiverId(orderDTO.getStoreId());
-			notificationDTO.setType("Pending-Notification");
-			NotificationDTO resultNotification = notificationService.save(notificationDTO); // sending notifications
-																			// from here to the store
-			Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
-			log.info("Notification publish status is " + status);
-			orderDTO.setStatusId(2l); // order is unapproved
+		
+		if(store.getStoreSettings().getOrderAcceptType() == "advanced") {
+			orderDTO.setStatusId(6l); // order is marked as pending for payment
 			orderService.update(orderDTO);
-		} else if (commandResource.getNextTaskName().equals("Process Payment")) {
-			
-			orderDTO.setStatusId(3l); // order is auto approved
-			orderService.update(orderDTO);
-			orderService.publishMesssage(orderId, phone, "CREATE"); // sending order to MOM
+		} else {
+			if (commandResource.getNextTaskName().equals("Accept Order")) {
+				NotificationDTO notificationDTO = new NotificationDTO();
+				notificationDTO.setDate(orderDTO.getDate());
+				notificationDTO.setMessage("You have new order request");
+				notificationDTO.setTitle("Order Request");
+				notificationDTO.setTargetId(orderId);
+				notificationDTO.setStatus("unread");
+				notificationDTO.setReceiverId(orderDTO.getStoreId());
+				notificationDTO.setType("Pending-Notification");
+				NotificationDTO resultNotification = notificationService.save(notificationDTO); // sending notifications
+																				// from here to the store
+				Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
+				log.info("Notification publish status is " + status);
+				orderDTO.setStatusId(2l); // order is unapproved
+				orderService.update(orderDTO);
+			} else if (commandResource.getNextTaskName().equals("Process Payment")) {
+				
+				orderDTO.setStatusId(3l); // order is auto approved
+				orderService.update(orderDTO);
+				orderService.publishMesssage(orderId, phone, "CREATE"); // sending order to MOM
 
+			}
 		}
+		
 		return commandResource;
 	}
 
