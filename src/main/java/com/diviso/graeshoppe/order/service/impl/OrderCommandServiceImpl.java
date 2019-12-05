@@ -195,7 +195,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		orderId.setType("String");
 		orderId.setValue(trackingId);
 		properties.add(orderId);
-		String type = storeResourceApi.findStoreSettingsByStoreIdUsingGET(storeId).getBody().getOrderAcceptType();
+		//String type = storeResourceApi.findStoreSettingsByStoreIdUsingGET(storeId).getBody().getOrderAcceptType();
 		RestFormProperty acceptType = new RestFormProperty();
 		acceptType.setId("acceptType");
 		acceptType.setName("acceptType");
