@@ -159,6 +159,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	}
 
 	public CommandResource initiateOrder(String trackingId, String storeId, String customerId) {
+		System.out.println("Definition id is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+BPM_PROCESSDEFINITION_ID);
 		ProcessInstanceCreateRequest processInstanceCreateRequest = new ProcessInstanceCreateRequest();
 		processInstanceCreateRequest.setProcessDefinitionId(BPM_PROCESSDEFINITION_ID);
 

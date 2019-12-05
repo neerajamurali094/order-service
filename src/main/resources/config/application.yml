@@ -217,7 +217,7 @@ app:
 
 bpmn:
    url: http://dev.servers.divisosofttech.com/activiti-rest/service
-   processId: process:10:35934 #process:1:43 #process:4:78797 #process:2:42632 #process:1:10004
+   processId: process:11:36008 #process:1:43 #process:4:78797 #process:2:42632 #process:1:10004
    security:
       basicAuth:
          username: kermit
