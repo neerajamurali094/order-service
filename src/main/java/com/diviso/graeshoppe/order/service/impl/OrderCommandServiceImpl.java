@@ -199,7 +199,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		acceptType.setId("acceptType");
 		acceptType.setName("acceptType");
 		acceptType.setType("String");
-		acceptType.setValue("advanced");
+		acceptType.setValue("automatic");
 		properties.add(acceptType);
 
 		formRequest.setProperties(properties);
