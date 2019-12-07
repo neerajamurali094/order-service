@@ -267,7 +267,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	
 	@Override
 	public boolean publishMesssage(String orderId, Long phone,String eventType) {
-		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "approved").get();
+		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "payment-processed-unapproved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		log.info("Applied offers in order is "+order.getAppliedOffers());
