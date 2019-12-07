@@ -45,19 +45,19 @@ public class PaymentSyncService {
 				orderDTO.get().setStatusId(6l); //payment-processed-unapproved
 				orderService.update(orderDTO.get());
 				LOG.info("Order updated with payment ref");
-				Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.get().getCustomerId()).getBody();
-				Long phone = customer.getContact().getMobileNumber();
-				DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderDTO.get().getOrderId());
-				if(deliveryInfo!=null) {
-					if (deliveryInfo.getDeliveryAddress() != null) {
-						Address address =deliveryInfo.getDeliveryAddress();
-						if(address.getPhone()!=null) {
-							phone = address.getPhone();
-						}
-					}
-				}
-				LOG.info("Phone number is publishing to kafka "+ phone);
-				orderService.publishMesssage(orderDTO.get().getOrderId(), phone, "CREATE"); // sending order to MOM
+//				Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.get().getCustomerId()).getBody();
+//				Long phone = customer.getContact().getMobileNumber();
+//				DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderDTO.get().getOrderId());
+//				if(deliveryInfo!=null) {
+//					if (deliveryInfo.getDeliveryAddress() != null) {
+//						Address address =deliveryInfo.getDeliveryAddress();
+//						if(address.getPhone()!=null) {
+//							phone = address.getPhone();
+//						}
+//					}
+//				}
+				//LOG.info("Phone number is publishing to kafka "+ phone);
+				orderService.publishMesssage(orderDTO.get().getOrderId(), 9809203816l, "CREATE"); // sending order to MOM
 
 			}
 			
