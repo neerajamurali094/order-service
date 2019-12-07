@@ -110,17 +110,17 @@ public class ApprovalDetailsServiceImpl implements ApprovalDetailsService {
 		Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
 		log.info("Notification publish status is " + status);
 		orderDTO.setApprovalDetailsId(result.getId());
-		orderDTO.setStatusId(3l);
+		orderDTO.setStatusId(7l); //payment-processed-approved
 		orderService.update(orderDTO);
-		Long phone=0l;
-		DeliveryInfo deliveryInfo=orderRespository.findDeliveryInfoByOrderId(orderDTO.getOrderId());
-		if(deliveryInfo.getDeliveryAddress()!=null) {
-			phone = deliveryInfo.getDeliveryAddress().getPhone();
-		} else {
-			Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
-			phone = customer.getContact().getMobileNumber();
-		}
-		orderService.publishMesssage(approvalDetailsDTO.getOrderId(),phone,"CREATE");
+//		Long phone=0l;
+//		DeliveryInfo deliveryInfo=orderRespository.findDeliveryInfoByOrderId(orderDTO.getOrderId());
+//		if(deliveryInfo.getDeliveryAddress()!=null) {
+//			phone = deliveryInfo.getDeliveryAddress().getPhone();
+//		} else {
+//			Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
+//			phone = customer.getContact().getMobileNumber();
+//		}
+//		orderService.publishMesssage(approvalDetailsDTO.getOrderId(),phone,"CREATE");
 		return result1;
 	}
 

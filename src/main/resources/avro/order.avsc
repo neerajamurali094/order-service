@@ -102,6 +102,7 @@
 			   {"name":"discountAmount","type":"double","default": 0.0},
 			   {"name":"grandTotal","type":"double"},
 			   {"name":"paymentRef","type":["null","string"]},
+			   {"name":"paymentMode","type":["null","string"]},
 			   {"name":"allergyNote","type":["null","string"],"default": null},
 			   {"name":"preOrderDate","type":"long","logicalType":"date","default": 0},
 			   {"name":"email","type":["null","string"]},

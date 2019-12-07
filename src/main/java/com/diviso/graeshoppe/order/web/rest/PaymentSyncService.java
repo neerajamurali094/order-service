@@ -41,7 +41,8 @@ public class PaymentSyncService {
 			if(orderDTO.isPresent()) {
 				orderDTO.get().setPaymentMode(value.getPaymentType().toUpperCase());
 				orderDTO.get().setPaymentRef(value.getId().toString());
-				orderDTO.get().setStatusId(4l);
+				// in order to set the status need to check the order flow if advanced flow this works
+				orderDTO.get().setStatusId(6l); //payment-processed-unapproved
 				orderService.update(orderDTO.get());
 				LOG.info("Order updated with payment ref");
 				Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.get().getCustomerId()).getBody();

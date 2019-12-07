@@ -112,7 +112,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		commandResource.setOrderId(orderId);
 		
 		if(store.getStoreSettings().getOrderAcceptType() == "advanced") {
-			orderDTO.setStatusId(6l); // order is marked as pending for payment
+			orderDTO.setStatusId(2l); // order is marked as pending for payment
 			orderService.update(orderDTO);
 		} else {
 			if (commandResource.getNextTaskName().equals("Accept Order")) {
