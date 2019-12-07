@@ -111,32 +111,32 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		orderDTO.setDeliveryInfoId(deliveryInfo.getId()); // updating the delivery info in corresponding order
 		commandResource.setOrderId(orderId);
 		
-		if(store.getStoreSettings().getOrderAcceptType() == "advanced") {
+		//if(store.getStoreSettings().getOrderAcceptType() == "advanced") {
 			orderDTO.setStatusId(2l); // order is marked as pending for payment
 			orderService.update(orderDTO);
-		} else {
-			if (commandResource.getNextTaskName().equals("Accept Order")) {
-				NotificationDTO notificationDTO = new NotificationDTO();
-				notificationDTO.setDate(orderDTO.getDate());
-				notificationDTO.setMessage("You have new order request");
-				notificationDTO.setTitle("Order Request");
-				notificationDTO.setTargetId(orderId);
-				notificationDTO.setStatus("unread");
-				notificationDTO.setReceiverId(orderDTO.getStoreId());
-				notificationDTO.setType("Pending-Notification");
-				NotificationDTO resultNotification = notificationService.save(notificationDTO); // sending notifications
-																				// from here to the store
-				Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
-				log.info("Notification publish status is " + status);
-				orderDTO.setStatusId(2l); // order is unapproved
-				orderService.update(orderDTO);
-			} else if (commandResource.getNextTaskName().equals("Process Payment")) {
-				
-				orderDTO.setStatusId(3l); // order is auto approved
-				orderService.update(orderDTO);
-
-			}
-		}
+		//} else {
+//			if (commandResource.getNextTaskName().equals("Accept Order")) {
+//				NotificationDTO notificationDTO = new NotificationDTO();
+//				notificationDTO.setDate(orderDTO.getDate());
+//				notificationDTO.setMessage("You have new order request");
+//				notificationDTO.setTitle("Order Request");
+//				notificationDTO.setTargetId(orderId);
+//				notificationDTO.setStatus("unread");
+//				notificationDTO.setReceiverId(orderDTO.getStoreId());
+//				notificationDTO.setType("Pending-Notification");
+//				NotificationDTO resultNotification = notificationService.save(notificationDTO); // sending notifications
+//																				// from here to the store
+//				Boolean status = notificationService.publishNotificationToMessageBroker(resultNotification);
+//				log.info("Notification publish status is " + status);
+//				orderDTO.setStatusId(2l); // order is unapproved
+//				orderService.update(orderDTO);
+//			} else if (commandResource.getNextTaskName().equals("Process Payment")) {
+//				
+//				orderDTO.setStatusId(3l); // order is auto approved
+//				orderService.update(orderDTO);
+//
+//			}
+//		}
 		
 		return commandResource;
 	}
