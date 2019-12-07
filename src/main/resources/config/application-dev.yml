@@ -112,7 +112,7 @@ spring:
     data:
         elasticsearch:
            cluster-name: 20a60de2fab94b1b9aca60bcfee1591b
-           cluster-nodes: https://20a60de2fab94b1b9aca60bcfee1591b.us-central1.gcp.cloud.es.io:9243    
+           cluster-nodes: https://20a60de2fab94b1b9aca60bcfee1591b.us-central1.gcp.cloud.es.io:9243  
            properties:
                path:
                    logs: target/elasticsearch/log
@@ -121,7 +121,7 @@ spring:
            username: elastic
            password: 7hcaOIiz0JiemFumZFRsLz6E
            readTimeout: 10000
-           uri: https://20a60de2fab94b1b9aca60bcfee1591b.us-central1.gcp.cloud.es.io:9243      
+           uri: https://20a60de2fab94b1b9aca60bcfee1591b.us-central1.gcp.cloud.es.io:9243    
     liquibase:
         contexts: dev
     mail:
