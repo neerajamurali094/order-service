@@ -21,6 +21,7 @@ import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
 import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
 import com.diviso.graeshoppe.order.client.customer.model.Customer;
 import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
+import com.diviso.graeshoppe.order.client.store.model.Store;
 import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
 import com.diviso.graeshoppe.order.domain.Offer;
@@ -274,19 +275,22 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	@Override
 	public boolean publishMesssage(String orderId) {
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "payment-processed-unapproved").get();
-		Customer customer = customerResourceApi.findByReferenceUsingGET(order.getCustomerId()).getBody();
-		Long phone = customer.getContact().getMobileNumber();
-		com.diviso.graeshoppe.order.domain.DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderId);
-		if(deliveryInfo!=null) {
-			if (deliveryInfo.getDeliveryAddress() != null) {
-				com.diviso.graeshoppe.order.domain.Address address =deliveryInfo.getDeliveryAddress();
-				if(address.getPhone()!=null) {
-					phone = address.getPhone();
-				}
-			}
-		}
-		log.info("Phone number is publishing to kafka "+ phone);
+		Long phone =9809203816l;
 		
+//		Customer customer = customerResourceApi.findByReferenceUsingGET(order.getCustomerId()).getBody();
+//		Long phone = customer.getContact().getMobileNumber();
+//		com.diviso.graeshoppe.order.domain.DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderId);
+//		if(deliveryInfo!=null) {
+//			if (deliveryInfo.getDeliveryAddress() != null) {
+//				com.diviso.graeshoppe.order.domain.Address address =deliveryInfo.getDeliveryAddress();
+//				if(address.getPhone()!=null) {
+//					phone = address.getPhone();
+//				}
+//			}
+//		}
+//		log.info("Phone number is publishing to kafka "+ phone);
+//		
+		Store store=storeResourceApi.findByRegNoUsingGET(order.getStoreId()).getBody();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		log.info("Applied offers in order is "+order.getAppliedOffers());
