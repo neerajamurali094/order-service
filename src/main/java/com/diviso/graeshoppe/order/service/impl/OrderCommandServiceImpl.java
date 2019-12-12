@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.order.service.impl;
 
 import com.diviso.graeshoppe.order.service.OrderCommandService;
+import com.diviso.graeshoppe.order.service.OrderQueryService;
 import com.diviso.graeshoppe.order.service.UniqueOrderIDService;
 import com.diviso.graeshoppe.order.service.UserService;
 import com.diviso.graeshoppe.order.avro.Address;
@@ -17,6 +18,8 @@ import com.diviso.graeshoppe.order.client.bpmn.model.ProcessInstanceResponse;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestFormProperty;
 import com.diviso.graeshoppe.order.client.bpmn.model.RestVariable;
 import com.diviso.graeshoppe.order.client.bpmn.model.SubmitFormRequest;
+import com.diviso.graeshoppe.order.client.customer.api.CustomerResourceApi;
+import com.diviso.graeshoppe.order.client.customer.model.Customer;
 import com.diviso.graeshoppe.order.client.store.api.StoreResourceApi;
 import com.diviso.graeshoppe.order.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.order.domain.AuxilaryOrderLine;
@@ -70,7 +73,10 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 	private final OfferRepository offerRepository;
 
 	private final SimpMessagingTemplate template;
-
+	@Autowired
+	private OrderQueryService orderQueryService;
+	@Autowired
+	private CustomerResourceApi customerResourceApi;
 	@Autowired
 	private StoreResourceApi storeResourceApi;
 
@@ -266,7 +272,20 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 	
 	@Override
-	public boolean publishMesssage(String orderId, Long phone,String eventType) {
+	public boolean publishMesssage(String orderId, String customerId) {
+		Customer customer = customerResourceApi.findByReferenceUsingGET(customerId).getBody();
+		Long phone = customer.getContact().getMobileNumber();
+		com.diviso.graeshoppe.order.domain.DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderId);
+		if(deliveryInfo!=null) {
+			if (deliveryInfo.getDeliveryAddress() != null) {
+				com.diviso.graeshoppe.order.domain.Address address =deliveryInfo.getDeliveryAddress();
+				if(address.getPhone()!=null) {
+					phone = address.getPhone();
+				}
+			}
+		}
+		log.info("Phone number is publishing to kafka "+ phone);
+		
 		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "payment-processed-unapproved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
@@ -277,7 +296,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		log.info("restaurant total count is " + restaurantCount + " Graeshoppe total count " + graeshoppeCount);
 		Builder orderAvro = com.diviso.graeshoppe.order.avro.Order.newBuilder().setOrderId(order.getOrderId())
 				.setAllergyNote(order.getAllergyNote())
-				.setEventType(eventType)
+				.setEventType("CREATE")
 				.setCustomerId(order.getCustomerId()).setStoreId(order.getStoreId())
 				.setPaymentRef(order.getPaymentRef()).setCustomerPhone(phone).setOrderCountgraeshoppe(graeshoppeCount)
 				.setOrderCountRestaurant(restaurantCount)

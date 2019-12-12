@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface OrderCommandService {
 
-	boolean publishMesssage(String orderId, Long phone, String eventType);
+	boolean publishMesssage(String orderId,String customerId);
     /**
      * Save a order.
      *
