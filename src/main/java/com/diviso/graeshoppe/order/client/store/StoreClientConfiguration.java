@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 public class StoreClientConfiguration {
 
-	
 	@Bean(name = "oauth2RequestInterceptor")
     public RequestInterceptor getOAuth2RequestInterceptor(AuthorizationHeaderUtil authorizationHeaderUtil) throws IOException {
         return new TokenRelayRequestInterceptor(authorizationHeaderUtil);

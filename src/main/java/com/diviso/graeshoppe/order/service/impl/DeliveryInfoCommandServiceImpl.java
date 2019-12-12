@@ -98,7 +98,7 @@ public class DeliveryInfoCommandServiceImpl implements DeliveryInfoService {
 		DeliveryInfoDTO result = deliveryInfoMapper.toDto(deliveryInfo);
 		deliveryInfoSearchRepository.save(deliveryInfo);
 		OrderDTO orderDTO = orderService.findByOrderID(orderId).get();
-		Store store = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody();
+		//Store store = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody();
 		String storeMail = storeResourceApi.findByRegNoUsingGET(orderDTO.getStoreId()).getBody().getEmail();
 		Customer customer = customerResourceApi.findByReferenceUsingGET(orderDTO.getCustomerId()).getBody();
 		Long phone = customer.getContact().getMobileNumber();

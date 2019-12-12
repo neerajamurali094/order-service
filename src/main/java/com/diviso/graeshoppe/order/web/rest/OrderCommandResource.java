@@ -151,9 +151,11 @@ public class OrderCommandResource {
 
    @PostMapping("/pulishMessage/{orderId}")
     public void publishOrderToMessagebroker(@PathVariable String orderId) {
-    	CompletableFuture.runAsync(()->{
-    		orderService.publishMesssage(orderId);
-    	});
+//    	CompletableFuture.runAsync(()->{
+//    		orderService.publishMesssage(orderId);
+//    	});
+	   
+	   orderService.publishMesssage(orderId);
     }
    
 }
