@@ -43,7 +43,7 @@ public class PaymentSyncService {
 				orderService.update(orderDTO.get());
 				LOG.info("Order updated with payment ref");
 				
-				orderService.publishMesssage(orderDTO.get().getOrderId(),orderDTO.get().getCustomerId()); // sending order to MOM
+				// orderService.publishMesssage(orderDTO.get().getOrderId(),orderDTO.get().getCustomerId()); // sending order to MOM
 
 			}
 			

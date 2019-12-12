@@ -272,8 +272,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
 	
 	@Override
-	public boolean publishMesssage(String orderId, String customerId) {
-		Customer customer = customerResourceApi.findByReferenceUsingGET(customerId).getBody();
+	public boolean publishMesssage(String orderId) {
+		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "payment-processed-unapproved").get();
+		Customer customer = customerResourceApi.findByReferenceUsingGET(order.getCustomerId()).getBody();
 		Long phone = customer.getContact().getMobileNumber();
 		com.diviso.graeshoppe.order.domain.DeliveryInfo deliveryInfo = orderQueryService.findDeliveryInfoByOrderId(orderId);
 		if(deliveryInfo!=null) {
@@ -286,7 +287,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 		}
 		log.info("Phone number is publishing to kafka "+ phone);
 		
-		Order order = orderRepository.findByOrderIdAndStatus_Name(orderId, "payment-processed-unapproved").get();
 		order.setOrderLines(orderLineRepository.findByOrder_OrderId(order.getOrderId()));
 		order.setAppliedOffers(offerRepository.findByOrder_Id(order.getId()));
 		log.info("Applied offers in order is "+order.getAppliedOffers());

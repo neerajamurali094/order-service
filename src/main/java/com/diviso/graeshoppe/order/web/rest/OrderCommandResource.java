@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * REST controller for managing Order.
@@ -148,9 +149,11 @@ public class OrderCommandResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-//    @PostMapping("/pulishMessage/{orderId}")
-//    public boolean publishOrderToMessagebroker(@PathVariable String orderId) {
-//    	return orderService.publishMesssage(orderId);
-//    }
+   @PostMapping("/pulishMessage/{orderId}")
+    public void publishOrderToMessagebroker(@PathVariable String orderId) {
+    	CompletableFuture.runAsync(()->{
+    		orderService.publishMesssage(orderId);
+    	});
+    }
    
 }
